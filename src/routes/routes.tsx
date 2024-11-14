@@ -1,9 +1,7 @@
-
 import App from 'App';
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Main from '@pages/user/Main';
-import Landing from '@pages/user/Landing';
 import Login from '@pages/user/Login';
 import Register from '@pages/user/Register';
 import Mypage from '@pages/user/Mypage';
@@ -36,10 +34,6 @@ const routes = [
     element: <App />,
     children: [
       // 사용자 기능
-      {
-        path: ROUTE_LINK.LANDING.path,
-        element: <Landing />,
-      },
       {
         path: ROUTE_LINK.LOGIN.path,
         element: <Login />,
