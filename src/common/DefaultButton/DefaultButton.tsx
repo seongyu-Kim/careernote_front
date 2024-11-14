@@ -25,6 +25,7 @@ interface DefaultButtonProps {
   fontSize?: string;
   type?: 'button' | 'submit' | 'reset';
 }
+
 const DefaultButton = ({
   children, //버튼 텍스트
   onClick, //onclick

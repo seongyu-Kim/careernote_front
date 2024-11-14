@@ -12,7 +12,6 @@
       "@/type/*": ["types/*"],
       "@apis/*": ["apis/*"],
       "@routes/*": ["routes/*"],
-
     },
   }
 }
