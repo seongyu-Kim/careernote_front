@@ -24,7 +24,6 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
 
   return (
     <>
-      <Styled.LogoImg src={landing} alt="Landing" />
       <Styled.PostListContainer>
         <Styled.ButtonBox>
           <Styled.WriteButton>
