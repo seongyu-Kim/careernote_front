@@ -37,7 +37,7 @@ const LoginPage = () => {
     <Styled.LoginPageBackground>
       <Styled.LoginContainer>
         <Styled.LoginField>
-          <Styled.MainLogo src={logo} />
+          <Styled.MainLogo src={logo} alt="로고이미지" />
           <Styled.LoginText>Login</Styled.LoginText>
           <Styled.LoginForm>
             <Styled.InputBoxContainer>

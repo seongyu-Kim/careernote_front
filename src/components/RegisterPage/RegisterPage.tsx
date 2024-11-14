@@ -141,7 +141,7 @@ const RegisterPage = () => {
       <p>{confirmPasswordCheck}</p>
       <Styled.RegisterContainer>
         <Styled.RegisterField>
-          <Styled.MainLogo src={logo} />
+          <Styled.MainLogo src={logo} alt="로고이미지" />
           <Styled.RegisterText>Sign Up</Styled.RegisterText>
           <Styled.RegisterForm onSubmit={handleSubmitUserData}>
             <Styled.InputBoxContainer>
