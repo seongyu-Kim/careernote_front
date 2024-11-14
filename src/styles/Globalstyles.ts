@@ -38,6 +38,24 @@ const GlobalStyles = createGlobalStyle`
         background: transparent;
         cursor: pointer;
     }
+    input {
+        &:focus {
+            outline: none; 
+            border: 1px solid #B3D5EB;
+        }
+    }
+    textarea {
+        &:focus {
+            outline: none; 
+            border: 1px solid #B3D5EB;
+        }
+    }
+    select {
+        &:focus {
+            outline: none; 
+            border: 1px solid #B3D5EB;
+        }
+    }
 `;
 
 export default GlobalStyles;
