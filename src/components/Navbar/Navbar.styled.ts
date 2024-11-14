@@ -1,10 +1,12 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Nav = styled.nav`
+  position: fixed;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 45px;
+  height: 66px;
   padding: 0 20px;
   background-color: #79b0cb;
   color: white;
@@ -16,33 +18,60 @@ export const MenuButton = styled.div`
 `;
 
 export const Logo = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  flex-grow: 1;
-  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+`;
+export const LogoImg = styled.img`
+  width: 164px;
+  height: 51px;
 `;
 
 export const UserInfo = styled.div`
   display: flex;
-  gap: 10px;
 `;
 
 export const Button = styled.button`
-  padding: 5px 10px;
   color: white;
-  font-weight: bold;
-  border: none;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 4px;
 `;
 
-export const Menu = styled.div`
+//사이드바
+const slideIn = keyframes`
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+`;
+
+interface MenuProps {
+  isOpen: boolean;
+}
+
+export const Menu = styled.div<MenuProps>`
   position: fixed;
-  display: flex;
-  flex-direction: column;
+  top: 66px;
+  left: 0;
   height: 100vh;
   width: 250px;
   background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+
+  transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
+  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s forwards;
 `;
 
 export const MenuItem = styled.div`
