@@ -17,6 +17,12 @@ const ResetPasswordPage = () => {
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 
   useEffect(() => {
+    if (inputPassword.length > 0 && inputConfirmPassword.length > 0) {
+      setInputFieldChecked(false);
+    } else {
+      setInputFieldChecked(true);
+    }
+
     if (inputPassword === inputConfirmPassword) {
       setErrorMsg('');
     } else {
@@ -56,12 +62,12 @@ const ResetPasswordPage = () => {
             <Styled.InputBoxContainer>
               <Styled.ResetPasswordInput
                 type="password"
-                onChange={() => handleInputChange('password')}
+                onChange={handleInputChange('password')}
                 placeholder="새 비밀번호"
               />
               <Styled.ResetPasswordInput
                 type="password"
-                onChange={() => handleInputChange('confirmPassword')}
+                onChange={handleInputChange('confirmPassword')}
                 placeholder="새 비밀번호 확인"
               />
             </Styled.InputBoxContainer>
@@ -75,11 +81,12 @@ const ResetPasswordPage = () => {
             </Styled.Divider>
             <Styled.ResetPasswordButtonBox>
               <DefaultButton
+                disabled={inputFieldChecked}
                 type="submit"
                 border="none"
                 textColor="white"
-                backgroundColor="#79B0CB"
-                useHover={true}
+                backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
+                useHover={!inputFieldChecked}
                 hoverBackgroundColor="#3F82AC">
                 재설정
               </DefaultButton>

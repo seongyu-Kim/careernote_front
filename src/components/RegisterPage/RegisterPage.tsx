@@ -17,6 +17,16 @@ const RegisterPage = () => {
   const [passwordConfirmStatus, setPasswordConfirmStatus] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
+  const [nicknameCheck, setNicknameCheck] = useState<string>('');
+  const [emailCheck, setEmailCheck] = useState<string>('');
+  const [passwordCheck, setPasswordCheck] = useState<string>('');
+  const [confirmPasswordCheck, setConfirmPasswordCheck] = useState<string>('');
+
+  const nicknameRegEx = /^(?! )[A-Za-z0-9가-힣]{2,}(?! )$/;
+  const emailRegEx =
+    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+  const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
+
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
   //아래 추후 분리해서 한곳에서 관리하게 API 관련 주소
   const REGISTER_API = '/api/signUp';
@@ -47,15 +57,21 @@ const RegisterPage = () => {
     const value = event.target.value;
     if (type === 'nickName') {
       setInputNickname(value);
+      setNicknameCheck(
+        nicknameRegEx.test(value) ? '' : '닉네임은 공백 없이 2글자 이상이어야 합니다.',
+      );
     }
     if (type === 'email') {
       setInputEmail(value);
+      setEmailCheck(emailRegEx.test(value) ? '' : '유효한 이메일 형식이 아닙니다.');
     }
     if (type === 'password') {
       setInputPassword(value);
+      setPasswordCheck(passwordRegEx.test(value) ? '' : '비밀번호는 8~20자여야 합니다.');
     }
     if (type === 'confirmPassword') {
       setInputConfirmPassword(value);
+      setConfirmPasswordCheck(value === inputPassword ? '' : '비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -101,6 +117,10 @@ const RegisterPage = () => {
 
   return (
     <Styled.RegisterPageBackground>
+      <p>{nicknameCheck}</p>
+      <p>{emailCheck}</p>
+      <p>{passwordCheck}</p>
+      <p>{confirmPasswordCheck}</p>
       <Styled.RegisterContainer>
         <Styled.RegisterField>
           <Styled.MainLogo src={logo} />
