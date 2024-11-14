@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Styled from './PostCard.styles';
 import Alert from '@components/Modal/Alert';
+import DefaultButton from '../../common/DefaultButton/DefaultButton';
+
 
 interface PostCardProps {
   // post 관련
@@ -69,8 +71,8 @@ const PostCard: React.FC<PostCardProps> = ({
       {/* 수정, 삭제 버튼은 작성자와 로그인한 사용자가 일치하는 경우에만 보임 */}
       {writer === user && (
         <Styled.ButtonGroup>
-          <Styled.Button color="#79B0CB" onClick={handleEdit}>수정</Styled.Button>
-          <Styled.Button color="#AB5A5A" onClick={() => openModal('삭제하시겠습니까?')}>삭제</Styled.Button>
+          <DefaultButton backgroundColor="#79B0CB" border='none' textColor='white' width='10%' onClick={handleEdit}>수정</DefaultButton>
+          <DefaultButton backgroundColor="#E25151" border='none' textColor='white' width='10%' onClick={() => openModal('삭제하시겠습니까?')}>삭제</DefaultButton>
         </Styled.ButtonGroup>
       )}
 

@@ -54,19 +54,3 @@ export const ButtonGroup = styled.div`
   justify-content: flex-end;
   gap: 10px;
 `;
-
-export const Button = styled.button<{ color: string }>`
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  background-color: ${(props) => props.color};
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ${(props) =>
-      props.color === '#79B0CB' ? '#3F82AC' : '#c94035'};
-  }
-`;
