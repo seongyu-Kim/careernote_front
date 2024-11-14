@@ -35,12 +35,36 @@ const RegisterPage = () => {
     if (
       inputNickname.length > 0 &&
       inputEmail.length > 0 &&
-      inputPassword.length > 0 &&
-      inputConfirmPassword.length > 0
+      inputPassword.length >= 8 &&
+      inputConfirmPassword.length > 8
     ) {
       setInputFieldChecked(false);
     } else {
       setInputFieldChecked(true);
+    }
+    //닉네임 유효성 검사
+    if (!nicknameRegEx.test(inputNickname)) {
+      setNicknameCheck('닉네임은 공백 없이 2글자 이상이어야 합니다.');
+    } else {
+      setNicknameCheck('');
+    }
+    //이메일 유효성 검사
+    if (!emailRegEx.test(inputEmail)) {
+      setEmailCheck('유효한 이메일 형식이 아닙니다.');
+    } else {
+      setEmailCheck('');
+    }
+    //비밀번호 유효성 검사
+    if (!passwordRegEx.test(inputPassword)) {
+      setPasswordCheck('비밀번호는 8~20자여야 합니다.');
+    } else {
+      setPasswordCheck('');
+    }
+    //비밀번호 확인 유효성 검사
+    if (!passwordRegEx.test(inputConfirmPassword)) {
+      setConfirmPasswordCheck('비밀번호는 8~20자여야 합니다.');
+    } else {
+      setConfirmPasswordCheck('');
     }
     //비밀번호 일치 확인
     if (inputPassword === inputConfirmPassword) {
@@ -57,21 +81,15 @@ const RegisterPage = () => {
     const value = event.target.value;
     if (type === 'nickName') {
       setInputNickname(value);
-      setNicknameCheck(
-        nicknameRegEx.test(value) ? '' : '닉네임은 공백 없이 2글자 이상이어야 합니다.',
-      );
     }
     if (type === 'email') {
       setInputEmail(value);
-      setEmailCheck(emailRegEx.test(value) ? '' : '유효한 이메일 형식이 아닙니다.');
     }
     if (type === 'password') {
       setInputPassword(value);
-      setPasswordCheck(passwordRegEx.test(value) ? '' : '비밀번호는 8~20자여야 합니다.');
     }
     if (type === 'confirmPassword') {
       setInputConfirmPassword(value);
-      setConfirmPasswordCheck(value === inputPassword ? '' : '비밀번호가 일치하지 않습니다.');
     }
   };
 
@@ -149,7 +167,7 @@ const RegisterPage = () => {
               />
             </Styled.InputBoxContainer>
             <Styled.Divider>
-              {errorMsg == '' ? null : (
+              {errorMsg && (
                 <Styled.ErrorMessage>
                   <IoAlertCircleOutline />
                   {errorMsg}

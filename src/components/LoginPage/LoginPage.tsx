@@ -4,11 +4,14 @@ import DefaultButton from '@common/DefaultButton/DefaultButton';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
+import { useFindPasswordModal } from '@stores/store';
+import FindPassword from '@components/Modal/FindPassword';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inpuFieldChecked, setInputFieldChecked] = useState<boolean>(true);
+  const { isOpen, setIsOpen } = useFindPasswordModal();
   const navigate = useNavigate();
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
 
@@ -50,7 +53,13 @@ const LoginPage = () => {
               />
             </Styled.InputBoxContainer>
             <Styled.FindPasswordBox>
-              <p>비밀번호 찾기</p>
+              <span
+                onClick={() => {
+                  setIsOpen(isOpen);
+                }}>
+                비밀번호 찾기
+              </span>
+              {isOpen && <FindPassword />}
             </Styled.FindPasswordBox>
             <Styled.LoginButtonBox>
               <DefaultButton

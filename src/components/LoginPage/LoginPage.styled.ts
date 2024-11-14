@@ -80,7 +80,7 @@ export const FindPasswordBox = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  p {
+  span {
     color: #325366;
     font-size: 14px;
     cursor: pointer;
