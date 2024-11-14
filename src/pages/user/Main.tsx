@@ -1,6 +1,8 @@
 import React from 'react';
 import MainLayout from '@components/MainLayout/MainLayout';
 import PostList from '@components/PostList/PostList';
+import landing from '@assets/landing.png';
+import * as Styled from '../../components/PostList/PostList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import { useState } from 'react';
 
@@ -340,6 +342,7 @@ const Main: React.FC = () => {
 
   return (
     <MainLayout>
+      <Styled.LogoImg src={landing} alt="Landing" />
       <PostList posts={currentPosts} />
       <Pagination
         currentPage={currentPage}
