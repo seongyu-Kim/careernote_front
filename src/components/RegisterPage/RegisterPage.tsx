@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import authApi from '@apis/authApi/authApi';
 import { ROUTE_LINK } from '@routes/routes';
 
+//추후 컴포넌트 분리
 const RegisterPage = () => {
   const [inputNickname, setInputNickname] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
@@ -17,7 +18,8 @@ const RegisterPage = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
-  const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
+  //아래 추후 분리해서 한곳에서 관리하게 API 관련 주소
+  const REGISTER_API = '/api/signUp';
 
   useEffect(() => {
     if (
@@ -59,6 +61,7 @@ const RegisterPage = () => {
 
   const handleSubmitUserData = async (event: React.FormEvent<HTMLFormElement>) => {
     //모든 필드가 채워져있는지 확인
+    alert('실행!');
     if (
       inputNickname === '' ||
       inputEmail === '' ||
@@ -77,13 +80,12 @@ const RegisterPage = () => {
     }
 
     const resData = {
-      nickname: inputNickname,
       email: inputEmail,
       password: inputPassword,
-      confirmPassword: inputConfirmPassword,
+      nickname: inputNickname,
     };
     try {
-      const res = await authApi.post(REGISTER_PAGE_URL, resData, {
+      const res = await authApi.post(REGISTER_API, resData, {
         headers: {
           'Content-Type': 'application/json',
         },

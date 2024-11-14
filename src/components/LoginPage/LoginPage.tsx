@@ -54,6 +54,7 @@ const LoginPage = () => {
             </Styled.FindPasswordBox>
             <Styled.LoginButtonBox>
               <DefaultButton
+                type="submit"
                 disabled={inpuFieldChecked}
                 border="none"
                 textColor="white"
