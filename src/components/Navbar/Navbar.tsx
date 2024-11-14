@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Styled from './Navbar.styled';
+import logo_w from '@assets/logo_w.png';
 
-// 네비게이션바 컴포넌트
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string>('');
@@ -12,6 +12,9 @@ const Navbar: React.FC = () => {
 
   const handleMenuItemClick = (menuName: string) => {
     setSelectedMenu(menuName);
+    setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 100);
   };
 
   return (
@@ -20,17 +23,19 @@ const Navbar: React.FC = () => {
       <Styled.Nav>
         <Styled.MenuButton onClick={toggleMenu}>☰</Styled.MenuButton>
 
-        <Styled.Logo>CareerNote</Styled.Logo>
+        <Styled.Logo>
+          <Styled.LogoImg src={logo_w} alt="logo" />
+        </Styled.Logo>
 
         <Styled.UserInfo>
-          <Styled.Button>김선규 님</Styled.Button>
+          <Styled.Button style={{ marginTop: '2px' }}>김선규 님</Styled.Button>
           <Styled.Button>Logout</Styled.Button>
         </Styled.UserInfo>
       </Styled.Nav>
 
       {/* 사이드바 */}
       {isMenuOpen && (
-        <Styled.Menu>
+        <Styled.Menu isOpen={isMenuOpen}>
           <Styled.MenuItem>
             <Styled.MenuItemBtn
               isSelected={selectedMenu === '자유게시판'}
