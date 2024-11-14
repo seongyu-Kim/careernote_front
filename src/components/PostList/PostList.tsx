@@ -3,170 +3,19 @@ import * as Styled from './PostList.styled';
 import landing from '@assets/landing.png';
 import { LuPencilLine } from 'react-icons/lu';
 
-const PostList: React.FC = () => {
-  const posts = [
-    {
-      id: 1,
-      category: '자유게시판',
-      title: '첫 번째 게시글',
-      author: '김선규',
-      date: '2024-11-13',
-      views: 123,
-    },
-    {
-      id: 2,
-      category: '공지',
-      title: '두 번째 게시글',
-      author: '박주호',
-      date: '2024-11-12',
-      views: 98,
-    },
-    {
-      id: 3,
-      category: '취업',
-      title: '세 번째 게시글',
-      author: '이주영',
-      date: '2024-11-11',
-      views: 76,
-    },
-    {
-      id: 4,
-      category: '스터디',
-      title: '네 번째 게시글',
-      author: '조아라',
-      date: '2024-11-10',
-      views: 45,
-    },
-    {
-      id: 5,
-      category: '자유게시판',
-      title: '다섯 번째 게시글',
-      author: '하정우',
-      date: '2024-11-09',
-      views: 189,
-    },
-    {
-      id: 1,
-      category: '자유게시판',
-      title: '첫 번째 게시글',
-      author: '김선규',
-      date: '2024-11-13',
-      views: 123,
-    },
-    {
-      id: 2,
-      category: '공지',
-      title: '두 번째 게시글',
-      author: '박주호',
-      date: '2024-11-12',
-      views: 98,
-    },
-    {
-      id: 3,
-      category: '취업',
-      title: '세 번째 게시글',
-      author: '이주영',
-      date: '2024-11-11',
-      views: 76,
-    },
-    {
-      id: 4,
-      category: '스터디',
-      title: '네 번째 게시글',
-      author: '조아라',
-      date: '2024-11-10',
-      views: 45,
-    },
-    {
-      id: 5,
-      category: '자유게시판',
-      title: '다섯 번째 게시글',
-      author: '하정우',
-      date: '2024-11-09',
-      views: 189,
-    },
-    {
-      id: 1,
-      category: '자유게시판',
-      title: '첫 번째 게시글',
-      author: '김선규',
-      date: '2024-11-13',
-      views: 123,
-    },
-    {
-      id: 2,
-      category: '공지',
-      title: '두 번째 게시글',
-      author: '박주호',
-      date: '2024-11-12',
-      views: 98,
-    },
-    {
-      id: 3,
-      category: '취업',
-      title: '세 번째 게시글',
-      author: '이주영',
-      date: '2024-11-11',
-      views: 76,
-    },
-    {
-      id: 4,
-      category: '스터디',
-      title: '네 번째 게시글',
-      author: '조아라',
-      date: '2024-11-10',
-      views: 45,
-    },
-    {
-      id: 5,
-      category: '자유게시판',
-      title: '다섯 번째 게시글',
-      author: '하정우',
-      date: '2024-11-09',
-      views: 189,
-    },
-    {
-      id: 1,
-      category: '자유게시판',
-      title: '첫 번째 게시글',
-      author: '김선규',
-      date: '2024-11-13',
-      views: 123,
-    },
-    {
-      id: 2,
-      category: '공지',
-      title: '두 번째 게시글',
-      author: '박주호',
-      date: '2024-11-12',
-      views: 98,
-    },
-    {
-      id: 3,
-      category: '취업',
-      title: '세 번째 게시글',
-      author: '이주영',
-      date: '2024-11-11',
-      views: 76,
-    },
-    {
-      id: 4,
-      category: '스터디',
-      title: '네 번째 게시글',
-      author: '조아라',
-      date: '2024-11-10',
-      views: 45,
-    },
-    {
-      id: 5,
-      category: '자유게시판',
-      title: '다섯 번째 게시글',
-      author: '하정우',
-      date: '2024-11-09',
-      views: 189,
-    },
-  ];
+interface Post {
+  id: number;
+  category: string;
+  title: string;
+  author: string;
+  date: string;
+}
 
+interface PostListProps {
+  posts: Post[];
+}
+
+const PostList: React.FC<PostListProps> = ({ posts }) => {
   const [isChecked, setChecked] = useState<boolean>(false);
 
   const handleCheckboxChange = () => {

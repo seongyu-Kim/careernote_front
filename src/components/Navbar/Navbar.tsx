@@ -4,7 +4,7 @@ import logo_w from '@assets/logo_w.png';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState<string>('');
+  const [selectedMenu, setSelectedMenu] = useState<string>('자유게시판');
 
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState);
