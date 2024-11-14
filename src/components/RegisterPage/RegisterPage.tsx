@@ -1,20 +1,45 @@
 import * as Styled from './RegisterPage.styled';
 import logo from '@assets/icon.png';
 import DefaultButton from '@common/DefaultButton/DefaultButton';
+import { IoAlertCircleOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import authApi from '@apis/authApi/authApi';
-
-const LOGIN_PAGE_URL = '/login';
-
-const REGISTER_URL = '/api/users';
+import { ROUTE_LINK } from '@routes/routes';
 
 const RegisterPage = () => {
   const [inputNickname, setInputNickname] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputConfirmPassword, setInputConfirmPassword] = useState<string>('');
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
+  const [passwordConfirmStatus, setPasswordConfirmStatus] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
+  const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
+  const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
+
+  useEffect(() => {
+    if (
+      inputNickname.length > 0 &&
+      inputEmail.length > 0 &&
+      inputPassword.length > 0 &&
+      inputConfirmPassword.length > 0
+    ) {
+      setInputFieldChecked(false);
+    } else {
+      setInputFieldChecked(true);
+    }
+    //비밀번호 일치 확인
+    if (inputPassword === inputConfirmPassword) {
+      setErrorMsg('');
+      setPasswordConfirmStatus(true);
+    } else {
+      setInputFieldChecked(true);
+      setPasswordConfirmStatus(false);
+      setErrorMsg('비밀번호가 일치하지 않습니다.');
+    }
+  }, [inputNickname, inputEmail, inputPassword, inputConfirmPassword]);
 
   const handleInputChange = (type: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -32,7 +57,25 @@ const RegisterPage = () => {
     }
   };
 
-  const handleSubmitUserData = async () => {
+  const handleSubmitUserData = async (event: React.FormEvent<HTMLFormElement>) => {
+    //모든 필드가 채워져있는지 확인
+    if (
+      inputNickname === '' ||
+      inputEmail === '' ||
+      inputPassword === '' ||
+      inputConfirmPassword === ''
+    ) {
+      event.preventDefault();
+      setErrorMsg('모든 필드를 채워주세요');
+      return;
+    }
+
+    if (!passwordConfirmStatus) {
+      event.preventDefault();
+      setErrorMsg('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     const resData = {
       nickname: inputNickname,
       email: inputEmail,
@@ -40,7 +83,7 @@ const RegisterPage = () => {
       confirmPassword: inputConfirmPassword,
     };
     try {
-      const res = await authApi.post(REGISTER_URL, resData, {
+      const res = await authApi.post(REGISTER_PAGE_URL, resData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -56,20 +99,11 @@ const RegisterPage = () => {
 
   return (
     <Styled.RegisterPageBackground>
-      <button
-        onClick={() => {
-          console.log('닉네임', inputNickname);
-          console.log('이메일', inputEmail);
-          console.log('비밀번호', inputPassword);
-          console.log('비밀번호 확인', inputConfirmPassword);
-        }}>
-        테스트
-      </button>
       <Styled.RegisterContainer>
         <Styled.RegisterField>
           <Styled.MainLogo src={logo} />
           <Styled.RegisterText>Sign Up</Styled.RegisterText>
-          <Styled.RegisterForm>
+          <Styled.RegisterForm onSubmit={handleSubmitUserData}>
             <Styled.InputBoxContainer>
               <Styled.RegisterInput
                 onChange={handleInputChange('nickName')}
@@ -92,6 +126,14 @@ const RegisterPage = () => {
                 placeholder="비밀번호 확인"
               />
             </Styled.InputBoxContainer>
+            <Styled.Divider>
+              {errorMsg == '' ? null : (
+                <Styled.ErrorMessage>
+                  <IoAlertCircleOutline />
+                  {errorMsg}
+                </Styled.ErrorMessage>
+              )}
+            </Styled.Divider>
             <Styled.RegisterButtonBox>
               <DefaultButton
                 onClick={() => navigate(LOGIN_PAGE_URL)}
@@ -102,13 +144,10 @@ const RegisterPage = () => {
                 취소
               </DefaultButton>
               <DefaultButton
-                disabled={false}
-                onClick={() => {
-                  handleSubmitUserData();
-                  navigate(LOGIN_PAGE_URL);
-                }}
+                disabled={inputFieldChecked}
+                type="submit"
                 width="40%"
-                backgroundColor="#79B0CB"
+                backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                 border="none"
                 textColor="white">
                 회원가입

@@ -59,7 +59,7 @@ export const InputBoxContainer = styled.div`
   height: 40%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
 export const LoginInput = styled.input`

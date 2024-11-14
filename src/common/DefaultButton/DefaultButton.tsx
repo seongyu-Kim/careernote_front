@@ -1,9 +1,9 @@
 import * as Styled from './DefaultButton.styled';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 interface DefaultButtonProps {
   children?: ReactNode;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   textColor?: string;
   backgroundColor?: string;
   border?: string;
@@ -23,6 +23,7 @@ interface DefaultButtonProps {
   hoverScale?: number;
   disabled?: boolean;
   fontSize?: string;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const DefaultButton = ({
@@ -47,6 +48,7 @@ const DefaultButton = ({
   hoverScale = 1, // hover Scale 값
   disabled = false, // 버튼 비활성화
   fontSize = '16px',
+  type = 'button',
 }: DefaultButtonProps) => {
   return (
     <Styled.DefaultButton
@@ -69,7 +71,8 @@ const DefaultButton = ({
       transitionDuration={transitionDuration}
       hoverScale={hoverScale}
       disabled={disabled}
-      fontSize={fontSize}>
+      fontSize={fontSize}
+      type={type}>
       {children}
     </Styled.DefaultButton>
   );

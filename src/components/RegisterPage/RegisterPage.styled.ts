@@ -81,6 +81,22 @@ export const RegisterButtonBox = styled.div`
   justify-content: center;
   gap: 9%;
   width: 100%;
-  margin-top: 15%;
-  margin-bottom: 5%;
+  margin: 5% 0 10% 0;
+`;
+
+export const Divider = styled.div`
+  width: 100%;
+  margin: 7%;
+  position: relative;
+`;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  position: absolute;
+  width: 100%;
+  left: 20%;
+  bottom: 25%;
+  display: flex;
+  align-content: center;
 `;

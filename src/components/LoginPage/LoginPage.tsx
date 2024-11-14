@@ -3,12 +3,14 @@ import logo from '@assets/icon.png';
 import DefaultButton from '@common/DefaultButton/DefaultButton';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ROUTE_LINK } from '@routes/routes';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inpuFieldChecked, setInputFieldChecked] = useState<boolean>(true);
   const navigate = useNavigate();
+  const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
 
   useEffect(() => {
     if (inputId.length > 0 && inputPassword.length > 0) {
@@ -61,7 +63,7 @@ const LoginPage = () => {
                 로그인
               </DefaultButton>
               <DefaultButton
-                onClick={() => navigate('/register')}
+                onClick={() => navigate(REGISTER_PAGE_URL)}
                 border="none"
                 textColor="#325366"
                 useHover={true}
