@@ -18,6 +18,7 @@ export interface ButtonProps {
   hoverBackgroundColor?: string;
   hoverScale?: number;
   transitionDuration?: number;
+  fontSize?: string;
 }
 
 export const DefaultButton = styled.button<ButtonProps>`
@@ -36,6 +37,7 @@ export const DefaultButton = styled.button<ButtonProps>`
   bottom: ${(props) => props.bottom};
   left: ${(props) => props.left};
   right: ${(props) => props.right};
+  font-size: ${(props) => props.fontSize};
   cursor: pointer;
 
   ${(props) =>
@@ -49,7 +51,7 @@ export const DefaultButton = styled.button<ButtonProps>`
     props.useHover &&
     `
       &:hover {
-        background-color: ${props.hoverBackgroundColor || '#b3d5eb'};
+        background-color: ${props.hoverBackgroundColor};
         transform: scale(${props.hoverScale});
       }
     `}

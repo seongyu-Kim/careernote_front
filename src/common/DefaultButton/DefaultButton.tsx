@@ -21,6 +21,8 @@ interface DefaultButtonProps {
   hoverBackgroundColor?: string;
   transitionDuration?: number;
   hoverScale?: number;
+  disabled?: boolean;
+  fontSize?: string;
 }
 
 const DefaultButton = ({
@@ -43,6 +45,8 @@ const DefaultButton = ({
   hoverBackgroundColor, // hover 상태일 때 버튼 배경 색상
   transitionDuration = 1, // 트랜지션 지속 효과
   hoverScale = 1, // hover Scale 값
+  disabled = false, // 버튼 비활성화
+  fontSize = '16px',
 }: DefaultButtonProps) => {
   return (
     <Styled.DefaultButton
@@ -63,7 +67,9 @@ const DefaultButton = ({
       useHover={useHover}
       hoverBackgroundColor={hoverBackgroundColor}
       transitionDuration={transitionDuration}
-      hoverScale={hoverScale}>
+      hoverScale={hoverScale}
+      disabled={disabled}
+      fontSize={fontSize}>
       {children}
     </Styled.DefaultButton>
   );
