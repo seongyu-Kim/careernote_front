@@ -9,18 +9,18 @@ import { ROUTE_LINK } from '@routes/routes';
 
 //추후 컴포넌트 분리
 const RegisterPage = () => {
-  const [inputNickname, setInputNickname] = useState<string>('');
-  const [inputEmail, setInputEmail] = useState<string>('');
-  const [inputPassword, setInputPassword] = useState<string>('');
-  const [inputConfirmPassword, setInputConfirmPassword] = useState<string>('');
-  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const [passwordConfirmStatus, setPasswordConfirmStatus] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [inputNickname, setInputNickname] = useState<string>(''); // 닉네임 입력 값
+  const [inputEmail, setInputEmail] = useState<string>(''); // 이메일 입력 값
+  const [inputPassword, setInputPassword] = useState<string>(''); // 패스워드 입력 값
+  const [inputConfirmPassword, setInputConfirmPassword] = useState<string>(''); // 패스워드 확인 입력 값
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true); // 입력 필드 체크
+  const [passwordConfirmStatus, setPasswordConfirmStatus] = useState<boolean>(false); // 패스워드 일치 상태
+  const [nicknameCheck, setNicknameCheck] = useState<string>(''); // 닉네임 유효성 체크 메시지
+  const [emailCheck, setEmailCheck] = useState<string>(''); // 이메일 유효성 체크 메시지
+  const [passwordCheck, setPasswordCheck] = useState<string>(''); // 패스워드 유효성 체크 메시지
+  const [confirmPasswordCheck, setConfirmPasswordCheck] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
+  const [errorMsg, setErrorMsg] = useState<string>(''); // 패스워드 불일치 시 에러 메세지 추후 리팩토링
   const navigate = useNavigate();
-  const [nicknameCheck, setNicknameCheck] = useState<string>('');
-  const [emailCheck, setEmailCheck] = useState<string>('');
-  const [passwordCheck, setPasswordCheck] = useState<string>('');
-  const [confirmPasswordCheck, setConfirmPasswordCheck] = useState<string>('');
 
   const nicknameRegEx = /^(?! )[A-Za-z0-9가-힣]{2,}(?! )$/;
   const emailRegEx =
@@ -43,25 +43,25 @@ const RegisterPage = () => {
       setInputFieldChecked(true);
     }
     //닉네임 유효성 검사
-    if (!nicknameRegEx.test(inputNickname)) {
+    if (inputNickname.length > 0 && !nicknameRegEx.test(inputNickname)) {
       setNicknameCheck('닉네임은 공백 없이 2글자 이상이어야 합니다.');
     } else {
       setNicknameCheck('');
     }
     //이메일 유효성 검사
-    if (!emailRegEx.test(inputEmail)) {
+    if (inputEmail.length > 0 && !emailRegEx.test(inputEmail)) {
       setEmailCheck('유효한 이메일 형식이 아닙니다.');
     } else {
       setEmailCheck('');
     }
     //비밀번호 유효성 검사
-    if (!passwordRegEx.test(inputPassword)) {
+    if (inputPassword.length > 0 && !passwordRegEx.test(inputPassword)) {
       setPasswordCheck('비밀번호는 8~20자여야 합니다.');
     } else {
       setPasswordCheck('');
     }
     //비밀번호 확인 유효성 검사
-    if (!passwordRegEx.test(inputConfirmPassword)) {
+    if (inputPassword.length > 0 && !passwordRegEx.test(inputConfirmPassword)) {
       setConfirmPasswordCheck('비밀번호는 8~20자여야 합니다.');
     } else {
       setConfirmPasswordCheck('');
@@ -135,10 +135,6 @@ const RegisterPage = () => {
 
   return (
     <Styled.RegisterPageBackground>
-      <p>{nicknameCheck}</p>
-      <p>{emailCheck}</p>
-      <p>{passwordCheck}</p>
-      <p>{confirmPasswordCheck}</p>
       <Styled.RegisterContainer>
         <Styled.RegisterField>
           <Styled.MainLogo src={logo} alt="로고이미지" />

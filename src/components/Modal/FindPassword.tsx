@@ -16,7 +16,7 @@ export const FindPassword = () => {
 
   useEffect(() => {
     //추후 전송 버튼 눌렀을 때 에러메시지 출력하게
-    if (!emailRegEx.test(inputEmail)) {
+    if (inputEmail.length > 0 && !emailRegEx.test(inputEmail)) {
       setErrorMsg('유효한 이메일 형식이 아닙니다.');
       setInputFieldChecked(true);
     } else {
