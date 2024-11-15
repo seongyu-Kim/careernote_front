@@ -1,6 +1,5 @@
 import MainLayout from '@components/MainLayout/MainLayout'
 import PostCard from '@components/PostCard/PostCard'
-import PostView from '@pages/user/PostView'
 import { useAlertStore } from '@stores/store'
 import React from 'react'
 

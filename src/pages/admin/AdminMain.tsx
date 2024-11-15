@@ -10,6 +10,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@components/Dnd/UserSection';
 import axios from 'axios';
+import { User, UserLevel } from '@/type/user';
 
 const dummyPosts = [
   {
@@ -34,13 +35,7 @@ const dummyPosts = [
     date: '2024-11-11',
   },
 ];
-type UserLevel = '관리자' | '삐약이' | '꼬꼬닭';
 
-interface User {
-  email: string;
-  level: UserLevel;
-  postCount: number;
-}
 const AdminMain = () => {
   // pagination
   const savedPage = sessionStorage.getItem('currentPage');
@@ -127,7 +122,7 @@ const AdminMain = () => {
     if (user.level === newLevel) return;
 
     try {
-      // API 호출 부분 (실제 구현 시 추가)
+      // API 요청
       // await axios.patch(`/api/users/${user.email}`, { level: newLevel });
 
       setUsers(prevUsers =>
