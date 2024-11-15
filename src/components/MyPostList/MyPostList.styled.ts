@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PostListContainer = styled.div<{ width: string }>`
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width || '75rem'}; 
+  width: ${(props) => props.width || '75rem'};
 `;
 
 export const LogoImg = styled.img`
@@ -45,15 +45,15 @@ export const Date = styled.div`
 `;
 
 export const Delete = styled.div`
-  flex: .5;
+  flex: 0.5;
   margin-top: 3px;
 `;
 
 export const DeleteBtn = styled.div`
-  flex: .5;
+  flex: 0.5;
   margin-top: 3px;
-  color: #E25151;
-  border: 1px solid #E25151;
+  color: #e25151;
+  border: 1px solid #e25151;
   border-radius: 5px;
   padding: 5px 0;
 `;
@@ -63,35 +63,4 @@ export const PostItem = styled.div`
   text-align: center;
   padding: 9px;
   background-color: #ececec;
-`;
-
-export const ButtonBox = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 5px;
-  gap: 5px;
-`;
-
-export const WriteButton = styled.button`
-  display: flex;
-  gap: 8px;
-  cursor: pointer;
-`;
-
-export const CheckboxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const Checkbox = styled.input`
-  width: 15px;
-  height: 15px;
-
-  margin-bottom: 6px;
-  cursor: pointer;
-
-  &:checked {
-    background-color: red;
-  }
 `;

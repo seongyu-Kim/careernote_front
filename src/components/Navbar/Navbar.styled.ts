@@ -17,25 +17,30 @@ export const MenuButton = styled.div`
   cursor: pointer;
 `;
 
-export const Logo = styled.div`
+export const Logo = styled.button`
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
+
+  cursor: pointer;
 `;
 export const LogoImg = styled.img`
   width: 164px;
   height: 51px;
 `;
 
-export const UserInfo = styled.div`
+export const LogoutBox = styled.div`
   display: flex;
+  color: white;
+  font-weight: 700;
+  gap: 10px;
 `;
 
-export const Button = styled.button`
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-`;
+// export const Button = styled.div`
+//   color: white;
+//   font-weight: 600;
+//   cursor: pointer;
+// `;
 
 //사이드바
 const slideIn = keyframes`
@@ -72,6 +77,42 @@ export const Menu = styled.div<MenuProps>`
 
   transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
   animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s forwards;
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: #325366;
+  font-weight: bold;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+export const UserName = styled.div`
+  margin-top: 40px;
+`;
+
+export const Hr = styled.hr`
+  width: 220px;
+  border: none;
+  border-top: 1px solid #d9d9d9;
+  margin: 15px;
+`;
+
+export const QuitBtn = styled.button`
+  width: 62px;
+  height: 20px;
+  border: 1px solid #f44336;
+  border-radius: 8px;
+
+  color: #f44336;
+  font-size: 12px;
+  font-weight: bold;
+
+  margin-top: 30px;
+  margin-bottom: 15px;
+
+  cursor: pointer;
 `;
 
 export const MenuItem = styled.div`

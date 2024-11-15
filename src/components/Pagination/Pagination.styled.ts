@@ -10,6 +10,7 @@ export const PaginationContainer = styled.div`
   align-items: center;
   gap: 3px;
   margin: 80px 0;
+  justify-content: center;
 `;
 
 export const PageButton = styled.button<PageButtonProps>`
