@@ -1,13 +1,9 @@
-import MainLayout from '@components/MainLayout/MainLayout'
-import WritePostPage from '@components/WritePostPage/WritePostPage'
-import React from 'react'
+import MainLayout from '@components/MainLayout/MainLayout';
+import WritePost from '@pages/user/WritePost';
+import React from 'react';
 
 const AdminWritePost = () => {
-  return (
-    <MainLayout>
-      <WritePostPage />
-    </MainLayout>
-  )
-}
+  return <WritePost />;
+};
 
-export default AdminWritePost
+export default AdminWritePost;

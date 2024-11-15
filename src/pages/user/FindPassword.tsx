@@ -1,10 +1,11 @@
-import * as Styled from './FindPassword.styled';
+import * as Styled from '@components/common/Modal/FindPasswordModal/FindPassword.styled';
 import logo from '@assets/icon.png';
-import DefaultButton from '@common/DefaultButton/DefaultButton';
+import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import { MdClose } from 'react-icons/md';
 import { useModal } from '@stores/store';
 import { IoAlertCircleOutline } from 'react-icons/io5';
 import React, { useEffect, useState } from 'react';
+import { USER_API } from '@routes/apiRoutes';
 
 export const FindPassword = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -13,8 +14,8 @@ export const FindPassword = () => {
   const { isOpen, setIsOpen } = useModal();
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+  const { REQUEST_RESET_PASSWORD } = USER_API;
 
-  const TEMP_FIND_PASSWORD_API = 'api/users/password/request';
   useEffect(() => {
     //추후 전송 버튼 눌렀을 때 에러메시지 출력하게
     if (inputEmail.length > 0 && emailRegEx.test(inputEmail)) {

@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Styled from './PostCard.styles';
-import Alert from '@components/Modal/Alert';
-import DefaultButton from '../../common/DefaultButton/DefaultButton';
-
+import Alert from '@components/common/Alert/Alert';
+import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 
 interface PostCardProps {
   // post 관련
@@ -16,7 +15,7 @@ interface PostCardProps {
   level?: string; // 관리자이면 모든 글 수정, 삭제 가능
   // 모달 관련
   isOpen: boolean;
-  message: string;  // 모달에 표시할 메시지
+  message: string; // 모달에 표시할 메시지
   openModal: (message: string) => void;
   closeModal: () => void;
 }
@@ -32,7 +31,7 @@ const PostCard: React.FC<PostCardProps> = ({
   isOpen,
   message,
   openModal,
-  closeModal
+  closeModal,
 }) => {
   const navigate = useNavigate();
   // 삭제 여부 : "네" 버튼 클릭 시 호출되는 함수
@@ -77,20 +76,18 @@ const PostCard: React.FC<PostCardProps> = ({
             <>
               <DefaultButton
                 backgroundColor="#79B0CB"
-                border='none'
-                textColor='white'
-                width='10%'
-                onClick={handleEdit}
-              >
+                border="none"
+                textColor="white"
+                width="10%"
+                onClick={handleEdit}>
                 수정
               </DefaultButton>
               <DefaultButton
                 backgroundColor="#E25151"
-                border='none'
-                textColor='white'
-                width='10%'
-                onClick={() => openModal('삭제하시겠습니까?')}
-              >
+                border="none"
+                textColor="white"
+                width="10%"
+                onClick={() => openModal('삭제하시겠습니까?')}>
                 삭제
               </DefaultButton>
             </>
@@ -98,17 +95,15 @@ const PostCard: React.FC<PostCardProps> = ({
             // 다른 사용자의 글에서는 삭제 버튼만 보이게 하기
             <DefaultButton
               backgroundColor="#E25151"
-              border='none'
-              textColor='white'
-              width='10%'
-              onClick={() => openModal('삭제하시겠습니까?')}
-            >
+              border="none"
+              textColor="white"
+              width="10%"
+              onClick={() => openModal('삭제하시겠습니까?')}>
               삭제
             </DefaultButton>
           )}
         </Styled.ButtonGroup>
       )}
-
 
       {/* 모달 컴포넌트 사용 */}
       <Alert isOpen={isOpen} message={message} onDelete={handleDelete} onCancel={handleCancel} />

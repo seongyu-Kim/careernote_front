@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Navbar.styled';
 import logo_w from '@assets/logo_w.png';
-import Alert from '@components/Modal/Alert';
+import Alert from '@components/common/Alert/Alert';
 import { useNavigate } from 'react-router-dom';
 // import useCategoryStore from '@stores/useCategoryStore';
 
@@ -86,9 +86,7 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
               <div>12</div>
             </div>
             <Styled.QuitBtn>
-              <div onClick={() => openModal('탈퇴 하시겠습니까?')} style={{ marginTop: '2px' }}>
-                회원탈퇴
-              </div>
+              <div onClick={() => openModal('탈퇴 하시겠습니까?')}>회원탈퇴</div>
             </Styled.QuitBtn>
           </Styled.UserInfo>
           {categories.map((category) => (

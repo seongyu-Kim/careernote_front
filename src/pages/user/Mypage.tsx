@@ -4,7 +4,7 @@ import landing from '@assets/landing.png';
 import * as Styled from '../../components/PostList/PostList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import { useState } from 'react';
-import MyPostList from '@components/MyPostList/MyPostList';
+import PostList from '@components/PostList/PostList';
 
 const dummyPosts = [
   {
@@ -324,7 +324,7 @@ const dummyPosts = [
   },
 ];
 
-const Main: React.FC = () => {
+const Mypage: React.FC = () => {
   const savedPage = sessionStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
   const [posts, setPosts] = useState(dummyPosts);
@@ -343,7 +343,7 @@ const Main: React.FC = () => {
   return (
     <MainLayout>
       <Styled.LogoImg src={landing} alt="Landing" />
-      <MyPostList posts={currentPosts} />
+      <PostList posts={currentPosts} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -353,4 +353,4 @@ const Main: React.FC = () => {
   );
 };
 
-export default Main;
+export default Mypage;

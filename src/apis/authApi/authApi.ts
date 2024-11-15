@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const authApi = axios.create({
-  baseURL: '34.64.63.137:3002',
-  withCredentials: true,
+  baseURL: 'http://kdt-react-1-team01.elicecoding.com:3002',
+  // withCredentials: true,
 });
 
 export default authApi;
