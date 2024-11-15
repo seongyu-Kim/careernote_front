@@ -12,7 +12,8 @@ interface PostCardProps {
   writer: string;
   date: string;
   content: string;
-  user: string;
+  user: string; // writer랑 일치하면 수정,삭제 가능
+  level?: string; // 관리자이면 모든 글 수정, 삭제 가능
   // 모달 관련
   isOpen: boolean;
   message: string;  // 모달에 표시할 메시지
@@ -27,6 +28,7 @@ const PostCard: React.FC<PostCardProps> = ({
   date,
   content,
   user,
+  level,
   isOpen,
   message,
   openModal,
@@ -68,13 +70,45 @@ const PostCard: React.FC<PostCardProps> = ({
       <Styled.Date>{date}</Styled.Date>
       <Styled.Content>{content}</Styled.Content>
 
-      {/* 수정, 삭제 버튼은 작성자와 로그인한 사용자가 일치하는 경우에만 보임 */}
-      {writer === user && (
+      {/* 관리자가 작성한 글인 경우 또는 사용자=작성자 일치하는 경우 수정, 삭제 버튼 모두 보이기 */}
+      {(writer === user || level === '관리자') && (
         <Styled.ButtonGroup>
-          <DefaultButton backgroundColor="#79B0CB" border='none' textColor='white' width='10%' onClick={handleEdit}>수정</DefaultButton>
-          <DefaultButton backgroundColor="#E25151" border='none' textColor='white' width='10%' onClick={() => openModal('삭제하시겠습니까?')}>삭제</DefaultButton>
+          {(level === '관리자' && writer === user) || writer === user ? (
+            <>
+              <DefaultButton
+                backgroundColor="#79B0CB"
+                border='none'
+                textColor='white'
+                width='10%'
+                onClick={handleEdit}
+              >
+                수정
+              </DefaultButton>
+              <DefaultButton
+                backgroundColor="#E25151"
+                border='none'
+                textColor='white'
+                width='10%'
+                onClick={() => openModal('삭제하시겠습니까?')}
+              >
+                삭제
+              </DefaultButton>
+            </>
+          ) : (
+            // 다른 사용자의 글에서는 삭제 버튼만 보이게 하기
+            <DefaultButton
+              backgroundColor="#E25151"
+              border='none'
+              textColor='white'
+              width='10%'
+              onClick={() => openModal('삭제하시겠습니까?')}
+            >
+              삭제
+            </DefaultButton>
+          )}
         </Styled.ButtonGroup>
       )}
+
 
       {/* 모달 컴포넌트 사용 */}
       <Alert isOpen={isOpen} message={message} onDelete={handleDelete} onCancel={handleCancel} />
