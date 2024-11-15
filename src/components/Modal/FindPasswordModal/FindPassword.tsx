@@ -2,7 +2,7 @@ import * as Styled from './FindPassword.styled';
 import logo from '@assets/icon.png';
 import DefaultButton from '@common/DefaultButton/DefaultButton';
 import { MdClose } from 'react-icons/md';
-import { useFindPasswordModal } from '@stores/store';
+import { useModal } from '@stores/store';
 import { IoAlertCircleOutline } from 'react-icons/io5';
 import React, { useEffect, useState } from 'react';
 
@@ -10,7 +10,7 @@ export const FindPassword = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen } = useFindPasswordModal();
+  const { isOpen, setIsOpen } = useModal();
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 
@@ -32,6 +32,14 @@ export const FindPassword = () => {
     }
   };
 
+  const handleSubmitSendEmail = async () => {
+    console.log('여기wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <Styled.FindPasswordBackground>
       <Styled.FindPasswordContainer>
@@ -41,7 +49,7 @@ export const FindPassword = () => {
           <Styled.FindPasswordText>
             비밀번호 재설정을 위한 이메일을 입력해주세요.
           </Styled.FindPasswordText>
-          <Styled.FindPasswordForm>
+          <Styled.FindPasswordForm onSubmit={handleSubmitSendEmail}>
             <Styled.FindPasswordInput onChange={handleInputChange('email')} placeholder="이메일" />
             <Styled.Divider>
               {errorMsg && (
@@ -52,7 +60,8 @@ export const FindPassword = () => {
               )}
             </Styled.Divider>
             <DefaultButton
-              type="submit"
+              // type="submit"
+              onClick={handleSubmitSendEmail}
               disabled={inputFieldChecked}
               width="40%"
               border="none"

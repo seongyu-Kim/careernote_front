@@ -63,6 +63,7 @@ const ResetPasswordPage = () => {
   };
 
   const handleSubmitResetPassword = async () => {
+    alert('실행!');
     try {
       const res = await authApi.post(RESET_PASSWORD);
 

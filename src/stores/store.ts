@@ -7,9 +7,12 @@ interface AlertStore {
   closeModal: () => void; // Alert를 닫는 함수
 }
 
-interface FindPasswordModal {
+//
+interface ModalState {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  modalState: '' | 'findPassword';
+  setModalState: (modalState: '' | 'findPassword') => void;
 }
 
 export const useAlertStore = create<AlertStore>((set) => ({
@@ -19,7 +22,12 @@ export const useAlertStore = create<AlertStore>((set) => ({
   closeModal: () => set({ isOpen: false, message: '' }),
 }));
 
-export const useFindPasswordModal = create<FindPasswordModal>((set) => ({
+//모달 ON OFF
+export const useModal = create<ModalState>((set) => ({
   isOpen: false,
+  modalState: '',
   setIsOpen: (isOpen: boolean) => set({ isOpen: !isOpen }),
+  setModalState: (value) => {
+    set({ modalState: value });
+  },
 }));

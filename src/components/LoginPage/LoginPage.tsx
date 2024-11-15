@@ -4,15 +4,15 @@ import DefaultButton from '@common/DefaultButton/DefaultButton';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
-import { useFindPasswordModal } from '@stores/store';
-import FindPassword from '@components/Modal/FindPassword';
+import { useModal } from '@stores/store';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inpuFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen } = useFindPasswordModal();
+  const { isOpen, setIsOpen, setModalState, modalState } = useModal();
   const navigate = useNavigate();
+  const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
 
   useEffect(() => {
@@ -33,13 +33,17 @@ const LoginPage = () => {
     }
   };
 
+  const handleSubmitLogin = async () => {
+    alert('실행!');
+    navigate(MAIN_PAGE_URL);
+  };
   return (
     <Styled.LoginPageBackground>
       <Styled.LoginContainer>
         <Styled.LoginField>
           <Styled.MainLogo src={logo} alt="로고이미지" />
           <Styled.LoginText>Login</Styled.LoginText>
-          <Styled.LoginForm>
+          <Styled.LoginForm onSubmit={handleSubmitLogin}>
             <Styled.InputBoxContainer>
               <Styled.LoginInput
                 onChange={handleInputChange('id')}
@@ -52,14 +56,15 @@ const LoginPage = () => {
                 placeholder="비밀번호를 입력하세요."
               />
             </Styled.InputBoxContainer>
+            <button onClick={() => console.log(isOpen, modalState)}>확인</button>
             <Styled.FindPasswordBox>
               <span
                 onClick={() => {
+                  setModalState('findPassword');
                   setIsOpen(isOpen);
                 }}>
                 비밀번호 찾기
               </span>
-              {isOpen && <FindPassword />}
             </Styled.FindPasswordBox>
             <Styled.LoginButtonBox>
               <DefaultButton
