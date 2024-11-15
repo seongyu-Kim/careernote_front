@@ -3,6 +3,7 @@ import * as Styled from './Navbar.styled';
 import logo_w from '@assets/logo_w.png';
 import Alert from '@components/Modal/Alert';
 import { useNavigate } from 'react-router-dom';
+// import useCategoryStore from '@stores/useCategoryStore';
 
 interface NavProps {
   isOpen: boolean;
@@ -13,44 +14,34 @@ interface NavProps {
 
 const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) => {
   const navigate = useNavigate();
+  // const { selectedCategory, setSelectedCategory } = useCategoryStore();
+  const categories = ['자유게시판', '공지', '등업', '취업', '스터디'];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string>('자유게시판');
-  // const [categoryList, setCategoryList] = useState<any[]>([]);
-
-  // 카테고리별 API 호출
-  // useEffect(() => {
-  //   const fetchCategoryData = async () => {
-  //     try {
-  //       const response = await axios.get(`/api/category/${selectedMenu}`);
-  //       setCategoryList(response.data);
-  //     } catch (error) {
-  //       console.error('카테고리 데이터를 불러오는 데 실패했습니다:', error);
-  //     }
-  //   };
-
-  //   fetchCategoryData();
-  // }, [selectedMenu]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prevState) => !prevState);
   };
 
-  const handleMenuItemClick = (menuName: string) => {
-    setSelectedMenu(menuName);
+  // const handleMenuItemClick = (category: string) => {
+  //   setSelectedCategory(category);
+  //   setTimeout(() => {
+  //     setIsMenuOpen(false);
+  //   }, 100);
+  // };
+
+  const handleMenuItemClick = (category: string) => {
+    setSelectedMenu(category);
     setTimeout(() => {
       setIsMenuOpen(false);
     }, 100);
   };
 
-  //공지 숨긴 리스트 API
-
-  //로그아웃 API
-
-  //회원탈퇴
+  // 로그아웃, 회원탈퇴 API 호출
   const handleQuitClick = () => {
     console.log('회원탈퇴 완료');
-    //탈퇴 API
+    // 탈퇴 API 호출 로직
     closeModal();
   };
 
@@ -70,10 +61,11 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
         </Styled.Logo>
 
         <Styled.LogoutBox>
-          <div>김선규 님</div>
+          <div style={{ display: 'flex', gap: '3px' }}>
+            <div style={{ color: '#325366' }}>김선규</div> 님
+          </div>
           <div
-            //로그아웃
-            //  onClick={() => ()}
+            // 로그아웃
             style={{ cursor: 'pointer' }}>
             Logout
           </div>
@@ -99,41 +91,16 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
               </div>
             </Styled.QuitBtn>
           </Styled.UserInfo>
-          <Styled.MenuItem>
-            <Styled.MenuItemBtn
-              isSelected={selectedMenu === '자유게시판'}
-              onClick={() => handleMenuItemClick('자유게시판')}>
-              자유게시판
-            </Styled.MenuItemBtn>
-          </Styled.MenuItem>
-          <Styled.MenuItem>
-            <Styled.MenuItemBtn
-              isSelected={selectedMenu === '공지'}
-              onClick={() => handleMenuItemClick('공지')}>
-              공지
-            </Styled.MenuItemBtn>
-          </Styled.MenuItem>
-          <Styled.MenuItem>
-            <Styled.MenuItemBtn
-              isSelected={selectedMenu === '등업'}
-              onClick={() => handleMenuItemClick('등업')}>
-              등업
-            </Styled.MenuItemBtn>
-          </Styled.MenuItem>
-          <Styled.MenuItem>
-            <Styled.MenuItemBtn
-              isSelected={selectedMenu === '취업'}
-              onClick={() => handleMenuItemClick('취업')}>
-              취업
-            </Styled.MenuItemBtn>
-          </Styled.MenuItem>
-          <Styled.MenuItem>
-            <Styled.MenuItemBtn
-              isSelected={selectedMenu === '스터디'}
-              onClick={() => handleMenuItemClick('스터디')}>
-              스터디
-            </Styled.MenuItemBtn>
-          </Styled.MenuItem>
+          {categories.map((category) => (
+            <Styled.MenuItem key={category}>
+              <Styled.MenuItemBtn
+                // isSelected={selectedCategory === category}
+                isSelected={selectedMenu === category}
+                onClick={() => handleMenuItemClick(category)}>
+                {category}
+              </Styled.MenuItemBtn>
+            </Styled.MenuItem>
+          ))}
         </Styled.Menu>
       )}
       {/* 모달 */}
