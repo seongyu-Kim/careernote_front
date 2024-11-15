@@ -4,16 +4,19 @@ import DefaultButton from '@common/DefaultButton/DefaultButton';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
-import { useFindPasswordModal } from '@stores/store';
-import FindPassword from '@components/Modal/FindPassword';
+import { useModal } from '@stores/store';
+import authApi from '@apis/authApi/authApi';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inpuFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen } = useFindPasswordModal();
+  const { isOpen, setIsOpen, setModalState, modalState } = useModal();
   const navigate = useNavigate();
+  const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
+
+  const TEMP_LOGIN_API = '/api/users/signin';
 
   useEffect(() => {
     if (inputId.length > 0 && inputPassword.length > 0) {
@@ -33,13 +36,32 @@ const LoginPage = () => {
     }
   };
 
+  const handleSubmitLogin = async () => {
+    const resData = {
+      email: inputId,
+      password: inputPassword,
+    };
+    try {
+      const res = await authApi.post(TEMP_LOGIN_API, resData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        //여기에서 유저 정보 저장해주고 로컬스토리지 사용하기
+      });
+      if (res.status === 200) {
+        navigate(MAIN_PAGE_URL);
+      }
+    } catch (error) {
+      console.error('로그인 오류', error);
+    }
+  };
   return (
     <Styled.LoginPageBackground>
       <Styled.LoginContainer>
         <Styled.LoginField>
           <Styled.MainLogo src={logo} alt="로고이미지" />
           <Styled.LoginText>Login</Styled.LoginText>
-          <Styled.LoginForm>
+          <Styled.LoginForm onSubmit={handleSubmitLogin}>
             <Styled.InputBoxContainer>
               <Styled.LoginInput
                 onChange={handleInputChange('id')}
@@ -55,11 +77,11 @@ const LoginPage = () => {
             <Styled.FindPasswordBox>
               <span
                 onClick={() => {
+                  setModalState('findPassword');
                   setIsOpen(isOpen);
                 }}>
                 비밀번호 찾기
               </span>
-              {isOpen && <FindPassword />}
             </Styled.FindPasswordBox>
             <Styled.LoginButtonBox>
               <DefaultButton

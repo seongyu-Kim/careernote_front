@@ -5,22 +5,44 @@ import authApi from '@apis/authApi/authApi';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE_LINK } from '@routes/routes';
 import { IoAlertCircleOutline } from 'react-icons/io5';
+import { FaRegCheckCircle } from 'react-icons/fa';
 import React, { useEffect, useState } from 'react';
 
 const ResetPasswordPage = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputConfirmPassword, setInputConfirmPassword] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
+  const [passwordCheck, setPasswordCheck] = useState<string>(''); // 패스워드 유효성 체크 메시지
+  const [confirmPasswordCheck, setConfirmPasswordCheck] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
-  const RESET_PASSWORD = '/api/reset-password';
+
+  const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
+  const TEMP_RESET_PASSWORD = '/api/users';
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 
   useEffect(() => {
-    if (inputPassword.length > 0 && inputConfirmPassword.length > 0) {
+    const passwordMatching = inputPassword === inputConfirmPassword;
+    const passwordValid = inputPassword.length >= 8 && passwordRegEx.test(inputPassword);
+    const confirmPasswordValid =
+      inputConfirmPassword.length >= 8 && passwordRegEx.test(inputConfirmPassword);
+
+    if (passwordMatching && passwordValid && confirmPasswordValid) {
       setInputFieldChecked(false);
     } else {
       setInputFieldChecked(true);
+    }
+    //비밀번호 유효성 검사
+    if (inputPassword.length > 0 && !passwordRegEx.test(inputPassword)) {
+      setPasswordCheck('비밀번호는 8~20자여야 합니다.');
+    } else {
+      setPasswordCheck('');
+    }
+    //비밀번호 확인 유효성 검사
+    if (inputConfirmPassword.length > 0 && !passwordRegEx.test(inputConfirmPassword)) {
+      setConfirmPasswordCheck('비밀번호는 8~20자여야 합니다.');
+    } else {
+      setConfirmPasswordCheck('');
     }
 
     if (inputPassword === inputConfirmPassword) {
@@ -41,8 +63,17 @@ const ResetPasswordPage = () => {
   };
 
   const handleSubmitResetPassword = async () => {
+    alert('실행!');
+    const resData = {
+      password: inputPassword,
+      // token: 토큰 가져와서 넣어주기
+    };
     try {
-      const res = await authApi.post(RESET_PASSWORD);
+      const res = await authApi.post(TEMP_RESET_PASSWORD, resData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (res.status === 200) {
         navigate(LOGIN_PAGE_URL);
@@ -60,23 +91,47 @@ const ResetPasswordPage = () => {
           <Styled.ResetPasswordText>비밀번호 재설정</Styled.ResetPasswordText>
           <Styled.ResetPasswordForm onSubmit={handleSubmitResetPassword}>
             <Styled.InputBoxContainer>
-              <Styled.ResetPasswordInput
-                type="password"
-                onChange={handleInputChange('password')}
-                placeholder="새 비밀번호"
-              />
-              <Styled.ResetPasswordInput
-                type="password"
-                onChange={handleInputChange('confirmPassword')}
-                placeholder="새 비밀번호 확인"
-              />
+              <Styled.InputWrapper>
+                <Styled.ResetPasswordInput
+                  type="password"
+                  onChange={handleInputChange('password')}
+                  placeholder="새 비밀번호"
+                />
+                {passwordRegEx.test(inputPassword) && <FaRegCheckCircle className="checkIcon" />}
+              </Styled.InputWrapper>
+              <Styled.Divider>
+                {passwordCheck && (
+                  <Styled.InputFiledErrorMessage>
+                    <IoAlertCircleOutline />
+                    {passwordCheck}
+                  </Styled.InputFiledErrorMessage>
+                )}
+              </Styled.Divider>
+              <Styled.InputWrapper>
+                <Styled.ResetPasswordInput
+                  type="password"
+                  onChange={handleInputChange('confirmPassword')}
+                  placeholder="새 비밀번호 확인"
+                />
+                {passwordRegEx.test(inputConfirmPassword) && (
+                  <FaRegCheckCircle className="checkIcon" />
+                )}
+              </Styled.InputWrapper>
+              <Styled.Divider>
+                {confirmPasswordCheck && (
+                  <Styled.InputFiledErrorMessage>
+                    <IoAlertCircleOutline />
+                    {confirmPasswordCheck}
+                  </Styled.InputFiledErrorMessage>
+                )}
+              </Styled.Divider>
             </Styled.InputBoxContainer>
             <Styled.Divider>
               {errorMsg == '' ? null : (
-                <Styled.ErrorMessage>
+                <Styled.PasswordErrorMessage>
                   <IoAlertCircleOutline />
                   {errorMsg}
-                </Styled.ErrorMessage>
+                </Styled.PasswordErrorMessage>
               )}
             </Styled.Divider>
             <Styled.ResetPasswordButtonBox>
