@@ -5,11 +5,11 @@ import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 interface ModalProps {
   isOpen: boolean;
   message: string;
-  onDelete: () => void;
+  onConfirm: () => void;
   onCancel: () => void;
 }
 
-const Alert: React.FC<ModalProps> = ({ isOpen, message, onDelete, onCancel }) => {
+const Alert: React.FC<ModalProps> = ({ isOpen, message, onConfirm, onCancel }) => {
   // 모달 오픈 시 배경 스크롤 막기
   const scrollbarWidth = window.innerWidth - document.body.offsetWidth;
   if (isOpen) {
@@ -28,7 +28,7 @@ const Alert: React.FC<ModalProps> = ({ isOpen, message, onDelete, onCancel }) =>
             backgroundColor="#E25151"
             width="70px"
             border="none"
-            onClick={onDelete}
+            onClick={onConfirm}
             textColor="white">
             네
           </DefaultButton>

@@ -102,7 +102,7 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
         </Styled.Menu>
       )}
       {/* 모달 */}
-      <Alert isOpen={isOpen} message={message} onDelete={handleQuitClick} onCancel={handleCancel} />
+      <Alert isOpen={isOpen} message={message} onConfirm={handleQuitClick} onCancel={handleCancel} />
     </>
   );
 };

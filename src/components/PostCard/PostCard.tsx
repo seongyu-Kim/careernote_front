@@ -106,7 +106,7 @@ const PostCard: React.FC<PostCardProps> = ({
       )}
 
       {/* 모달 컴포넌트 사용 */}
-      <Alert isOpen={isOpen} message={message} onDelete={handleDelete} onCancel={handleCancel} />
+      <Alert isOpen={isOpen} message={message} onConfirm={handleDelete} onCancel={handleCancel} />
     </Styled.Container>
   );
 };
