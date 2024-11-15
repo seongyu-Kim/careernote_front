@@ -25,7 +25,7 @@ const MyPostList: React.FC<PostListProps> = ({ posts, width = '75rem', isAdmin, 
         </div>
         <Styled.PostHeader>
           <Styled.Category>카테고리</Styled.Category>
-          <Styled.Title>제목</Styled.Title>
+          <Styled.Title noPointer>제목</Styled.Title>
           <Styled.Author>작성자</Styled.Author>
           <Styled.Date>작성일</Styled.Date>
           {/* 관리자일 경우만 삭제 버튼 보이기 */}

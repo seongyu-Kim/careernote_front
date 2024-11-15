@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PostListContainer = styled.div<{ width: string }>`
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width || '75rem'}; 
+  width: ${(props) => props.width || '75rem'};
 `;
 
 export const LogoImg = styled.img`
@@ -29,9 +29,14 @@ export const Category = styled.div`
   margin-top: 3px;
 `;
 
-export const Title = styled.div`
+export const Title = styled.div<{ noPointer?: boolean }>`
   flex: 3;
   margin-top: 3px;
+  cursor: ${(props) => (props.noPointer ? 'default' : 'pointer')};
+
+  &:hover {
+    text-decoration: ${(props) => (props.noPointer ? 'none' : 'underline')};
+  }
 `;
 
 export const Author = styled.div`
@@ -45,15 +50,15 @@ export const Date = styled.div`
 `;
 
 export const Delete = styled.div`
-  flex: .5;
+  flex: 0.5;
   margin-top: 3px;
 `;
 
 export const DeleteBtn = styled.div`
-  flex: .5;
+  flex: 0.5;
   margin-top: 3px;
-  color: #E25151;
-  border: 1px solid #E25151;
+  color: #e25151;
+  border: 1px solid #e25151;
   border-radius: 5px;
   padding: 5px 0;
 `;

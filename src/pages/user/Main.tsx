@@ -5,8 +5,19 @@ import landing from '@assets/landing.png';
 import * as Styled from '../../components/PostList/PostList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import { useState } from 'react';
+import useCategoryStore from '@stores/useCategoryStore';
 
-const dummyPosts = [
+interface Post {
+  id: number;
+  category: string;
+  title: string;
+  author: string;
+  date: string;
+}
+
+// const dummyPosts: Post[] = [];
+
+const dummyPosts: Post[] = [
   {
     id: 1,
     category: '자유게시판',
@@ -261,7 +272,7 @@ const dummyPosts = [
   },
   {
     id: 37,
-    category: '공지',
+    category: '등업',
     title: '두 번째 게시글',
     author: '박주호',
     date: '2024-11-12',
@@ -327,11 +338,20 @@ const dummyPosts = [
 const Main: React.FC = () => {
   const savedPage = sessionStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
-  const [posts, setPosts] = useState(dummyPosts);
-
+  const [posts, setPosts] = useState<Post[]>(dummyPosts);
+  const { selectedCategory } = useCategoryStore();
   const postsPerPage = 20;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
+
+  // const filteredPosts =
+  //   selectedCategory === '자유게시판'
+  //     ? posts
+  //     : posts.filter((post) => post.category === selectedCategory);
+
+  // const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  // const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
