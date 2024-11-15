@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as Styled from './PostList.styled';
 import landing from '@assets/landing.png';
 import { LuPencilLine } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
 
 interface Post {
   id: number;
@@ -16,6 +17,8 @@ interface PostListProps {
 }
 
 const PostList: React.FC<PostListProps> = ({ posts }) => {
+  const navigate = useNavigate();
+
   const [isChecked, setChecked] = useState<boolean>(false);
 
   const handleCheckboxChange = () => {
@@ -26,7 +29,7 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
     <>
       <Styled.PostListContainer>
         <Styled.ButtonBox>
-          <Styled.WriteButton>
+          <Styled.WriteButton onClick={() => navigate('/write')}>
             <LuPencilLine />
             글쓰기
           </Styled.WriteButton>
