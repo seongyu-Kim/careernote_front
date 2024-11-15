@@ -103,7 +103,7 @@ export const Divider = styled.div`
 `;
 
 export const ErrorMessage = styled.p`
-  color: red;
+  color: #e25151;
   font-size: 14px;
   position: absolute;
   width: 100%;
