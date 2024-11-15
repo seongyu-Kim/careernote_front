@@ -1,8 +1,12 @@
+import MainLayout from '@components/MainLayout/MainLayout'
+import WritePostPage from '@components/WritePostPage/WritePostPage'
 import React from 'react'
 
 const AdminWritePost = () => {
   return (
-    <div>AdminWritePost</div>
+    <MainLayout>
+      <WritePostPage />
+    </MainLayout>
   )
 }
 

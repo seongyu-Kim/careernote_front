@@ -7,6 +7,13 @@ export const Container = styled.div`
   border-radius: 8px;
 `;
 
+export const AdminNotice = styled.h2`
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+`;
+
 export const FormFieldGroup = styled.div`
   display: flex;
   margin-bottom: 40px;
