@@ -36,12 +36,6 @@ export const LogoutBox = styled.div`
   gap: 10px;
 `;
 
-// export const Button = styled.div`
-//   color: white;
-//   font-weight: 600;
-//   cursor: pointer;
-// `;
-
 //사이드바
 const slideIn = keyframes`
   from {
