@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import * as Styled from './PostList.styled';
-import landing from '@assets/landing.png';
 import { LuPencilLine } from 'react-icons/lu';
 
 interface Post {
@@ -13,9 +12,12 @@ interface Post {
 
 interface PostListProps {
   posts: Post[];
+  width?: string;  // width prop 추가 
+  isAdmin?: boolean; // 관리자페이지일 경우 목록에 삭제버튼 추가하기 위함
+  onDelete?: (id: number) => void;
 }
 
-const PostList: React.FC<PostListProps> = ({ posts }) => {
+const PostList: React.FC<PostListProps> = ({ posts, width = '75rem', isAdmin, onDelete }) => {
   const [isChecked, setChecked] = useState<boolean>(false);
 
   const handleCheckboxChange = () => {
@@ -24,7 +26,7 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
 
   return (
     <>
-      <Styled.PostListContainer>
+      <Styled.PostListContainer width={width}>
         <Styled.ButtonBox>
           <Styled.WriteButton>
             <LuPencilLine />
@@ -41,6 +43,8 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
           <Styled.Title>제목</Styled.Title>
           <Styled.Author>작성자</Styled.Author>
           <Styled.Date>작성일</Styled.Date>
+          {/* 관리자일 경우만 삭제 버튼 보이기 */}
+          {isAdmin && <Styled.Delete>관리</Styled.Delete>}
         </Styled.PostHeader>
 
         {posts.map((post) => (
@@ -49,6 +53,13 @@ const PostList: React.FC<PostListProps> = ({ posts }) => {
             <Styled.Title>{post.title}</Styled.Title>
             <Styled.Author>{post.author}</Styled.Author>
             <Styled.Date>{post.date}</Styled.Date>
+            {isAdmin && onDelete && (
+              <Styled.DeleteBtn
+                onClick={() => onDelete(post.id)} // onDelete가 정의되어 있을 때만 호출
+              >
+                삭제
+              </Styled.DeleteBtn>
+            )} {/* 관리자일 경우만 삭제 버튼 보이기 */}
           </Styled.PostItem>
         ))}
       </Styled.PostListContainer>
