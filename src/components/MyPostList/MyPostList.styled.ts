@@ -29,11 +29,15 @@ export const Category = styled.div`
   margin-top: 3px;
 `;
 
-export const Title = styled.div`
+export const Title = styled.div<{ noPointer?: boolean }>`
   flex: 3;
   margin-top: 3px;
-`;
+  cursor: ${(props) => (props.noPointer ? 'default' : 'pointer')};
 
+  &:hover {
+    text-decoration: ${(props) => (props.noPointer ? 'none' : 'underline')};
+  }
+`;
 export const Author = styled.div`
   flex: 1;
   margin-top: 3px;
