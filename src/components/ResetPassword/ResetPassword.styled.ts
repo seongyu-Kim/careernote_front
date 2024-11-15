@@ -60,6 +60,12 @@ export const InputBoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  .checkIcon {
+    display: flex;
+    color: green;
+    position: absolute;
+    right: 3%;
+  }
 `;
 
 export const ResetPasswordInput = styled.input`
@@ -73,17 +79,6 @@ export const ResetPasswordInput = styled.input`
   padding: 3%;
   &::placeholder {
     color: #79b0c8;
-  }
-`;
-
-export const FindPasswordBox = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  p {
-    color: #325366;
-    font-size: 14px;
-    cursor: pointer;
   }
 `;
 
@@ -102,7 +97,17 @@ export const Divider = styled.div`
   position: relative;
 `;
 
-export const ErrorMessage = styled.p`
+export const InputFiledErrorMessage = styled.p`
+  color: #e25151;
+  font-size: 14px;
+  position: absolute;
+  width: 100%;
+  bottom: 25%;
+  left: -7%;
+  display: flex;
+`;
+
+export const PasswordErrorMessage = styled.p`
   color: #e25151;
   font-size: 14px;
   position: absolute;
@@ -111,4 +116,11 @@ export const ErrorMessage = styled.p`
   bottom: 25%;
   display: flex;
   align-content: center;
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
 `;
