@@ -1,9 +1,12 @@
-import React from 'react'
+import AdminMainPage from '@components/AdminMainPage/AdminMainPage';
+import MainLayout from '@components/MainLayout/MainLayout';
 
 const AdminMain = () => {
   return (
-    <div>AdminMain</div>
-  )
+    <MainLayout>
+      <AdminMainPage />
+    </MainLayout>
+  );
 }
 
-export default AdminMain
+export default AdminMain;
