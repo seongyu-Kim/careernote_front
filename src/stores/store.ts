@@ -22,7 +22,7 @@ export const useAlertStore = create<AlertStore>((set) => ({
   closeModal: () => set({ isOpen: false, message: '' }),
 }));
 
-//모달 ON OFF
+//모달 ON OFF & 모달 상태 설정
 export const useModal = create<ModalState>((set) => ({
   isOpen: false,
   modalState: '',
