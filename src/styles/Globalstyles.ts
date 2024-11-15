@@ -1,12 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
-// import reset from 'styled-reset';
 
 const GlobalStyles = createGlobalStyle`
-    /* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
+    /* 기본 CSS 리셋 */
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
     a, abbr, acronym, address, big, cite, code,
@@ -49,6 +44,46 @@ const GlobalStyles = createGlobalStyle`
     table {
         border-collapse: collapse;
         border-spacing: 0;
+    }
+
+    /* 사용자 정의 스타일 */
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    * {
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    html {
+        height: 100%;
+    }
+    body {
+        height: 100%;
+        overflow-y: scroll;
+        line-height: 1;
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #ffffff;
+        margin-bottom: 100px;
+    }
+    html, body, div, span, h1, h2, h3, h4, h5, h6, p,
+    a, dl, dt, dd, ol, ul, li, form, label, table {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        vertical-align: baseline;
+    }
+    ol, ul {
+        list-style: none;
+    }
+    button {
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+    }
+    input:focus, textarea:focus, select:focus {
+        outline: none;
+        border: 1px solid #B3D5EB;
     }
 `;
 
