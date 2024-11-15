@@ -18,7 +18,7 @@ const ResetPasswordPage = () => {
   const navigate = useNavigate();
 
   const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
-  const RESET_PASSWORD = '/api/reset-password';
+  const TEMP_RESET_PASSWORD = '/api/users';
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 
   useEffect(() => {
@@ -64,8 +64,16 @@ const ResetPasswordPage = () => {
 
   const handleSubmitResetPassword = async () => {
     alert('실행!');
+    const resData = {
+      password: inputPassword,
+      // token: 토큰 가져와서 넣어주기
+    };
     try {
-      const res = await authApi.post(RESET_PASSWORD);
+      const res = await authApi.post(TEMP_RESET_PASSWORD, resData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (res.status === 200) {
         navigate(LOGIN_PAGE_URL);

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { useModal } from '@stores/store';
+import authApi from '@apis/authApi/authApi';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
@@ -14,6 +15,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
+
+  const TEMP_LOGIN_API = '/api/users/signin';
 
   useEffect(() => {
     if (inputId.length > 0 && inputPassword.length > 0) {
@@ -34,8 +37,23 @@ const LoginPage = () => {
   };
 
   const handleSubmitLogin = async () => {
-    alert('실행!');
-    navigate(MAIN_PAGE_URL);
+    const resData = {
+      email: inputId,
+      password: inputPassword,
+    };
+    try {
+      const res = await authApi.post(TEMP_LOGIN_API, resData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        //여기에서 유저 정보 저장해주고 로컬스토리지 사용하기
+      });
+      if (res.status === 200) {
+        navigate(MAIN_PAGE_URL);
+      }
+    } catch (error) {
+      console.error('로그인 오류', error);
+    }
   };
   return (
     <Styled.LoginPageBackground>
@@ -56,7 +74,6 @@ const LoginPage = () => {
                 placeholder="비밀번호를 입력하세요."
               />
             </Styled.InputBoxContainer>
-            <button onClick={() => console.log(isOpen, modalState)}>확인</button>
             <Styled.FindPasswordBox>
               <span
                 onClick={() => {

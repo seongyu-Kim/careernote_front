@@ -30,7 +30,7 @@ const RegisterPage = () => {
 
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
   //아래 추후 분리해서 한곳에서 관리하게 API 관련 주소
-  const REGISTER_API = '/api/signUp';
+  const TEMP_REGISTER_API = '/api/signUp';
 
   useEffect(() => {
     const passwordMatching = inputPassword === inputConfirmPassword;
@@ -107,6 +107,7 @@ const RegisterPage = () => {
     ) {
       event.preventDefault();
       setErrorMsg('모든 필드를 채워주세요');
+      console.log(11);
       return;
     }
 
@@ -121,13 +122,62 @@ const RegisterPage = () => {
       password: inputPassword,
       nickname: inputNickname,
     };
-    try {
-      const res = await authApi.post(REGISTER_API, resData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
 
+    try {
+      const res = await authApi.post(
+        'http://kdt-react-1-team01.elicecoding.com:3002/api/user//signUp',
+        resData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('응답결과', res);
+      if (res.status === 200) {
+        navigate(LOGIN_PAGE_URL);
+      }
+    } catch (error) {
+      console.error('회원가입 오류', error);
+    }
+  };
+
+  const test = async () => {
+    //모든 필드가 채워져있는지 확인
+    console.log('테스트 요청 실행');
+    if (
+      inputNickname === '' ||
+      inputEmail === '' ||
+      inputPassword === '' ||
+      inputConfirmPassword === ''
+    ) {
+      setErrorMsg('모든 필드를 채워주세요');
+      console.log(11);
+      return;
+    }
+
+    if (!passwordConfirmStatus) {
+      setErrorMsg('비밀번호가 일치하지 않습니다.');
+      console.log(11);
+      return;
+    }
+
+    const resData = {
+      email: inputEmail,
+      password: inputPassword,
+      nickname: inputNickname,
+    };
+    try {
+      const res = await authApi.post(
+        'http://kdt-react-1-team01.elicecoding.com:3002/api/user/signUp',
+        resData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('응답결과', res);
       if (res.status === 200) {
         navigate(LOGIN_PAGE_URL);
       }
@@ -141,6 +191,9 @@ const RegisterPage = () => {
       <Styled.RegisterContainer>
         <Styled.RegisterField>
           <Styled.MainLogo src={logo} alt="로고이미지" />
+          <button type="button" onClick={() => test()}>
+            회원가입 확인하기
+          </button>
           <Styled.RegisterText>Sign Up</Styled.RegisterText>
           <Styled.RegisterForm onSubmit={handleSubmitUserData}>
             <Styled.InputBoxContainer>
