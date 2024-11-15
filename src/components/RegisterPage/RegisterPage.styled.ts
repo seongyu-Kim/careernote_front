@@ -28,7 +28,7 @@ export const RegisterField = styled.div`
   justify-content: center;
   gap: 5%;
   border-radius: 9px;
-  padding: 10px 0 0 10px;
+  padding: 10px 0 10px 0;
   box-shadow:
     2px 2px 11px 5px rgba(208, 208, 208, 0.3),
     -2px -2px 11px 2px rgba(208, 208, 208, 0.3),
@@ -91,7 +91,7 @@ export const Divider = styled.div`
 `;
 
 export const ErrorMessage = styled.p`
-  color: red;
+  color: #e25151;
   font-size: 14px;
   position: absolute;
   width: 100%;
