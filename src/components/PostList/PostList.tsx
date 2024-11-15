@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as Styled from './PostList.styled';
 import { LuPencilLine } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
 
 interface Post {
   id: number;
@@ -23,12 +24,12 @@ const PostList: React.FC<PostListProps> = ({ posts, width = '75rem', isAdmin, on
   const handleCheckboxChange = () => {
     setChecked((prev) => !prev);
   };
-
+  const navigate = useNavigate();
   return (
     <>
       <Styled.PostListContainer width={width}>
         <Styled.ButtonBox>
-          <Styled.WriteButton>
+          <Styled.WriteButton onClick={() => navigate('/write')}>
             <LuPencilLine />
             글쓰기
           </Styled.WriteButton>
