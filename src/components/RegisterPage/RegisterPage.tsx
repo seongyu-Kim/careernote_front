@@ -2,6 +2,7 @@ import * as Styled from './RegisterPage.styled';
 import logo from '@assets/icon.png';
 import DefaultButton from '@common/DefaultButton/DefaultButton';
 import { IoAlertCircleOutline } from 'react-icons/io5';
+import { FaRegCheckCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import authApi from '@apis/authApi/authApi';
@@ -32,12 +33,14 @@ const RegisterPage = () => {
   const REGISTER_API = '/api/signUp';
 
   useEffect(() => {
-    if (
-      inputNickname.length > 0 &&
-      inputEmail.length > 0 &&
-      inputPassword.length >= 8 &&
-      inputConfirmPassword.length > 8
-    ) {
+    const passwordMatching = inputPassword === inputConfirmPassword;
+    const nicknameValid = inputNickname.length > 0 && nicknameRegEx.test(inputNickname);
+    const emailValid = inputEmail.length > 0 && emailRegEx.test(inputEmail);
+    const passwordValid = inputPassword.length >= 8 && passwordRegEx.test(inputPassword);
+    const confirmPasswordValid =
+      inputConfirmPassword.length >= 8 && passwordRegEx.test(inputConfirmPassword);
+
+    if (passwordMatching && nicknameValid && emailValid && passwordValid && confirmPasswordValid) {
       setInputFieldChecked(false);
     } else {
       setInputFieldChecked(true);
@@ -61,7 +64,7 @@ const RegisterPage = () => {
       setPasswordCheck('');
     }
     //비밀번호 확인 유효성 검사
-    if (inputPassword.length > 0 && !passwordRegEx.test(inputConfirmPassword)) {
+    if (inputConfirmPassword.length > 0 && !passwordRegEx.test(inputConfirmPassword)) {
       setConfirmPasswordCheck('비밀번호는 8~20자여야 합니다.');
     } else {
       setConfirmPasswordCheck('');
@@ -141,33 +144,79 @@ const RegisterPage = () => {
           <Styled.RegisterText>Sign Up</Styled.RegisterText>
           <Styled.RegisterForm onSubmit={handleSubmitUserData}>
             <Styled.InputBoxContainer>
-              <Styled.RegisterInput
-                onChange={handleInputChange('nickName')}
-                type="text"
-                placeholder="닉네임"
-              />
-              <Styled.RegisterInput
-                onChange={handleInputChange('email')}
-                type="text"
-                placeholder="이메일"
-              />
-              <Styled.RegisterInput
-                onChange={handleInputChange('password')}
-                type="password"
-                placeholder="비밀번호"
-              />
-              <Styled.RegisterInput
-                onChange={handleInputChange('confirmPassword')}
-                type="password"
-                placeholder="비밀번호 확인"
-              />
+              <Styled.InputWrapper>
+                <Styled.RegisterInput
+                  onChange={handleInputChange('nickName')}
+                  type="text"
+                  placeholder="닉네임"
+                />
+                {nicknameRegEx.test(inputNickname) && <FaRegCheckCircle className="checkIcon" />}
+              </Styled.InputWrapper>
+              <Styled.Divider>
+                {nicknameCheck && (
+                  <Styled.InputFiledErrorMessage>
+                    <IoAlertCircleOutline />
+                    {nicknameCheck}
+                  </Styled.InputFiledErrorMessage>
+                )}
+              </Styled.Divider>
+              <Styled.InputWrapper>
+                <Styled.RegisterInput
+                  onChange={handleInputChange('email')}
+                  type="text"
+                  placeholder="이메일"
+                />
+                {emailRegEx.test(inputEmail) && <FaRegCheckCircle className="checkIcon" />}
+              </Styled.InputWrapper>
+              <Styled.Divider>
+                {emailCheck && (
+                  <Styled.InputFiledErrorMessage>
+                    <IoAlertCircleOutline />
+                    {emailCheck}
+                  </Styled.InputFiledErrorMessage>
+                )}
+              </Styled.Divider>
+              <Styled.InputWrapper>
+                <Styled.RegisterInput
+                  onChange={handleInputChange('password')}
+                  type="password"
+                  placeholder="비밀번호"
+                />
+                {passwordRegEx.test(inputPassword) && <FaRegCheckCircle className="checkIcon" />}
+              </Styled.InputWrapper>
+              <Styled.Divider>
+                {passwordCheck && (
+                  <Styled.InputFiledErrorMessage>
+                    <IoAlertCircleOutline />
+                    {passwordCheck}
+                  </Styled.InputFiledErrorMessage>
+                )}
+              </Styled.Divider>
+              <Styled.InputWrapper>
+                <Styled.RegisterInput
+                  onChange={handleInputChange('confirmPassword')}
+                  type="password"
+                  placeholder="비밀번호 확인"
+                />
+                {passwordRegEx.test(inputConfirmPassword) && (
+                  <FaRegCheckCircle className="checkIcon" />
+                )}
+              </Styled.InputWrapper>
+              <Styled.Divider>
+                {confirmPasswordCheck && (
+                  <Styled.InputFiledErrorMessage>
+                    <IoAlertCircleOutline />
+                    {confirmPasswordCheck}
+                  </Styled.InputFiledErrorMessage>
+                )}
+              </Styled.Divider>
             </Styled.InputBoxContainer>
             <Styled.Divider>
               {errorMsg && (
-                <Styled.ErrorMessage>
+                <Styled.PasswordErrorMessage>
                   <IoAlertCircleOutline />
                   {errorMsg}
-                </Styled.ErrorMessage>
+                </Styled.PasswordErrorMessage>
               )}
             </Styled.Divider>
             <Styled.RegisterButtonBox>

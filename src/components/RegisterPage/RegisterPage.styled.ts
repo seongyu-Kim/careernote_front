@@ -15,7 +15,7 @@ export const RegisterContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 60%;
+  height: 80%;
   background-color: white;
 `;
 
@@ -58,7 +58,12 @@ export const InputBoxContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  .checkIcon {
+    display: flex;
+    color: green;
+    position: absolute;
+    right: 3%;
+  }
 `;
 
 export const RegisterInput = styled.input`
@@ -81,7 +86,7 @@ export const RegisterButtonBox = styled.div`
   justify-content: center;
   gap: 9%;
   width: 100%;
-  margin: 5% 0 10% 0;
+  margin: 0 0 10% 0;
 `;
 
 export const Divider = styled.div`
@@ -90,13 +95,30 @@ export const Divider = styled.div`
   position: relative;
 `;
 
-export const ErrorMessage = styled.p`
+export const InputFiledErrorMessage = styled.p`
+  color: #e25151;
+  font-size: 14px;
+  position: absolute;
+  width: 100%;
+  bottom: 25%;
+  left: -7%;
+  display: flex;
+`;
+
+export const PasswordErrorMessage = styled.p`
   color: #e25151;
   font-size: 14px;
   position: absolute;
   width: 100%;
   left: 20%;
-  bottom: 25%;
+  bottom: 20px;
   display: flex;
   align-content: center;
+`;
+
+export const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
 `;
