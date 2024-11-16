@@ -48,7 +48,7 @@ const AdminMain = () => {
   const totalPages = Math.ceil(posts.length / postsPerPage);
 
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
-  const { isOpen, message, openModal, closeModal } = useAlertStore();
+  const { openAlert, closeAlert } = useAlertStore();
   const [users, setUsers] = useState<User[]>([
     { email: 'elice@naver.com', postCount: 0, level: '삐약이' },
     { email: 'aro123@naver.com', postCount: 12, level: '삐약이' },
@@ -71,24 +71,18 @@ const AdminMain = () => {
 
   // 게시글 삭제 Alert
   const handleDelete = (id: number) => {
-    openModal('삭제하시겠습니까?');
-    //setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(id));
   };
   // 삭제 여부 : "네" 버튼 클릭 시 호출되는 함수
-  const handleDeleteConfirm = () => {
-    console.log('게시글이 삭제되었습니다.');
+  const handleDeleteConfirm = (id: number) => {
+    alert(`게시글이 ${id}가 삭제되었습니다.`);
     //삭제 api 호출 부분 추가 예정
-    closeModal();
+    closeAlert();
   };
-  // 삭제 여부 : "아니요" 버튼 클릭 시 호출되는 함수
-  const handleCancel = () => {
-    console.log('모달 닫기', isOpen);
-    closeModal();
-  };
+
   // 사용자 탈퇴
   const handleUserDelete = (user: User) => {
-    setSelectedUser(user); // 삭제할 사용자 저장
-    openModal('탈퇴하시겠습니까?'); // 모달 열기
+    openAlert('탈퇴하시겠습니까?', handleUserDeleteConfirm); // 모달 열기
   };
   // 탈퇴 여부 : "네" 버튼 클릭 시 호출되는 함수
   const handleUserDeleteConfirm = async () => {
@@ -108,8 +102,7 @@ const AdminMain = () => {
       console.error('사용자 탈퇴 중 오류 발생:', error);
       alert('사용자 탈퇴에 실패했습니다.');
     } finally {
-      closeModal(); // 모달 닫기
-      setSelectedUser(null); // 선택된 사용자 초기화
+      closeAlert(); // 모달 닫기
     }
   };
 
@@ -123,7 +116,7 @@ const AdminMain = () => {
 
     try {
       // API 요청
-      // await axios.patch(`/api/users/${user.email}`, { level: newLevel });
+      // await axios.put(`/api/users/${user.email}`, { level: newLevel });
 
       setUsers(prevUsers =>
         prevUsers.map(u =>
@@ -132,7 +125,7 @@ const AdminMain = () => {
       );
     } catch (error) {
       console.error('사용자 레벨 변경 실패:', error);
-      openModal('사용자 레벨 변경에 실패했습니다.');
+      alert('사용자 레벨 변경에 실패했습니다.');
     }
   };
   // '삐약이 회원'과 '꼬꼬닭 회원'으로 유저를 그룹화
@@ -160,7 +153,6 @@ const AdminMain = () => {
                 onDelete={handleUserDelete}
               />
             </Styled.UserSectionGroup>
-            <Alert isOpen={isOpen} message={message} onConfirm={handleUserDeleteConfirm} onCancel={handleCancel} />
           </Styled.UserManagement>
         </DndProvider>
         <Styled.PostManagement>
@@ -184,7 +176,6 @@ const AdminMain = () => {
           </Styled.PostListContainer>
         </Styled.PostManagement>
       </Styled.Container>
-      <Alert isOpen={isOpen} message={message} onConfirm={handleDeleteConfirm} onCancel={handleCancel} />
     </MainLayout>
   );
 };

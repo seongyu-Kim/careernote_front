@@ -3,16 +3,11 @@ import * as Styled from './Navbar.styled';
 import logo_w from '@assets/logo_w.png';
 import Alert from '@components/common/Alert/Alert';
 import { useNavigate } from 'react-router-dom';
+import { useAlertStore } from '@stores/store';
 // import useCategoryStore from '@stores/useCategoryStore';
 
-interface NavProps {
-  isOpen: boolean;
-  message: string;
-  openModal: (message: string) => void;
-  closeModal: () => void;
-}
-
-const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) => {
+const Navbar: React.FC = () => {
+  const { openAlert, closeAlert } = useAlertStore();
   const navigate = useNavigate();
   // const { selectedCategory, setSelectedCategory } = useCategoryStore();
   const categories = ['자유게시판', '공지', '등업', '취업', '스터디'];
@@ -42,14 +37,8 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
   const handleQuitClick = () => {
     console.log('회원탈퇴 완료');
     // 탈퇴 API 호출 로직
-    closeModal();
+    closeAlert();
   };
-
-  const handleCancel = () => {
-    closeModal();
-    console.log('모달 닫기', isOpen);
-  };
-
   return (
     <>
       {/* 네비게이션바 */}
@@ -86,7 +75,7 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
               <div>12</div>
             </div>
             <Styled.QuitBtn>
-              <div onClick={() => openModal('탈퇴 하시겠습니까?')}>회원탈퇴</div>
+              <div onClick={() => openAlert('탈퇴 하시겠습니까?', handleQuitClick)}>회원탈퇴</div>
             </Styled.QuitBtn>
           </Styled.UserInfo>
           {categories.map((category) => (
@@ -101,8 +90,6 @@ const Navbar: React.FC<NavProps> = ({ isOpen, message, openModal, closeModal }) 
           ))}
         </Styled.Menu>
       )}
-      {/* 모달 */}
-      <Alert isOpen={isOpen} message={message} onConfirm={handleQuitClick} onCancel={handleCancel} />
     </>
   );
 };
