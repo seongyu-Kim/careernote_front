@@ -89,6 +89,7 @@ export const ResetPasswordButtonBox = styled.div`
   width: 100%;
   height: 20%;
   margin-top: 10%;
+  margin-bottom: 8%;
 `;
 
 export const Divider = styled.div`

@@ -7,6 +7,7 @@ import { ROUTE_LINK } from '@routes/routes';
 import { useModal } from '@stores/store';
 import authApi from '@apis/authApi/authApi';
 import { USER_API } from '@routes/apiRoutes';
+import DefaultInput from '@components/common/DefaultInput/DefaultInput';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
@@ -64,15 +65,29 @@ const LoginPage = () => {
           <Styled.LoginText>Login</Styled.LoginText>
           <Styled.LoginForm onSubmit={handleSubmitLogin}>
             <Styled.InputBoxContainer>
-              <Styled.LoginInput
+              <DefaultInput
                 onChange={handleInputChange('id')}
                 type="text"
                 placeholder="아이디를 입력하세요."
+                width="100%"
+                height="40px"
+                border="1px solid #b3d5eb"
+                backgroundColor="#f0f7fb"
+                caretColor="#79b0c8"
+                padding="3%"
+                placeholderColor="#79b0c8"
               />
-              <Styled.LoginInput
+              <DefaultInput
                 onChange={handleInputChange('password')}
                 type="password"
                 placeholder="비밀번호를 입력하세요."
+                width="100%"
+                height="40px"
+                border="1px solid #b3d5eb"
+                backgroundColor="#f0f7fb"
+                caretColor="#79b0c8"
+                padding="3%"
+                placeholderColor="#79b0c8"
               />
             </Styled.InputBoxContainer>
             <Styled.FindPasswordBox>
