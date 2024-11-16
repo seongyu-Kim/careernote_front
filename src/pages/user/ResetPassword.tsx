@@ -5,15 +5,15 @@ import authApi from '@apis/authApi/authApi';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE_LINK } from '@routes/routes';
 import { IoAlertCircleOutline } from 'react-icons/io5';
-import { FaRegCheckCircle } from 'react-icons/fa';
 import React, { useEffect, useState } from 'react';
+import InputValid from '@components/InputValid/InputValid';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputConfirmPassword, setInputConfirmPassword] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const [passwordCheck, setPasswordCheck] = useState<string>(''); // 패스워드 유효성 체크 메시지
-  const [confirmPasswordCheck, setConfirmPasswordCheck] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
+  const [passwordCheckMessage, setPasswordCheckMessage] = useState<string>(''); // 패스워드 유효성 체크 메시지
+  const [confirmPasswordCheckMessage, setConfirmPasswordCheckMessage] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
@@ -34,15 +34,15 @@ const ResetPassword = () => {
     }
     //비밀번호 유효성 검사
     if (inputPassword.length > 0 && !passwordRegEx.test(inputPassword)) {
-      setPasswordCheck('비밀번호는 8~20자여야 합니다.');
+      setPasswordCheckMessage('비밀번호는 8~20자여야 합니다.');
     } else {
-      setPasswordCheck('');
+      setPasswordCheckMessage('');
     }
     //비밀번호 확인 유효성 검사
     if (inputConfirmPassword.length > 0 && !passwordRegEx.test(inputConfirmPassword)) {
-      setConfirmPasswordCheck('비밀번호는 8~20자여야 합니다.');
+      setConfirmPasswordCheckMessage('비밀번호는 8~20자여야 합니다.');
     } else {
-      setConfirmPasswordCheck('');
+      setConfirmPasswordCheckMessage('');
     }
 
     if (inputPassword === inputConfirmPassword) {
@@ -51,16 +51,6 @@ const ResetPassword = () => {
       setErrorMsg('비밀번호가 일치하지 않습니다.');
     }
   }, [inputPassword, inputConfirmPassword]);
-
-  const handleInputChange = (type: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (type === 'password') {
-      setInputPassword(value);
-    }
-    if (type === 'confirmPassword') {
-      setInputConfirmPassword(value);
-    }
-  };
 
   const handleSubmitResetPassword = async () => {
     alert('실행!');
@@ -90,42 +80,20 @@ const ResetPassword = () => {
           <Styled.MainLogo src={logo} />
           <Styled.ResetPasswordText>비밀번호 재설정</Styled.ResetPasswordText>
           <Styled.ResetPasswordForm onSubmit={handleSubmitResetPassword}>
-            <Styled.InputBoxContainer>
-              <Styled.InputWrapper>
-                <Styled.ResetPasswordInput
-                  type="password"
-                  onChange={handleInputChange('password')}
-                  placeholder="새 비밀번호"
-                />
-                {passwordRegEx.test(inputPassword) && <FaRegCheckCircle className="checkIcon" />}
-              </Styled.InputWrapper>
-              <Styled.Divider>
-                {passwordCheck && (
-                  <Styled.InputFiledErrorMessage>
-                    <IoAlertCircleOutline />
-                    {passwordCheck}
-                  </Styled.InputFiledErrorMessage>
-                )}
-              </Styled.Divider>
-              <Styled.InputWrapper>
-                <Styled.ResetPasswordInput
-                  type="password"
-                  onChange={handleInputChange('confirmPassword')}
-                  placeholder="새 비밀번호 확인"
-                />
-                {passwordRegEx.test(inputConfirmPassword) && (
-                  <FaRegCheckCircle className="checkIcon" />
-                )}
-              </Styled.InputWrapper>
-              <Styled.Divider>
-                {confirmPasswordCheck && (
-                  <Styled.InputFiledErrorMessage>
-                    <IoAlertCircleOutline />
-                    {confirmPasswordCheck}
-                  </Styled.InputFiledErrorMessage>
-                )}
-              </Styled.Divider>
-            </Styled.InputBoxContainer>
+            <InputValid
+              inputTagType="password"
+              placeholderText="새 비밀번호"
+              onChange={setInputPassword}
+              valid={passwordRegEx.test(inputPassword)}
+              checkMessage={passwordCheckMessage}
+            />
+            <InputValid
+              inputTagType="password"
+              placeholderText="새 비밀번호 확인"
+              onChange={setInputConfirmPassword}
+              valid={passwordRegEx.test(inputConfirmPassword)}
+              checkMessage={confirmPasswordCheckMessage}
+            />
             <Styled.Divider>
               {errorMsg == '' ? null : (
                 <Styled.PasswordErrorMessage>
