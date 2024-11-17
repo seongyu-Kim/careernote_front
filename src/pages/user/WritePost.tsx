@@ -3,11 +3,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as Styled from '@components/WritePost/WritePost.styled';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import MainLayout from '@components/MainLayout/MainLayout';
-type UserLevel = '관리자' | '삐약이' | '꼬꼬닭';
+import { UserLevel } from '@/type/user';
+import authApi from '@apis/authApi/authApi';
+import { BOARD_API } from '@routes/apiRoutes';
+const { CREATE_BOARD } = BOARD_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
 const WritePost = () => {
-  const [level, setLevel] = useState<UserLevel>('관리자'); // 스토어에서 사용자 등급 받아오기
+  const [level, setLevel] = useState<UserLevel>('삐약이'); // 스토어에서 사용자 등급 받아오기
   const { state } = useLocation(); // useLocation 훅을 사용하여 state 값 받기
   const [category, setCategory] = useState(state?.category || '');
   const [title, setTitle] = useState(state?.title || '');
@@ -31,10 +34,30 @@ const WritePost = () => {
       navigate('/posts'); // 관리자가 아니면 /posts로 이동
     }
   };
-  const handleSubmit = () => {
-    console.log('제목:', title);
-    console.log('내용:', content);
-    console.log('카테고리:', category);
+  const handleSubmit = async () => {
+    const resData = {
+      title,
+      content,
+      category: level === "관리자" ? "공지" : category, // level이 "관리자"인 경우 category를 "공지"로 설정
+      // "(user)_id": "(user)_id" // 스토어에서 가져오기
+    };
+    try {
+      const token = localStorage.getItem('jwt');
+      const res = await authApi.post(CREATE_BOARD, resData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        console.log('게시물 작성 성공', res.data);
+        alert('게시물이 성공적으로 작성되었습니다!');
+      }
+    } catch (error) {
+      console.error('게시물 작성 에러:', error);
+      alert('게시물 작성 중 오류가 발생했습니다.');
+    }
   };
   return (
     <MainLayout>

@@ -1,15 +1,11 @@
 import React, { useEffect } from 'react';
 import * as Styled from '@components/common/Alert/Alert.styled';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
+import { useAlertStore } from '@stores/store';
 
-interface ModalProps {
-  isOpen: boolean;
-  message: string;
-  onDelete: () => void;
-  onCancel: () => void;
-}
+const Alert: React.FC = () => {
+  const { isOpen, message, onConfirm, onCancel, closeAlert } = useAlertStore();
 
-const Alert: React.FC<ModalProps> = ({ isOpen, message, onDelete, onCancel }) => {
   // 모달 오픈 시 배경 스크롤 막기
   const scrollbarWidth = window.innerWidth - document.body.offsetWidth;
   if (isOpen) {
@@ -25,20 +21,26 @@ const Alert: React.FC<ModalProps> = ({ isOpen, message, onDelete, onCancel }) =>
         <Styled.ModalTitle>{message}</Styled.ModalTitle>
         <Styled.ButtonGroup>
           <DefaultButton
-            backgroundColor="#E25151"
-            width="70px"
-            border="none"
-            onClick={onDelete}
-            textColor="white">
-            네
-          </DefaultButton>
-          <DefaultButton
             backgroundColor="#BDBDBD"
             width="70px"
             border="none"
-            onClick={onCancel}
+            onClick={() => {
+              onCancel();
+              closeAlert();
+            }}
             textColor="white">
             아니요
+          </DefaultButton>
+          <DefaultButton
+            backgroundColor="#E25151"
+            width="70px"
+            border="none"
+            onClick={() => {
+              onConfirm();
+              closeAlert();
+            }}
+            textColor="white">
+            네
           </DefaultButton>
         </Styled.ButtonGroup>
       </Styled.ModalContainer>

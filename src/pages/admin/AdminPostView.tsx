@@ -1,29 +1,37 @@
 import MainLayout from '@components/MainLayout/MainLayout'
 import PostCard from '@components/PostCard/PostCard'
-import PostView from '@pages/user/PostView'
-import { useAlertStore } from '@stores/store'
-import React from 'react'
+import { useAlertStore } from '@stores/store';
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 
 const AdminPostView = () => {
-  // api 호출해서 PostCard 컴포넌트에 넘기는 부분 추가
+  const { postId } = useParams();
+  const { openAlert, closeAlert } = useAlertStore();
+  const navigate = useNavigate();
+  const [post, setPost] = useState({
+    title: '제목',
+    content: '내용',
+    category: '카테고리',
+    date: '날짜',
+    writer: '리오니',
+    id: '1'
+  });
   const user = '이주영'; // 유저 상태관리에서 가져오기?
   const level = '관리자';  // 유저 상태관리에서 가져오기?
-  const { isOpen, message, openModal, closeModal } = useAlertStore();
+  const handleDelete = (postId: string) => {
+    console.log(`게시글 ${postId}이 삭제되었습니다.`);
+    // 삭제 API 호출 (postId를 이용)
+    closeAlert();
+    navigate('/admin');
+  };
   return (
     <div>
       <MainLayout>
         <PostCard
-          category="취업"
-          title="제목입니다~"
-          writer="리오니"
-          date="2024.11.03"
-          content="content 입니다. content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다"
+          post={post}
           user={user} //user가 writer랑 일치해야만 수정, 삭제 버튼 떠야함
-          isOpen={isOpen}  // 모달의 열림 여부 전달
-          message={message}  // 모달에 표시할 메시지 전달
-          openModal={openModal}  // 모달 열기 함수 전달
-          closeModal={closeModal}  // 모달 닫기 함수 전달
-          level={level} // 등급 전달
+          level={level}
+          onDelete={() => handleDelete(post.id)}
         />
       </MainLayout>
     </div>
