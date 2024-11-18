@@ -8,7 +8,7 @@ interface UserSectionProps {
   level: UserLevel;
   users: User[];
   onUserDrop: (user: User, newLevel: UserLevel) => void;
-  onDelete: (user: User) => void;  // id 넘겨서 삭제할건지...
+  onDelete: (id: string) => void;  // id 넘겨서 삭제할건지...
 }
 {/**드래그앤드랍 영역 */ }
 const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionProps) => {
@@ -30,7 +30,7 @@ const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionP
             <DraggableUser
               key={user.email}
               user={user}
-              onDelete={() => onDelete(user)}
+              onDelete={() => onDelete(user.id)}
             />
           ))}
         </Styled.UserList>
