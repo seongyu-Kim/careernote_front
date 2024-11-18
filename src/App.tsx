@@ -11,8 +11,8 @@ function App() {
       <Outlet />
       <ModalPortal>
         <ModalView />
-        <Alert />
       </ModalPortal>
+      <Alert />
     </>
   );
 }
