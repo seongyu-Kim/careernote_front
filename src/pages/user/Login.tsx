@@ -12,8 +12,8 @@ import DefaultInput from '@components/common/DefaultInput/DefaultInput';
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
-  const [inpuFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen, setModalState, modalState } = useModal();
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
+  const { isOpen, setIsOpen, setModalState } = useModal();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
@@ -39,6 +39,7 @@ const LoginPage = () => {
 
   const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log('로그인 제출!');
     const resData = {
       email: inputId,
       password: inputPassword,
@@ -102,11 +103,11 @@ const LoginPage = () => {
             <Styled.LoginButtonBox>
               <DefaultButton
                 type="submit"
-                disabled={inpuFieldChecked}
+                disabled={inputFieldChecked}
                 border="none"
                 textColor="white"
-                backgroundColor={inpuFieldChecked ? 'gray' : '#79B0CB'}
-                useHover={!inpuFieldChecked}
+                backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
+                useHover={!inputFieldChecked}
                 hoverBackgroundColor="#3F82AC">
                 로그인
               </DefaultButton>
