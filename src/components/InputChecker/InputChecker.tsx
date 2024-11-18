@@ -82,9 +82,9 @@ const InputChecker = ({
           </Button>
         )}
       </Styled.InputWrapper>
-      <Styled.Divider>
+      <Styled.Divider tabIndex={-1}>
         {checkMessage && (
-          <Styled.ErrorMessage>
+          <Styled.ErrorMessage tabIndex={-1}>
             <IoAlertCircleOutline />
             {checkMessage}
           </Styled.ErrorMessage>

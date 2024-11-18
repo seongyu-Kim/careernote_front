@@ -114,6 +114,8 @@ const ResetPassword = () => {
                 textColor="white"
                 backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                 useHover={!inputFieldChecked}
+                useTransition={true}
+                transitionDuration={0.3}
                 hoverBackgroundColor="#3F82AC">
                 재설정
               </Button>

@@ -161,7 +161,7 @@ const Register = () => {
               placeholderText="비밀번호 확인."
               checkMessage={confirmPasswordCheckMessage}
             />
-            <Styled.Divider>
+            <Styled.Divider tabIndex={-1}>
               {notAccorPassword && (
                 <Styled.PasswordErrorMessage>
                   <IoAlertCircleOutline />
@@ -184,7 +184,11 @@ const Register = () => {
                 width="40%"
                 backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                 border="none"
-                textColor="white">
+                textColor="white"
+                useHover={!inputFieldChecked}
+                useTransition={true}
+                transitionDuration={0.3}
+                hoverBackgroundColor="#3F82AC">
                 회원가입
               </Button>
             </Styled.RegisterButtonContainer>

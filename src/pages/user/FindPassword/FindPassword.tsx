@@ -97,7 +97,11 @@ export const FindPassword = () => {
                   width="100%"
                   border="none"
                   backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
-                  textColor="white">
+                  textColor="white"
+                  useHover={!inputFieldChecked}
+                  useTransition={true}
+                  transitionDuration={0.3}
+                  hoverBackgroundColor="#3F82AC">
                   전송
                 </Button>
               </Styled.FindPasswordButtonContainer>

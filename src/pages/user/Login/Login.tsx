@@ -9,6 +9,7 @@ import { USER_API } from '@routes/apiRoutes';
 import Input from '@components/Input/Input';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
+import { LoginInputBoxContainer } from '@styles/Authentication/Authentication.styled';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
@@ -68,7 +69,7 @@ const LoginPage = () => {
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text>Login</Styled.Text>
           <Styled.Form onSubmit={handleSubmitLogin}>
-            <Styled.InputBoxContainer>
+            <Styled.LoginInputBoxContainer>
               <Input
                 onChange={handleInputChange('id')}
                 type="text"
@@ -110,6 +111,8 @@ const LoginPage = () => {
                   textColor="white"
                   backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                   useHover={!inputFieldChecked}
+                  useTransition={true}
+                  transitionDuration={0.3}
                   hoverBackgroundColor="#3F82AC">
                   로그인
                 </Button>
@@ -124,7 +127,7 @@ const LoginPage = () => {
                   JOIN US
                 </Button>
               </Styled.ButtonContainer>
-            </Styled.InputBoxContainer>
+            </Styled.LoginInputBoxContainer>
           </Styled.Form>
         </Styled.Field>
       </Styled.Container>

@@ -102,18 +102,10 @@ export const InputBoxContainer = styled.div`
   height: 80%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 `;
-
-export const RegisterInputBoxContainer = styled(InputBoxContainer)`
-  height: 100%;
-  flex-direction: column;
-  .checkIcon {
-    display: flex;
-    color: green;
-    position: absolute;
-    right: 3%;
-  }
+export const LoginInputBoxContainer = styled(InputBoxContainer)`
+  gap: 20px;
 `;
 
 export const FindPasswordBox = styled.div`
@@ -165,6 +157,7 @@ export const ErrorMessage = styled.p`
   bottom: 25%;
   left: -7%;
   display: flex;
+  align-items: center;
 `;
 
 export const PasswordErrorMessage = styled.p`
@@ -173,7 +166,7 @@ export const PasswordErrorMessage = styled.p`
   position: absolute;
   width: 100%;
   left: -5%;
-  bottom: 10px;
+  bottom: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,5 +185,12 @@ export const InputLabel = styled.label`
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 3%;
+  .checkIcon {
+    display: flex;
+    color: green;
+    position: absolute;
+    right: 3%;
+  }
 `;
