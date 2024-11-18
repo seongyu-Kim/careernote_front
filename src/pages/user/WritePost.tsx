@@ -5,8 +5,8 @@ import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import MainLayout from '@components/MainLayout/MainLayout';
 import { UserLevel } from '@/type/user';
 import authApi from '@apis/authApi/authApi';
-import { BOARD_API } from '@routes/apiRoutes';
-const { CREATE_BOARD } = BOARD_API;
+import { COMMON_API } from '@routes/apiRoutes';
+const { CREATE_NOTICE } = COMMON_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
 const WritePost = () => {
@@ -42,8 +42,8 @@ const WritePost = () => {
       // "(user)_id": "(user)_id" // 스토어에서 가져오기
     };
     try {
-      const token = localStorage.getItem('jwt');
-      const res = await authApi.post(CREATE_BOARD, resData, {
+      const token = localStorage.getItem('token');
+      const res = await authApi.post(CREATE_NOTICE, resData, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
