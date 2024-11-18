@@ -328,6 +328,7 @@ const Mypage: React.FC = () => {
   const savedPage = sessionStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
   const [posts, setPosts] = useState(dummyPosts);
+  const [isMyPost, setIsMyPost] = useState<boolean>(true);
 
   const postsPerPage = 20;
   const indexOfLastPost = currentPage * postsPerPage;
@@ -354,7 +355,7 @@ const Mypage: React.FC = () => {
   return (
     <MainLayout>
       <Styled.LogoImg src={landing} alt="Landing" />
-      <PostList posts={currentPosts} columns={columns} />
+      <PostList isMyPost={isMyPost} posts={currentPosts} columns={columns} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
