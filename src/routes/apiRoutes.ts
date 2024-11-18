@@ -25,5 +25,4 @@ export const BOARD_API = {
 export const NOTICE_API = {
   ALL_NOTICES: '/api/notice',
 };
-
 //const response = await axios.get(BOARD_ROUTE_API.READ_BOARD(id)); 사용 예시
