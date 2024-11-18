@@ -8,6 +8,7 @@ import authApi from '@apis/authApi/authApi';
 import { ROUTE_LINK } from '@routes/routes';
 import { USER_API } from '@routes/apiRoutes';
 import InputValid from '@components/InputValid/InputValid';
+import apiUtils from '@utils/apiUtils';
 
 //추후 컴포넌트 분리
 const Register = () => {
@@ -106,14 +107,20 @@ const Register = () => {
     };
 
     try {
-      const res = await authApi.post(SIGNUP, resData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      // const res = await authApi.post(SIGNUP, resData, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
+      const res = await apiUtils({
+        url: `http://kdt-react-1-team01.elicecoding.com:3002${SIGNUP}`,
+        method: 'POST',
+        data: resData,
+        withAuth: false,
       });
       console.log('전송 데이터', resData);
       console.log('응답결과', res);
-      if (res.status === 201) {
+      if (res.message === '회원가입 성공') {
         navigate(LOGIN_PAGE_URL);
       }
     } catch (error) {
@@ -134,6 +141,7 @@ const Register = () => {
               valid={nicknameRegEx.test(inputNickname)}
               placeholderText="닉네임을 입력해주세요."
               checkMessage={nicknameCheckMessage}
+              useCheckDuplication={true}
             />
             <InputValid
               inputTagType="text"
@@ -141,6 +149,7 @@ const Register = () => {
               valid={emailRegEx.test(inputEmail)}
               placeholderText="이메일을 입력해주세요."
               checkMessage={emailCheckMessage}
+              useCheckDuplication={true}
             />
             <InputValid
               inputTagType="password"

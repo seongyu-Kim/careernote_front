@@ -121,4 +121,13 @@ export const InputWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  gap: 3%;
+`;
+
+export const inputLabel = styled.label`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 3%;
 `;

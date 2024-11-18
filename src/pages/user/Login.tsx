@@ -5,15 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { useModal } from '@stores/store';
-import authApi from '@apis/authApi/authApi';
 import { USER_API } from '@routes/apiRoutes';
 import DefaultInput from '@components/common/DefaultInput/DefaultInput';
+import { useUserStore } from '@stores/userStore';
+import apiUtils from '@utils/apiUtils';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
-  const [inpuFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen, setModalState, modalState } = useModal();
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
+  const { isOpen, setIsOpen, setModalState } = useModal();
+  const { login } = useUserStore();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
@@ -39,18 +41,20 @@ const LoginPage = () => {
 
   const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log('로그인 제출!');
     const resData = {
-      email: inputId,
+      userEmail: inputId,
       password: inputPassword,
     };
     try {
-      const res = await authApi.post(LOGIN, resData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        //여기에서 유저 정보 저장해주고 로컬스토리지 사용하기
+      const res = await apiUtils({
+        url: `http://kdt-react-1-team01.elicecoding.com:3002${LOGIN}`,
+        method: 'POST',
+        data: resData,
+        withAuth: false,
       });
-      if (res.status === 200) {
+      if (res.message === '로그인 성공') {
+        login(res.data.user);
         navigate(MAIN_PAGE_URL);
       }
     } catch (error) {
@@ -102,11 +106,11 @@ const LoginPage = () => {
             <Styled.LoginButtonBox>
               <DefaultButton
                 type="submit"
-                disabled={inpuFieldChecked}
+                disabled={inputFieldChecked}
                 border="none"
                 textColor="white"
-                backgroundColor={inpuFieldChecked ? 'gray' : '#79B0CB'}
-                useHover={!inpuFieldChecked}
+                backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
+                useHover={!inputFieldChecked}
                 hoverBackgroundColor="#3F82AC">
                 로그인
               </DefaultButton>

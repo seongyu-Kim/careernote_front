@@ -1,10 +1,10 @@
 import axios, { Method, AxiosResponse } from 'axios';
 
 interface ApiRequestParams {
-  url: string; 
+  url: string;
   method?: Method;
   data?: Record<string, any>;
-  headers?: Record<string, string>; 
+  headers?: Record<string, string>;
   withAuth?: boolean; // Authorization 포함 여부
 }
 /**
