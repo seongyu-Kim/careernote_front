@@ -3,19 +3,25 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as Styled from '@components/WritePost/WritePost.styled';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import MainLayout from '@components/MainLayout/MainLayout';
-import { UserLevel } from '@/type/user';
-import authApi from '@apis/authApi/authApi';
 import { COMMON_API } from '@routes/apiRoutes';
+import { useUserStore } from '@stores/userStore';
+import apiUtils from '@utils/apiUtils';
 const { CREATE_NOTICE } = COMMON_API;
-const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
+const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 const WritePost = () => {
-  const [level, setLevel] = useState<UserLevel>('삐약이'); // 스토어에서 사용자 등급 받아오기
-  const { state } = useLocation(); // useLocation 훅을 사용하여 state 값 받기
-  const [category, setCategory] = useState(state?.category || '');
+  // userStore에서 로그인 사용자 정보 가져오기
+  const user = useUserStore((state) => state.user);
+  const level = user?.levelName;
+  const userId = user?.user_id;
+
+  const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
+  const [category, setCategory] = useState(state?.category || '선택');
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
+
   const navigate = useNavigate();
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -35,29 +41,27 @@ const WritePost = () => {
     }
   };
   const handleSubmit = async () => {
-    const resData = {
+    const data = {
       title,
       content,
       category: level === "관리자" ? "공지" : category, // level이 "관리자"인 경우 category를 "공지"로 설정
-      // "(user)_id": "(user)_id" // 스토어에서 가져오기
+      user: userId
     };
     try {
-      const token = localStorage.getItem('token');
-      const res = await authApi.post(CREATE_NOTICE, resData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await apiUtils({
+        url: CREATE_NOTICE,
+        method: 'POST',
+        data: data
       });
-
-      if (res.status === 200) {
-        console.log('게시물 작성 성공', res.data);
-        alert('게시물이 성공적으로 작성되었습니다!');
+      if (response.status === 200) {
+        alert('게시물이 저장되었습니다.');
+        console.log('서버 응답 데이터:', response);
       }
     } catch (error) {
-      console.error('게시물 작성 에러:', error);
-      alert('게시물 작성 중 오류가 발생했습니다.');
+      console.error('게시글 등록 혹은 수정 요청 실패:', error);
+      alert('게시물을 다시 등록하세요.');
     }
+    navigate('/posts');
   };
   return (
     <MainLayout>
