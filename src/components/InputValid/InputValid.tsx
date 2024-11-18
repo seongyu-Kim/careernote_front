@@ -1,9 +1,8 @@
-import * as Styled from '@components/Register/Register.styled';
+import * as Styled from '@components/common/Authentication/Authentication.styled';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { IoAlertCircleOutline } from 'react-icons/io5';
 import React from 'react';
 import DefaultInput from '@components/common/DefaultInput/DefaultInput';
-import { InputBoxContainer } from '@components/Register/Register.styled';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
@@ -55,9 +54,9 @@ const InputValid = ({
   };
 
   return (
-    <InputBoxContainer>
+    <Styled.InputBoxContainer>
       <Styled.InputWrapper>
-        <Styled.inputLabel>
+        <Styled.InputLabel>
           <DefaultInput
             onChange={handleInputChange}
             type={inputTagType}
@@ -71,7 +70,7 @@ const InputValid = ({
             placeholderColor="#79b0c8"
           />
           {valid && <FaRegCheckCircle className="checkIcon" />}
-        </Styled.inputLabel>
+        </Styled.InputLabel>
         {useCheckDuplication && (
           <DefaultButton
             onClick={() => checkDuplicationCheck(checkDuplicationType)}
@@ -85,13 +84,13 @@ const InputValid = ({
       </Styled.InputWrapper>
       <Styled.Divider>
         {checkMessage && (
-          <Styled.InputFiledErrorMessage>
+          <Styled.ErrorMessage>
             <IoAlertCircleOutline />
             {checkMessage}
-          </Styled.InputFiledErrorMessage>
+          </Styled.ErrorMessage>
         )}
       </Styled.Divider>
-    </InputBoxContainer>
+    </Styled.InputBoxContainer>
   );
 };
 

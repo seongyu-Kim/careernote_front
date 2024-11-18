@@ -1,10 +1,9 @@
-import * as Styled from '@components/Register/Register.styled';
+import * as Styled from '@components/common/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import { IoAlertCircleOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import authApi from '@apis/authApi/authApi';
 import { ROUTE_LINK } from '@routes/routes';
 import { USER_API } from '@routes/apiRoutes';
 import InputValid from '@components/InputValid/InputValid';
@@ -122,12 +121,12 @@ const Register = () => {
   };
 
   return (
-    <Styled.RegisterPageBackground>
-      <Styled.RegisterContainer>
-        <Styled.RegisterField>
-          <Styled.MainLogo src={logo} alt="로고이미지" />
-          <Styled.RegisterText>Sign Up</Styled.RegisterText>
-          <Styled.RegisterForm onSubmit={handleSubmitUserData}>
+    <Styled.PageBackground>
+      <Styled.Container height="85%">
+        <Styled.Field>
+          <Styled.MainLogo src={logo} alt="로고 이미지" />
+          <Styled.Text>Sign Up</Styled.Text>
+          <Styled.Form onSubmit={handleSubmitUserData}>
             <InputValid
               inputTagType="text"
               onChange={setInputNickname}
@@ -170,7 +169,7 @@ const Register = () => {
                 </Styled.PasswordErrorMessage>
               )}
             </Styled.Divider>
-            <Styled.RegisterButtonBox>
+            <Styled.RegisterButtonContainer>
               <DefaultButton
                 onClick={() => navigate(LOGIN_PAGE_URL)}
                 width="40%"
@@ -188,11 +187,11 @@ const Register = () => {
                 textColor="white">
                 회원가입
               </DefaultButton>
-            </Styled.RegisterButtonBox>
-          </Styled.RegisterForm>
-        </Styled.RegisterField>
-      </Styled.RegisterContainer>
-    </Styled.RegisterPageBackground>
+            </Styled.RegisterButtonContainer>
+          </Styled.Form>
+        </Styled.Field>
+      </Styled.Container>
+    </Styled.PageBackground>
   );
 };
 
