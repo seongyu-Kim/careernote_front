@@ -9,7 +9,6 @@ import { USER_API } from '@routes/apiRoutes';
 import Input from '@components/Input/Input';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-import { LoginInputBoxContainer } from '@styles/Authentication/Authentication.styled';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');

@@ -8,11 +8,6 @@ import React, { useEffect, useState } from 'react';
 import { USER_API } from '@routes/apiRoutes';
 import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
-import {
-  FindPasswordButtonContainer,
-  ModalBackground,
-  ModalContainer,
-} from '@styles/Authentication/Authentication.styled';
 
 export const FindPassword = () => {
   const [setEmailCheckMessage, setSetEmailCheckMessage] = useState<string>('');

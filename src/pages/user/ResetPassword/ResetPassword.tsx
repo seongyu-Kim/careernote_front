@@ -8,10 +8,6 @@ import React, { useEffect, useState } from 'react';
 import InputChecker from '@components/InputChecker/InputChecker';
 import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
-import {
-  ButtonContainer,
-  PasswordButtonContainer,
-} from '@styles/Authentication/Authentication.styled';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
