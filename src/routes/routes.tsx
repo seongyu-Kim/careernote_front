@@ -1,17 +1,17 @@
 import App from 'App';
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Main from '@pages/user/Main';
-import Login from '@pages/user/Login';
-import Register from '@pages/user/Register';
-import Mypage from '@pages/user/Mypage';
-import ResetPassword from '@pages/user/ResetPassword';
-import PostView from '@pages/user/PostView';
-import WritePost from '@pages/user/WritePost';
-import AdminMain from '@pages/admin/AdminMain';
-import AdminWritePost from '@pages/admin/AdminWritePost';
-import AdminPostView from '@pages/admin/AdminPostView';
-import ErrorPage from '@pages/ErrorPage';
+import Main from '@pages/user/Main/Main';
+import Login from '@pages/user/Login/Login';
+import Register from '@pages/user/Register/Register';
+import Mypage from '@pages/user/MyPage/Mypage';
+import ResetPassword from '@pages/user/ResetPassword/ResetPassword';
+import PostView from '@pages/user/PostView/PostView';
+import WritePost from '@pages/user/WritePost/WritePost';
+import AdminMain from '@pages/admin/Main/AdminMain';
+import AdminWritePost from '@pages/admin/WritePost/AdminWritePost';
+import AdminPostView from '@pages/admin/PostView/AdminPostView';
+import ErrorPage from '@pages/user/Error/ErrorPage';
 
 export const ROUTE_LINK = {
   LANDING: { path: '/', link: '/' },

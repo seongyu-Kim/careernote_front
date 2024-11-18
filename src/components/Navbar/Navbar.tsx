@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Navbar.styled';
 import logo_w from '@assets/logo_w.png';
-import Alert from '@components/common/Alert/Alert';
+import Alert from '@components/Alert/Alert';
 import { useNavigate } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
 // import useCategoryStore from '@stores/useCategoryStore';
