@@ -1,12 +1,17 @@
-import * as Styled from '@components/ResetPassword/ResetPassword.styled';
+import * as Styled from '@components/common/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
-import authApi from '@apis/authApi/authApi';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE_LINK } from '@routes/routes';
 import { IoAlertCircleOutline } from 'react-icons/io5';
 import React, { useEffect, useState } from 'react';
 import InputValid from '@components/InputValid/InputValid';
+import { USER_API } from '@routes/apiRoutes';
+import apiUtils from '@utils/apiUtils';
+import {
+  ButtonContainer,
+  PasswordButtonContainer,
+} from '@components/common/Authentication/Authentication.styled';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
@@ -18,7 +23,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
-  const TEMP_RESET_PASSWORD = '/api/users';
+  const { RESET_PASSWORD } = USER_API;
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 
   useEffect(() => {
@@ -53,19 +58,18 @@ const ResetPassword = () => {
   }, [inputPassword, inputConfirmPassword]);
 
   const handleSubmitResetPassword = async () => {
-    alert('실행!');
     const resData = {
       password: inputPassword,
       // token: 토큰 가져와서 넣어주기
     };
     try {
-      const res = await authApi.post(TEMP_RESET_PASSWORD, resData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const res = await apiUtils({
+        url: `http://kdt-react-1-team01.elicecoding.com:3002${RESET_PASSWORD}`,
+        method: 'PUT',
+        data: resData,
+        withAuth: false,
       });
-
-      if (res.status === 200) {
+      if (res.message === '비밀번호 재설정 성공') {
         navigate(LOGIN_PAGE_URL);
       }
     } catch (error) {
@@ -74,12 +78,12 @@ const ResetPassword = () => {
   };
 
   return (
-    <Styled.ResetPasswordPageBackground>
-      <Styled.ResetPasswordContainer>
-        <Styled.ResetPasswordField>
-          <Styled.MainLogo src={logo} />
-          <Styled.ResetPasswordText>비밀번호 재설정</Styled.ResetPasswordText>
-          <Styled.ResetPasswordForm onSubmit={handleSubmitResetPassword}>
+    <Styled.PageBackground>
+      <Styled.Container height="60%">
+        <Styled.Field>
+          <Styled.MainLogo src={logo} alt="로고 이미지" />
+          <Styled.Text fontSize="2.5rem">비밀번호 재설정</Styled.Text>
+          <Styled.Form onSubmit={handleSubmitResetPassword}>
             <InputValid
               inputTagType="password"
               placeholderText="새 비밀번호"
@@ -102,7 +106,7 @@ const ResetPassword = () => {
                 </Styled.PasswordErrorMessage>
               )}
             </Styled.Divider>
-            <Styled.ResetPasswordButtonBox>
+            <Styled.PasswordButtonContainer>
               <DefaultButton
                 disabled={inputFieldChecked}
                 type="submit"
@@ -113,11 +117,11 @@ const ResetPassword = () => {
                 hoverBackgroundColor="#3F82AC">
                 재설정
               </DefaultButton>
-            </Styled.ResetPasswordButtonBox>
-          </Styled.ResetPasswordForm>
-        </Styled.ResetPasswordField>
-      </Styled.ResetPasswordContainer>
-    </Styled.ResetPasswordPageBackground>
+            </Styled.PasswordButtonContainer>
+          </Styled.Form>
+        </Styled.Field>
+      </Styled.Container>
+    </Styled.PageBackground>
   );
 };
 

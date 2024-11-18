@@ -1,4 +1,4 @@
-import * as Styled from '@components/Login/Login.styled';
+import * as Styled from '@components/common/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import { useNavigate } from 'react-router-dom';
@@ -62,12 +62,12 @@ const LoginPage = () => {
     }
   };
   return (
-    <Styled.LoginPageBackground>
-      <Styled.LoginContainer>
-        <Styled.LoginField>
-          <Styled.MainLogo src={logo} alt="로고이미지" />
-          <Styled.LoginText>Login</Styled.LoginText>
-          <Styled.LoginForm onSubmit={handleSubmitLogin}>
+    <Styled.PageBackground>
+      <Styled.Container height="60%">
+        <Styled.Field>
+          <Styled.MainLogo src={logo} alt="로고 이미지" />
+          <Styled.Text>Login</Styled.Text>
+          <Styled.Form onSubmit={handleSubmitLogin}>
             <Styled.InputBoxContainer>
               <DefaultInput
                 onChange={handleInputChange('id')}
@@ -93,42 +93,42 @@ const LoginPage = () => {
                 padding="3%"
                 placeholderColor="#79b0c8"
               />
+              <Styled.FindPasswordBox>
+                <span
+                  onClick={() => {
+                    setModalState('findPassword');
+                    setIsOpen(isOpen);
+                  }}>
+                  비밀번호 찾기
+                </span>
+              </Styled.FindPasswordBox>
+              <Styled.ButtonContainer>
+                <DefaultButton
+                  type="submit"
+                  disabled={inputFieldChecked}
+                  border="none"
+                  textColor="white"
+                  backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
+                  useHover={!inputFieldChecked}
+                  hoverBackgroundColor="#3F82AC">
+                  로그인
+                </DefaultButton>
+                <DefaultButton
+                  onClick={() => navigate(REGISTER_PAGE_URL)}
+                  border="none"
+                  textColor="#325366"
+                  useHover={true}
+                  useTransition={true}
+                  transitionDuration={0.2}
+                  hoverScale={1.1}>
+                  JOIN US
+                </DefaultButton>
+              </Styled.ButtonContainer>
             </Styled.InputBoxContainer>
-            <Styled.FindPasswordBox>
-              <span
-                onClick={() => {
-                  setModalState('findPassword');
-                  setIsOpen(isOpen);
-                }}>
-                비밀번호 찾기
-              </span>
-            </Styled.FindPasswordBox>
-            <Styled.LoginButtonBox>
-              <DefaultButton
-                type="submit"
-                disabled={inputFieldChecked}
-                border="none"
-                textColor="white"
-                backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
-                useHover={!inputFieldChecked}
-                hoverBackgroundColor="#3F82AC">
-                로그인
-              </DefaultButton>
-              <DefaultButton
-                onClick={() => navigate(REGISTER_PAGE_URL)}
-                border="none"
-                textColor="#325366"
-                useHover={true}
-                useTransition={true}
-                transitionDuration={0.2}
-                hoverScale={1.1}>
-                JOIN US
-              </DefaultButton>
-            </Styled.LoginButtonBox>
-          </Styled.LoginForm>
-        </Styled.LoginField>
-      </Styled.LoginContainer>
-    </Styled.LoginPageBackground>
+          </Styled.Form>
+        </Styled.Field>
+      </Styled.Container>
+    </Styled.PageBackground>
   );
 };
 
