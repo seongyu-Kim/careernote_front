@@ -15,7 +15,8 @@ interface InputValidProps {
   valid: boolean;
   checkMessage: string;
   useCheckDuplication?: boolean;
-  checkDuplicationType?: 'nickName' | 'email';
+  checkDuplicationType?: string;
+  checkDuplicationValue?: string;
 }
 
 const InputValid = ({
@@ -24,8 +25,9 @@ const InputValid = ({
   onChange,
   valid,
   checkMessage,
-  useCheckDuplication = false,
-  checkDuplicationType, // 이거 따라서 중복 확인 요청 api 보내게
+  useCheckDuplication = false, // 중복 검사 사용 여부
+  checkDuplicationType = '', //이메일 닉네임 지정
+  checkDuplicationValue, // 이거 따라서 중복 확인 요청 api 보내게
 }: InputValidProps) => {
   const { CHECK_DUPLICATION } = USER_API;
 
@@ -33,11 +35,23 @@ const InputValid = ({
     const value = event.target.value;
     onChange(value);
   };
-  const checkDuplicationCheck = async () => {
+  const checkDuplicationCheck = async (type: string) => {
+    if (!type) {
+      return;
+    }
     try {
-      const res = apiUtils({
+      const res = await apiUtils({
         url: `http://kdt-react-1-team01.elicecoding.com:3002${CHECK_DUPLICATION}`,
+        data:
+          type === 'nickname'
+            ? { nickname: checkDuplicationValue }
+            : { email: checkDuplicationValue },
+        withAuth: false,
       });
+      console.log(res);
+      if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
+        console.log('사용가능!');
+      }
     } catch (error) {
       console.log('중복 검사 오류', error);
     }
@@ -62,7 +76,12 @@ const InputValid = ({
           {valid && <FaRegCheckCircle className="checkIcon" />}
         </Styled.inputLabel>
         {useCheckDuplication && (
-          <DefaultButton width="30%" height="40px" border="1px solid #b3d5eb" textColor="#79b0c8">
+          <DefaultButton
+            onClick={() => checkDuplicationCheck(checkDuplicationType)}
+            width="30%"
+            height="40px"
+            border="1px solid #b3d5eb"
+            textColor="#79b0c8">
             중복 확인
           </DefaultButton>
         )}

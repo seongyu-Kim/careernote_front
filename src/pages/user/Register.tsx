@@ -107,19 +107,12 @@ const Register = () => {
     };
 
     try {
-      // const res = await authApi.post(SIGNUP, resData, {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
       const res = await apiUtils({
         url: `http://kdt-react-1-team01.elicecoding.com:3002${SIGNUP}`,
         method: 'POST',
         data: resData,
         withAuth: false,
       });
-      console.log('전송 데이터', resData);
-      console.log('응답결과', res);
       if (res.message === '회원가입 성공') {
         navigate(LOGIN_PAGE_URL);
       }
@@ -142,6 +135,8 @@ const Register = () => {
               placeholderText="닉네임을 입력해주세요."
               checkMessage={nicknameCheckMessage}
               useCheckDuplication={true}
+              checkDuplicationValue={inputNickname}
+              checkDuplicationType="nickname"
             />
             <InputValid
               inputTagType="text"
@@ -150,6 +145,8 @@ const Register = () => {
               placeholderText="이메일을 입력해주세요."
               checkMessage={emailCheckMessage}
               useCheckDuplication={true}
+              checkDuplicationValue={inputEmail}
+              checkDuplicationType="email"
             />
             <InputValid
               inputTagType="password"
