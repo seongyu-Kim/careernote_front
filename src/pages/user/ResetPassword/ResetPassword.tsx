@@ -98,7 +98,7 @@ const ResetPassword = () => {
               valid={passwordRegEx.test(inputConfirmPassword)}
               checkMessage={confirmPasswordCheckMessage}
             />
-            <Styled.Divider>
+            <Styled.Divider tabIndex={-1}>
               {errorMsg == '' ? null : (
                 <Styled.PasswordErrorMessage>
                   <IoAlertCircleOutline />
