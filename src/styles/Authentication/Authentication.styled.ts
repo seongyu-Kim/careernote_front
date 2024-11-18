@@ -28,8 +28,8 @@ export const ModalBackground = styled.div`
 `;
 //모달 박스
 export const ModalContainer = styled.div`
-  width: 25%;
-  height: 60%;
+  width: 450px;
+  height: 570px;
   border-radius: 9px;
   background-color: white;
   display: flex;
@@ -39,9 +39,9 @@ export const ModalContainer = styled.div`
   .close {
     font-size: 2rem;
     color: grey;
-    position: fixed;
-    right: 38%;
-    top: 21%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
   }
 `;
 
@@ -56,7 +56,7 @@ export const Container = styled.div<Props>`
 `;
 
 export const Field = styled.div<Props>`
-  width: 25%;
+  width: 450px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -89,7 +89,7 @@ export const Text = styled.p<Props>`
 `;
 
 export const Form = styled.form`
-  width: 70%;
+  width: 75%;
   height: 100%;
   display: flex;
   flex-direction: column;

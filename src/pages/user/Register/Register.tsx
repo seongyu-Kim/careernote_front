@@ -122,7 +122,7 @@ const Register = () => {
 
   return (
     <Styled.PageBackground>
-      <Styled.Container height="85%">
+      <Styled.Container height="800px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text>Sign Up</Styled.Text>

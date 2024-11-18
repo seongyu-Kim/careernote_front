@@ -79,7 +79,7 @@ const ResetPassword = () => {
 
   return (
     <Styled.PageBackground>
-      <Styled.Container height="60%">
+      <Styled.Container height="600px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text fontSize="2.5rem">비밀번호 재설정</Styled.Text>
