@@ -16,7 +16,7 @@ interface PostCardProps {
   };
   user: string; // writer랑 일치하면 수정,삭제 가능
   level?: string; // 관리자이면 모든 글 수정, 삭제 가능
-  onDelete: () => void;
+  onDelete: (postId: string) => void;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -67,7 +67,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 border="none"
                 textColor="white"
                 width="10%"
-                onClick={() => openAlert('삭제하시겠습니까?', onDelete)}>
+                onClick={() => openAlert('삭제하시겠습니까?', () => onDelete(post.id))}>
                 삭제
               </DefaultButton>
             </>
@@ -78,7 +78,7 @@ const PostCard: React.FC<PostCardProps> = ({
               border="none"
               textColor="white"
               width="10%"
-              onClick={() => openAlert('삭제하시겠습니까?', onDelete)}>
+              onClick={() => openAlert('삭제하시겠습니까?', () => onDelete(post.id))}>
               삭제
             </DefaultButton>
           )}

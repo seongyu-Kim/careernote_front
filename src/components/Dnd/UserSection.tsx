@@ -8,7 +8,7 @@ interface UserSectionProps {
   level: UserLevel;
   users: User[];
   onUserDrop: (user: User, newLevel: UserLevel) => void;
-  onDelete: (id: string) => void;  // id 넘겨서 삭제할건지...
+  onDelete: (id: string) => void;
 }
 {/**드래그앤드랍 영역 */ }
 const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionProps) => {

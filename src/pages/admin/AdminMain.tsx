@@ -129,8 +129,10 @@ const AdminMain = () => {
         url: DELETE_NOTICE(id),
         method: 'DELETE',
       });
-      console.log('게시글 삭제 성공 응답 데이터:', response);
-      alert(`게시글이 ${id}가 삭제되었습니다.`);
+      if (response.status === 200) {
+        console.log('게시글 삭제 성공 응답 데이터:', response);
+        alert(`게시글 ${id} 삭제되었습니다.`);
+      }
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
     }
