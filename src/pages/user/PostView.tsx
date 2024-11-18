@@ -2,10 +2,10 @@ import authApi from '@apis/authApi/authApi';
 import MainLayout from '@components/MainLayout/MainLayout';
 import PostCard from '@components/PostCard/PostCard';
 import React, { useEffect, useState } from 'react';
-import { BOARD_API } from '@routes/apiRoutes';
+import { COMMON_API } from '@routes/apiRoutes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
-const { READ_BOARD } = BOARD_API;
+const { READ_NOTICE } = COMMON_API;
 
 const PostView: React.FC = () => {
   const { postId } = useParams();
@@ -27,7 +27,7 @@ const PostView: React.FC = () => {
   //   }
   //   const fetchPostDetails = async () => {
   //     try {
-  //       const res = await authApi.get(READ_BOARD(postId));
+  //       const res = await authApi.get(READ_NOTICE(postId));
   //       if (res.status === 200) {
   //         const { title, content, category, date, writer } = res.data;
   //         setPost({ title, content, category, date, writer });
