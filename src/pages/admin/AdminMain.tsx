@@ -1,7 +1,7 @@
 import DefaultButton from '@components/common/DefaultButton/DefaultButton';
 import Alert from '@components/common/Alert/Alert';
 import Pagination from '@components/Pagination/Pagination';
-import PostList from '@components/PostList/PostList';
+import PostList from '@components/common/PostList/PostList';
 import { useAlertStore } from '@stores/store';
 import React, { useState } from 'react';
 import * as Styled from '@components/AdminMain/AdminMain.styled';
@@ -54,7 +54,7 @@ const AdminMain = () => {
     { email: 'aro123@naver.com', postCount: 12, level: '삐약이' },
     { email: 'tteam123@naver.com', postCount: 12, level: '꼬꼬닭' },
   ]); // 유저 상태
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);  // 탈퇴 시 선택 사용자
+  const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
   // useEffect(() => {
   //   // GET 요청으로 사용자 정보 가져오기
   //   const fetchUsers = async () => {
@@ -93,9 +93,7 @@ const AdminMain = () => {
       // await axios.delete(`/api/users/${id}`);
 
       // 상태 업데이트
-      setUsers((prevUsers) =>
-        prevUsers.filter((user) => user.email !== selectedUser.email)
-      );
+      setUsers((prevUsers) => prevUsers.filter((user) => user.email !== selectedUser.email));
 
       alert(`${selectedUser.email} 사용자가 탈퇴되었습니다.`);
     } catch (error) {
@@ -118,10 +116,8 @@ const AdminMain = () => {
       // API 요청
       // await axios.put(`/api/users/${user.email}`, { level: newLevel });
 
-      setUsers(prevUsers =>
-        prevUsers.map(u =>
-          u.email === user.email ? { ...u, level: newLevel } : u
-        )
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u.email === user.email ? { ...u, level: newLevel } : u)),
       );
     } catch (error) {
       console.error('사용자 레벨 변경 실패:', error);
@@ -129,8 +125,19 @@ const AdminMain = () => {
     }
   };
   // '삐약이 회원'과 '꼬꼬닭 회원'으로 유저를 그룹화
-  const piakMembers = users.filter(user => user.level === '삐약이');
-  const kkokkodakMembers = users.filter(user => user.level === '꼬꼬닭');
+  const piakMembers = users.filter((user) => user.level === '삐약이');
+  const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
+  //postlist수정
+  const columns = [
+    { key: 'category', label: '카테고리', flex: '1' },
+    {
+      key: 'title',
+      label: '제목',
+      flex: '3',
+    },
+    { key: 'author', label: '작성자', flex: '1' },
+    { key: 'date', label: '작성일', flex: '1' },
+  ];
   return (
     <MainLayout>
       <Styled.Container>
@@ -167,7 +174,14 @@ const AdminMain = () => {
             </select>
           </Styled.CategorySelect>
           <Styled.PostListContainer>
-            <PostList posts={dummyPosts} width='100%' onDelete={handleDelete} isAdmin={isAdmin} />
+            <PostList
+              //postlist수정
+              columns={columns}
+              posts={dummyPosts}
+              width="100%"
+              onDelete={handleDelete}
+              isAdmin={isAdmin}
+            />
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

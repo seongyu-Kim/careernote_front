@@ -17,41 +17,9 @@ export const LogoImg = styled.img`
 
 export const PostHeader = styled.div`
   display: flex;
-  justify-content: center;
-  text-align: center;
-  padding: 5px 0;
-  font-weight: 800;
+  align-items: center;
+  padding: 9px;
   background-color: #dee2e6;
-`;
-
-export const Category = styled.div`
-  flex: 1;
-  margin-top: 3px;
-`;
-
-export const Title = styled.div<{ noPointer?: boolean }>`
-  flex: 3;
-  margin-top: 3px;
-  cursor: ${(props) => (props.noPointer ? 'default' : 'pointer')};
-
-  &:hover {
-    text-decoration: ${(props) => (props.noPointer ? 'none' : 'underline')};
-  }
-`;
-
-export const Author = styled.div`
-  flex: 1;
-  margin-top: 3px;
-`;
-
-export const Date = styled.div`
-  flex: 2;
-  margin-top: 3px;
-`;
-
-export const Delete = styled.div`
-  flex: 0.5;
-  margin-top: 3px;
 `;
 
 export const DeleteBtn = styled.div`
@@ -98,5 +66,17 @@ export const Checkbox = styled.input`
 
   &:checked {
     background-color: red;
+  }
+`;
+
+export const TableCell = styled.div<{ isTitle?: boolean }>`
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  padding: 0 8px;
+  cursor: ${(props) => (props.isTitle ? 'pointer' : 'default')};
+
+  &:hover {
+    text-decoration: ${(props) => (props.isTitle ? 'underline' : 'none')};
   }
 `;
