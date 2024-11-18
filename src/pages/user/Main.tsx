@@ -1,8 +1,8 @@
 import React from 'react';
 import MainLayout from '@components/MainLayout/MainLayout';
-import PostList from '@components/PostList/PostList';
+import PostList from '@components/common/PostList/PostList';
 import landing from '@assets/landing.png';
-import * as Styled from '../../components/PostList/PostList.styled';
+import * as Styled from '../../components/common/PostList/PostList.styled';
 import Pagination from '@components/Pagination/Pagination';
 import { useState } from 'react';
 import useCategoryStore from '@stores/useCategoryStore';
@@ -360,10 +360,22 @@ const Main: React.FC = () => {
     sessionStorage.setItem('currentPage', page.toString());
   };
 
+  //테이블 데이터
+  const columns = [
+    { key: 'category', label: '카테고리', flex: '1' },
+    {
+      key: 'title',
+      label: '제목',
+      flex: '3',
+    },
+    { key: 'author', label: '작성자', flex: '1' },
+    { key: 'date', label: '작성일', flex: '1' },
+  ];
+
   return (
     <MainLayout>
       <Styled.LogoImg src={landing} alt="Landing" />
-      <PostList posts={currentPosts} />
+      <PostList posts={currentPosts} columns={columns} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
