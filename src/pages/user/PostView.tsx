@@ -1,26 +1,62 @@
+import authApi from '@apis/authApi/authApi';
 import MainLayout from '@components/MainLayout/MainLayout';
 import PostCard from '@components/PostCard/PostCard';
+import React, { useEffect, useState } from 'react';
+import { BOARD_API } from '@routes/apiRoutes';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
-import React from 'react';
+const { READ_BOARD } = BOARD_API;
 
 const PostView: React.FC = () => {
-  // api 호출해서 PostCard 컴포넌트에 넘기는 부분 추가
+  const { postId } = useParams();
+  const { closeAlert } = useAlertStore();
+  const navigate = useNavigate();
+  const [post, setPost] = useState({
+    title: '제목',
+    content: '내용',
+    category: '카테고리',
+    date: '날짜',
+    writer: '리오니',
+    id: '1'
+  });
+
+  // useEffect(() => {
+  //   if (!postId) {
+  //     console.error('해당 postId가 없습니다.');
+  //     return;
+  //   }
+  //   const fetchPostDetails = async () => {
+  //     try {
+  //       const res = await authApi.get(READ_BOARD(postId));
+  //       if (res.status === 200) {
+  //         const { title, content, category, date, writer } = res.data;
+  //         setPost({ title, content, category, date, writer });
+  //       }
+  //     } catch (error) {
+  //       console.error('게시물 불러오기 에러:', error);
+  //       alert('게시물을 불러오는 중 오류가 발생했습니다.');
+  //     }
+  //   };
+
+  //   fetchPostDetails();
+  // }, [postId]); 
+
   const user = '리오니'; // 유저 상태관리에서 가져오기?
-  const { isOpen, message, openModal, closeModal } = useAlertStore();
+
+  const handleDelete = (postId: string) => {
+    alert(`게시글 ${postId}이 삭제되었습니다.`); //tostify
+    // 삭제 API 호출 (postId를 이용)
+    closeAlert();
+    navigate('/posts');
+  };
+
   return (
     <>
       <MainLayout>
         <PostCard
-          category="취업"
-          title="제목입니다~"
-          writer="리오니"
-          date="2024.11.03"
-          content="content 입니다. content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다 content 입니다"
+          post={post}
           user={user} //user가 writer랑 일치해야만 수정, 삭제 버튼 떠야함
-          isOpen={isOpen}  // 모달의 열림 여부 전달
-          message={message}  // 모달에 표시할 메시지 전달
-          openModal={openModal}  // 모달 열기 함수 전달
-          closeModal={closeModal}  // 모달 닫기 함수 전달
+          onDelete={() => handleDelete(post.id)}
         />
       </MainLayout>
     </>
