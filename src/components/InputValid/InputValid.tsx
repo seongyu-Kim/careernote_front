@@ -35,19 +35,16 @@ const InputValid = ({
     const value = event.target.value;
     onChange(value);
   };
+
   const checkDuplicationCheck = async (type: string) => {
-    if (!type) {
-      return;
-    }
+    const resData = checkDuplicationValue;
     try {
       const res = await apiUtils({
         url: `http://kdt-react-1-team01.elicecoding.com:3002${CHECK_DUPLICATION}`,
-        data:
-          type === 'nickname'
-            ? { nickname: checkDuplicationValue }
-            : { email: checkDuplicationValue },
+        data: type === 'nickname' ? { nickname: resData } : { email: resData },
         withAuth: false,
       });
+      console.log(resData);
       console.log(res);
       if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
         console.log('사용가능!');

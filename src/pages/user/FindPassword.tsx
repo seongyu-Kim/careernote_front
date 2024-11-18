@@ -6,6 +6,7 @@ import { useModal } from '@stores/store';
 import React, { useEffect, useState } from 'react';
 import { USER_API } from '@routes/apiRoutes';
 import InputValid from '@components/InputValid/InputValid';
+import apiUtils from '@utils/apiUtils';
 
 export const FindPassword = () => {
   const [setEmailCheckMessage, setSetEmailCheckMessage] = useState<string>('');
@@ -35,10 +36,25 @@ export const FindPassword = () => {
     }
   }, [isOpen]);
 
-  const handleSubmitSendEmail = async () => {
-    alert('실행!');
+  const handleSubmitSendEmail = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (inputFieldChecked) {
       alert('비어있음');
+    }
+    const resData = { email: inputEmail };
+    try {
+      const res = await apiUtils({
+        url: `http://kdt-react-1-team01.elicecoding.com:3002${REQUEST_RESET_PASSWORD}`,
+        method: 'POST',
+        data: resData,
+        withAuth: false,
+      });
+      console.log(res);
+      if (res.message === '재설정 링크 전송 성공') {
+        console.log('재설정 링크 전송 완료.');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -70,7 +86,7 @@ export const FindPassword = () => {
               checkMessage={setEmailCheckMessage}
             />
             <DefaultButton
-              onClick={handleSubmitSendEmail}
+              type="submit"
               disabled={inputFieldChecked}
               width="40%"
               border="none"
