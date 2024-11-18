@@ -10,20 +10,19 @@ export const USER_API = {
   USER_DELETE: '/api/user/delete', // 유저 탈퇴
 };
 
-export const BOARD_API = {
-  CREATE_BOARD: '/api/board', //게시글 생성
-  READ_BOARD: (id: string | number) => `/api/board/${id}`, // 게시글 세부 사항
-  UPDATE_BOARD: (id: string | number) => `/api/board/${id}`, // 게시글 수정
-  DELETE_BOARD: (id: string | number) => `/api/board/${id}`, //게시글 삭제
-  CATEGORY: (category: string) => `/api/board/category/${category}`, // 게시글 by 카테고리
-  ALL_BOARD: '/api/board',
-};
-
-export const NOTICE_API = {
+export const COMMON_API = {
   CREATE_NOTICE: '/api/board', // 공지 생성
   READ_NOTICE: (id: string | number) => `/api/board/${id}`, // 공지 세부 사항
   UPDATE_NOTICE: (id: string | number) => `/api/board/${id}`, // 공지 수정
   DELETE_NOTICE: (id: string | number) => `/api/board/${id}`, // 공지 삭제
+};
+
+export const BOARD_API = {
+  ALL_BOARD: '/api/board',
+  CATEGORY: (category: string) => `/api/board/category/${category}`, // 게시글 by 카테고리
+};
+
+export const NOTICE_API = {
   ALL_NOTICES: '/api/notice',
 };
 
