@@ -24,6 +24,7 @@ interface PostListProps {
   posts: Post[];
   width?: string;
   isAdmin?: boolean;
+  isMyPost?: boolean;
   onDelete?: (id: number) => void;
 }
 
@@ -32,6 +33,7 @@ const PostList: React.FC<PostListProps> = ({
   posts,
   width = '75rem',
   isAdmin,
+  isMyPost,
   onDelete,
 }) => {
   const navigate = useNavigate();
@@ -48,17 +50,40 @@ const PostList: React.FC<PostListProps> = ({
   return (
     <Styled.PostListContainer width={width}>
       {/* 테이블 버튼 옵션 */}
-      {!isAdmin && (
+      {!isMyPost ? (
         <Styled.ButtonBox>
-          <Styled.WriteButton onClick={() => navigate('/write')}>
-            <LuPencilLine />
-            글쓰기
-          </Styled.WriteButton>
-          <Styled.CheckboxWrapper>
-            <Styled.Checkbox type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
-            <div>공지 숨기기</div>
-          </Styled.CheckboxWrapper>
+          {isAdmin ? (
+            <Styled.WriteButton onClick={() => navigate('/write')}>
+              <LuPencilLine />
+              공지 쓰기
+            </Styled.WriteButton>
+          ) : (
+            <>
+              <Styled.WriteButton onClick={() => navigate('/write')}>
+                <LuPencilLine />
+                글쓰기
+              </Styled.WriteButton>
+              <Styled.CheckboxWrapper>
+                <Styled.Checkbox
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
+                <div>공지 숨기기</div>
+              </Styled.CheckboxWrapper>
+            </>
+          )}
         </Styled.ButtonBox>
+      ) : (
+        <div
+          style={{
+            textAlign: 'center',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            marginBottom: '5px',
+          }}>
+          📝 내가 쓴 글
+        </div>
       )}
 
       {/* 테이블 헤더 */}
