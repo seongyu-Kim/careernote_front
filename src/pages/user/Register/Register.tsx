@@ -108,7 +108,6 @@ const Register = () => {
   }, [inputEmail]);
 
   const handleSubmitUserData = async (event: React.FormEvent<HTMLFormElement>) => {
-    //모든 필드가 채워져있는지 확인
     event.preventDefault();
     if (
       inputNickname === '' ||
@@ -119,18 +118,15 @@ const Register = () => {
       setNotAccorPassword('모든 필드를 채워주세요');
       return;
     }
-
     if (!passwordConfirmStatus) {
       setNotAccorPassword('비밀번호가 일치하지 않습니다.');
       return;
     }
-
     const resData = {
       email: inputEmail,
       password: inputPassword,
       nickname: inputNickname,
     };
-
     try {
       const res = await apiUtils({
         url: SIGNUP,
@@ -146,6 +142,7 @@ const Register = () => {
       console.error('회원가입 오류', error);
     }
   };
+
   return (
     <Styled.PageBackground>
       <Styled.Container height="800px">
