@@ -1,11 +1,11 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import { FaRegCheckCircle } from 'react-icons/fa';
-import { IoAlertCircleOutline } from 'react-icons/io5';
 import React from 'react';
 import Input from '@components/Input/Input';
 import Button from '@components/Button/Button';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
+import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 
 interface InputCheckrProps {
   inputTagType: string;
@@ -57,68 +57,57 @@ const InputChecker = ({
           />
           {valid && <FaRegCheckCircle className="checkIcon" />}
         </Styled.InputLabel>
-        {/*{useCheckDuplication && (*/}
-        {/*  <Button*/}
-        {/*    onClick={() => duplicationCheck(checkDuplicationType)}*/}
-        {/*    width="30%"*/}
-        {/*    height="40px"*/}
-        {/*    border="1px solid #b3d5eb"*/}
-        {/*    textColor="#79b0c8">*/}
-        {/*    중복 확인*/}
-        {/*  </Button>*/}
-        {/*)}*/}
-        {/*<CheckDuplication*/}
-        {/*  useCheck={useCheckDuplication}*/}
-        {/*  dataType={checkDuplicationType}*/}
-        {/*  value={checkDuplicationValue}*/}
-        {/*/>*/}
+        <CheckDuplication
+          useCheck={useCheckDuplication}
+          dataType={checkDuplicationType}
+          value={checkDuplicationValue}
+        />
       </Styled.InputWrapper>
-      <Styled.Divider tabIndex={-1}>
-        {checkMessage && (
-          <Styled.ErrorMessage tabIndex={-1}>
-            <IoAlertCircleOutline />
-            {checkMessage}
-          </Styled.ErrorMessage>
-        )}
-      </Styled.Divider>
+      <InputErrorMessage message={checkMessage} />
     </Styled.InputBoxContainer>
   );
 };
 
-// const CheckDuplication = ({useCheck, dataType, value}: CheckDuplicationProps) => {
-//   const { CHECK_DUPLICATION } = USER_API;
-//
-//   const duplicationCheck = async (type: string) => {
-//     if (value) {
-//       return;
-//     }
-//     const resData = value;
-//     try {
-//       const res = await apiUtils({
-//         url: `http://kdt-react-1-team01.elicecoding.com:3002${CHECK_DUPLICATION}`,
-//         data: type === 'nickname' ? { nickname: resData } : { email: resData },
-//         withAuth: false,
-//       });
-//       console.log(resData);
-//       console.log(res);
-//       if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
-//         console.log('사용가능!');
-//       }
-//     } catch (error) {
-//       console.log('중복 검사 오류', error);
-//     }
-//   };
-//
-//   return ({useCheck && (
-//     <Button
-//       onClick={() => duplicationCheck(dataType)}
-//       width="30%"
-//       height="40px"
-//       border="1px solid #b3d5eb"
-//       textColor="#79b0c8">
-//       중복 확인
-//     </Button>
-//   )})
-// }
+const CheckDuplication = ({ useCheck, dataType, value }: CheckDuplicationProps) => {
+  const { CHECK_DUPLICATION } = USER_API;
+
+  const duplicationCheck = async (type: string) => {
+    if (value) {
+      return;
+    }
+    const resData = value;
+    try {
+      const res = await apiUtils({
+        url: CHECK_DUPLICATION,
+        data: type === 'nickname' ? { nickname: resData } : { email: resData },
+        withAuth: false,
+      });
+      console.log(resData);
+      console.log(res);
+      if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
+        console.log('사용가능!');
+      }
+    } catch (error) {
+      console.log('중복 검사 오류', error);
+    }
+  };
+
+  if (!useCheck) {
+    return null;
+  }
+
+  return (
+    useCheck && (
+      <Button
+        onClick={() => duplicationCheck(dataType)}
+        width="30%"
+        height="40px"
+        border="1px solid #b3d5eb"
+        textColor="#79b0c8">
+        중복 확인
+      </Button>
+    )
+  );
+};
 
 export default InputChecker;

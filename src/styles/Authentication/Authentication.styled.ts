@@ -143,7 +143,7 @@ export const PasswordButtonContainer = styled(ButtonContainer)`
 export const FindPasswordButtonContainer = styled(ButtonContainer)`
   align-items: center;
 `;
-export const Divider = styled.button`
+export const Divider = styled.div`
   width: 100%;
   margin: 7%;
   position: relative;

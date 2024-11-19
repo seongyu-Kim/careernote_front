@@ -12,19 +12,16 @@ export const USER_API = {
   USER_DELETE: `${BASE_URL}/api/user/delete`, // 유저 탈퇴
 };
 
-export const COMMON_API = {
-  CREATE_NOTICE: `${BASE_URL}/api/board`, // 공지 생성
-  READ_NOTICE: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 공지 세부 사항
-  UPDATE_NOTICE: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 공지 수정
-  DELETE_NOTICE: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 공지 삭제
-};
-
 export const BOARD_API = {
-  ALL_BOARD: `${BASE_URL}/api/board`,
+  ALL_BOARD: `${BASE_URL}/api/board`, // 게시글 목록 조회
   CATEGORY: (category: string) => `${BASE_URL}/api/board/category/${category}`, // 게시글 by 카테고리
+  CREATE_BOARD: `${BASE_URL}/api/board`, // 게시글 생성
+  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 게시물 RUD
 };
 
 export const NOTICE_API = {
-  ALL_NOTICES: `${BASE_URL}/api/notice`,
+  ALL_NOTICES: `${BASE_URL}/api/notice`, // 공지 목록 조회
+  CREATE_NOTICE: `${BASE_URL}/api/notice`, // 공지 생성
+  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/notice/${id}`, // 공지 RUD
 };
 //const response = await axios.get(BOARD_ROUTE_API.READ_BOARD(id)); 사용 예시
