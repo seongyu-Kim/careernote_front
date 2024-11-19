@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { LOGOUT } from '@routes/apiRoutes';
+import apiUtils from '@utils/apiUtils';
 
 interface UserState {
   user: {
@@ -47,7 +49,12 @@ export const useUserStore = create<UserState>((set) => ({
     });
     localStorage.setItem('token', JSON.stringify(accessToken));
   },
-  logout: () => {
+  logout: async () => {
+    try {
+      await apiUtils();
+    } catch (error) {
+      console.log(error);
+    }
     set({ user: null, isLogin: false, token: null });
     localStorage.removeItem('token');
   },
