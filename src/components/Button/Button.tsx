@@ -1,30 +1,5 @@
 import * as Styled from './Button.styled';
-import React, { ReactNode } from 'react';
-
-interface DefaultButtonProps {
-  children?: ReactNode;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  textColor?: string;
-  backgroundColor?: string;
-  border?: string;
-  borderRadius?: string;
-  width?: string;
-  height?: string;
-  padding?: string;
-  position?: 'absolute' | 'relative' | 'fixed' | 'sticky' | 'static' | 'inherit';
-  top?: string;
-  bottom?: string;
-  left?: string;
-  right?: string;
-  useTransition?: boolean;
-  useHover?: boolean;
-  hoverBackgroundColor?: string;
-  transitionDuration?: number;
-  hoverScale?: number;
-  disabled?: boolean;
-  fontSize?: string;
-  type?: 'button' | 'submit' | 'reset';
-}
+import { ButtonProps } from '@/type/button';
 
 const Button = ({
   children, //버튼 텍스트
@@ -49,7 +24,7 @@ const Button = ({
   disabled = false, // 버튼 비활성화
   fontSize = '16px',
   type = 'button',
-}: DefaultButtonProps) => {
+}: ButtonProps) => {
   return (
     <Styled.DefaultButton
       onClick={onClick}

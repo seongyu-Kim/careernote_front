@@ -1,31 +1,5 @@
 import * as Styled from './Input.styled';
-import React, { ReactNode } from 'react';
-
-interface DefaultInputProps {
-  children?: ReactNode;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  placeholderColor?: string;
-  type?: string;
-  value?: string;
-  width?: string;
-  height?: string;
-  border?: string;
-  borderRadius?: string;
-  outline?: string;
-  backgroundColor?: string;
-  caretColor?: string;
-  padding?: string;
-  margin?: string;
-  position?: 'absolute' | 'relative' | 'fixed' | 'sticky' | 'static' | 'inherit';
-  top?: string;
-  bottom?: string;
-  left?: string;
-  right?: string;
-  fontSize?: string;
-  textColor?: string;
-  focusBorderColor?: string;
-}
+import { InputProps } from '@/type/input';
 
 const Input = ({
   children,
@@ -51,7 +25,7 @@ const Input = ({
   fontSize,
   textColor = 'black',
   focusBorderColor = 'none',
-}: DefaultInputProps) => {
+}: InputProps) => {
   return (
     <Styled.DefaultInput
       onChange={onChange}

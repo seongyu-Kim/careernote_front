@@ -8,10 +8,6 @@ import React, { useEffect, useState } from 'react';
 import InputChecker from '@components/InputChecker/InputChecker';
 import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
-import {
-  ButtonContainer,
-  PasswordButtonContainer,
-} from '@styles/Authentication/Authentication.styled';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
@@ -79,7 +75,7 @@ const ResetPassword = () => {
 
   return (
     <Styled.PageBackground>
-      <Styled.Container height="60%">
+      <Styled.Container height="600px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text fontSize="2.5rem">비밀번호 재설정</Styled.Text>
@@ -98,7 +94,7 @@ const ResetPassword = () => {
               valid={passwordRegEx.test(inputConfirmPassword)}
               checkMessage={confirmPasswordCheckMessage}
             />
-            <Styled.Divider>
+            <Styled.Divider tabIndex={-1}>
               {errorMsg == '' ? null : (
                 <Styled.PasswordErrorMessage>
                   <IoAlertCircleOutline />
@@ -114,6 +110,8 @@ const ResetPassword = () => {
                 textColor="white"
                 backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                 useHover={!inputFieldChecked}
+                useTransition={true}
+                transitionDuration={0.3}
                 hoverBackgroundColor="#3F82AC">
                 재설정
               </Button>
