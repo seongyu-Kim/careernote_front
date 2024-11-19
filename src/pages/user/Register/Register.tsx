@@ -8,6 +8,7 @@ import { USER_API } from '@routes/apiRoutes';
 import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
 import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
+import { REG_EX } from '@utils/RegEx';
 
 //추후 컴포넌트 분리
 const Register = () => {
@@ -24,10 +25,9 @@ const Register = () => {
   const [notAccorPassword, setNotAccorPassword] = useState<string>(''); // 패스워드 불일치 시 에러 메세지 추후 리팩토링
   const navigate = useNavigate();
 
-  const nicknameRegEx = /^(?! )[A-Za-z0-9가-힣]{2,}(?! )$/;
-  const emailRegEx =
-    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
-  const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
+  const { nicknameRegEx } = REG_EX;
+  const { emailRegEx } = REG_EX;
+  const { passwordRegEx } = REG_EX;
 
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
   const { SIGNUP } = USER_API;

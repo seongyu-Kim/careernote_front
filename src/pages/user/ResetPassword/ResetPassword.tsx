@@ -8,6 +8,7 @@ import InputChecker from '@components/InputChecker/InputChecker';
 import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
 import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
+import { REG_EX } from '@utils/RegEx';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
@@ -18,7 +19,7 @@ const ResetPassword = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
-  const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
+  const { passwordRegEx } = REG_EX;
   const { RESET_PASSWORD } = USER_API;
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 

@@ -7,14 +7,14 @@ import React, { useEffect, useState } from 'react';
 import { USER_API } from '@routes/apiRoutes';
 import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
+import { REG_EX } from '@utils/RegEx';
 
 export const FindPassword = () => {
   const [setEmailCheckMessage, setSetEmailCheckMessage] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
   const { isOpen, setIsOpen } = useModal();
-  const emailRegEx =
-    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
+  const { emailRegEx } = REG_EX;
   const { REQUEST_RESET_PASSWORD } = USER_API;
 
   useEffect(() => {
