@@ -29,7 +29,7 @@ const AdminPostView = () => {
   });
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
-  const level = user?.levelName;
+  const level = user?.level.name;
   const username = user?.nickName;
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const AdminPostView = () => {
         const updatedPost: PostProps = {
           ...response,
           date: new Date(response.updatedAt).toLocaleString(),
-          writer: '관리자'
+          writer: '관리자',
         };
         setPost(updatedPost);
       } catch (error) {

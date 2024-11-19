@@ -9,6 +9,7 @@ import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
 import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 import { REG_EX } from '@utils/RegEx';
+import { useValidCheck } from '@stores/useCheckDuplication';
 
 //추후 컴포넌트 분리
 const Register = () => {
@@ -23,6 +24,7 @@ const Register = () => {
   const [passwordCheckMessage, setPasswordCheckMessage] = useState<string>(''); // 패스워드 유효성 체크 메시지
   const [confirmPasswordCheckMessage, setConfirmPasswordCheckMessage] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
   const [notAccorPassword, setNotAccorPassword] = useState<string>(''); // 패스워드 불일치 시 에러 메세지 추후 리팩토링
+  const { validCheck, setValidCheck, resetValidCheck } = useValidCheck();
   const navigate = useNavigate();
 
   const { nicknameRegEx } = REG_EX;
@@ -39,8 +41,18 @@ const Register = () => {
     const passwordValid = inputPassword.length >= 8 && passwordRegEx.test(inputPassword);
     const confirmPasswordValid =
       inputConfirmPassword.length >= 8 && passwordRegEx.test(inputConfirmPassword);
+    const nickNameDuplication = validCheck.nickName;
+    const emailDuplication = validCheck.email;
 
-    if (passwordMatching && nicknameValid && emailValid && passwordValid && confirmPasswordValid) {
+    if (
+      passwordMatching &&
+      nicknameValid &&
+      emailValid &&
+      passwordValid &&
+      confirmPasswordValid &&
+      nickNameDuplication &&
+      emailDuplication
+    ) {
       setInputFieldChecked(false);
     } else {
       setInputFieldChecked(true);
@@ -78,7 +90,22 @@ const Register = () => {
       setPasswordConfirmStatus(false);
       setNotAccorPassword('비밀번호가 일치하지 않습니다.');
     }
-  }, [inputNickname, inputEmail, inputPassword, inputConfirmPassword]);
+  }, [
+    inputNickname,
+    inputEmail,
+    inputPassword,
+    inputConfirmPassword,
+    validCheck.nickName,
+    validCheck.email,
+  ]);
+
+  useEffect(() => {
+    setValidCheck('nickName', false);
+  }, [inputNickname]);
+
+  useEffect(() => {
+    setValidCheck('email', false);
+  }, [inputEmail]);
 
   const handleSubmitUserData = async (event: React.FormEvent<HTMLFormElement>) => {
     //모든 필드가 채워져있는지 확인
@@ -112,13 +139,13 @@ const Register = () => {
         withAuth: false,
       });
       if (res.message === '회원가입 성공') {
+        resetValidCheck();
         navigate(LOGIN_PAGE_URL);
       }
     } catch (error) {
       console.error('회원가입 오류', error);
     }
   };
-
   return (
     <Styled.PageBackground>
       <Styled.Container height="800px">
