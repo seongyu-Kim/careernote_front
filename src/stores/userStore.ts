@@ -1,31 +1,60 @@
 import { create } from 'zustand';
-import { LOGOUT } from '@routes/apiRoutes';
+import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
+
+interface Level {
+  _id: string;
+  name: string;
+}
+
+interface Board {
+  _id: string;
+  title: string;
+  content: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+interface User {
+  _id: string;
+  email: string;
+  nickname: string;
+  level: Level;
+  boards: Board[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  accessToken: string;
+}
 
 interface UserState {
   user: {
     user_id: string;
     email: string;
     nickName: string;
-    level_id: string;
-    levelName: string;
+    level: Level;
+    boards: Board[];
     created_at: string;
+    updated_at: string;
+    __v: number;
     accessToken: string;
   } | null;
   token: string | null;
   isLogin: boolean;
-  login: ({ user_id, email, nickname, level_id, levelName, createdAt, accessToken }: User) => void;
+  login: ({
+    _id,
+    email,
+    nickname,
+    level,
+    boards,
+    createdAt,
+    updatedAt,
+    __v,
+    accessToken,
+  }: User) => void;
   logout: () => void;
-}
-
-interface User {
-  user_id: string;
-  email: string;
-  nickname: string;
-  level_id: string;
-  levelName: string;
-  createdAt: string;
-  accessToken: string;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -33,15 +62,27 @@ export const useUserStore = create<UserState>((set) => ({
   token: null,
   isLogin: false,
 
-  login: ({ user_id, email, nickname, level_id, levelName, createdAt, accessToken }: User) => {
+  login: ({
+    _id,
+    email,
+    nickname,
+    level,
+    boards,
+    createdAt,
+    updatedAt,
+    __v,
+    accessToken,
+  }: User) => {
     set({
       user: {
-        user_id,
+        user_id: _id,
         email,
         nickName: nickname,
-        level_id,
-        levelName,
+        level,
+        boards,
         created_at: createdAt,
+        updated_at: updatedAt,
+        __v,
         accessToken,
       },
       isLogin: true,
@@ -50,8 +91,14 @@ export const useUserStore = create<UserState>((set) => ({
     localStorage.setItem('token', JSON.stringify(accessToken));
   },
   logout: async () => {
+    const { LOGOUT } = USER_API;
     try {
-      await apiUtils();
+      await apiUtils({
+        url: LOGOUT,
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
+        withAuth: false,
+      });
     } catch (error) {
       console.log(error);
     }
