@@ -6,6 +6,7 @@ import { NavbarContainer } from 'components';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { NOTICE_API } from '@routes/apiRoutes';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 const { CREATE_NOTICE } = NOTICE_API;
 const AdminWritePost = () => {
   const user = useUserStore((state) => state.user);
@@ -38,12 +39,12 @@ const AdminWritePost = () => {
         data: data,
       });
       if (response.status === 200) {
-        alert('게시물이 저장되었습니다.');
+        SuccessToast('게시물이 저장되었습니다.');
         console.log('서버 응답 데이터:', response);
       }
     } catch (error) {
       console.error('공지 등록 요청 실패:', error);
-      alert('공지를 다시 등록하세요.');
+      ErrorToast('공지를 다시 등록하세요.');
     }
     navigate('/admin');
   };

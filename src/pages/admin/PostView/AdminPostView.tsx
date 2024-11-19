@@ -6,6 +6,7 @@ import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { SuccessToast } from '@utils/ToastUtils';
 const { DETAILS_BOARD } = NOTICE_API;
 interface PostProps {
   title: string;
@@ -61,7 +62,7 @@ const AdminPostView = () => {
   }, [postId]);
 
   const handleDelete = (postId: string) => {
-    console.log(`게시글 ${postId}이 삭제되었습니다.`);
+    SuccessToast(`게시글 ${postId}이 삭제되었습니다.`);
     // 삭제 API 호출 (postId를 이용)
     closeAlert();
     navigate('/admin');

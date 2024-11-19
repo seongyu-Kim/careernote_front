@@ -6,6 +6,7 @@ import { NavbarContainer } from 'components';
 import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 const { CREATE_BOARD } = BOARD_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
@@ -50,12 +51,12 @@ const WritePost = () => {
         data: data,
       });
       if (response.status === 201) {
-        alert('게시물이 저장되었습니다.');
+        SuccessToast('게시물이 저장되었습니다.');
         console.log('서버 응답 데이터:', response);
       }
     } catch (error) {
       console.error('게시글 등록 혹은 수정 요청 실패:', error);
-      alert('게시물을 다시 등록하세요.');
+      ErrorToast('게시물을 다시 등록하세요.');
     }
     navigate('/posts');
   };
