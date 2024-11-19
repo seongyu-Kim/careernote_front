@@ -7,7 +7,7 @@ import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 
-interface InputCheckrProps {
+interface InputCheckerProps {
   inputTagType: string;
   placeholderText: string;
   onChange: (value: string) => void;
@@ -33,7 +33,7 @@ const InputChecker = ({
   useCheckDuplication = false, // 중복 검사 사용 여부
   checkDuplicationType = '', //이메일 닉네임 지정
   checkDuplicationValue, // 이거 따라서 중복 확인 요청 api 보내게
-}: InputCheckrProps) => {
+}: InputCheckerProps) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     onChange(value);
