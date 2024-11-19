@@ -1,11 +1,10 @@
 import React from 'react';
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
-import PostList from '@components/PostList/PostList';
-import landing from '@assets/landing.png';
-import * as Styled from '@components/PostList/PostList.styled';
-import Pagination from '@components/Pagination/Pagination';
 import { useState } from 'react';
 import useCategoryStore from '@stores/useCategoryStore';
+import { useLocation } from 'react-router-dom';
+import { NavbarContainer, PostList, Pagination } from 'components';
+import landing from '@assets/landing.png';
+import * as Styled from './Main.styled';
 
 interface Post {
   id: number;
@@ -335,11 +334,11 @@ const dummyPosts: Post[] = [
   },
 ];
 
-const Main: React.FC = () => {
+const Main = () => {
   const savedPage = sessionStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
   const [posts, setPosts] = useState<Post[]>(dummyPosts);
-  const { selectedCategory } = useCategoryStore();
+  // const { selectedCategory } = useCategoryStore();
   const postsPerPage = 20;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -372,10 +371,13 @@ const Main: React.FC = () => {
     { key: 'date', label: '작성일', flex: '1' },
   ];
 
+  const location = useLocation();
+  const isMyPost = location.pathname === '/mypage';
+
   return (
     <NavbarContainer>
       <Styled.LogoImg src={landing} alt="Landing" />
-      <PostList posts={currentPosts} columns={columns} />
+      <PostList isMyPost={isMyPost} posts={currentPosts} columns={columns} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
