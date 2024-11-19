@@ -27,9 +27,7 @@ const Register = () => {
   const { validCheck, setValidCheck, resetValidCheck } = useValidCheck();
   const navigate = useNavigate();
 
-  const { nicknameRegEx } = REG_EX;
-  const { emailRegEx } = REG_EX;
-  const { passwordRegEx } = REG_EX;
+  const { nicknameRegEx, emailRegEx, passwordRegEx } = REG_EX;
 
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
   const { SIGNUP } = USER_API;

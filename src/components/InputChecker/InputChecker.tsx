@@ -148,7 +148,7 @@ const CheckDuplication = ({
         console.log('사용가능!');
         return validCheck!(true);
       }
-      // 여기에 중복된 경우 에러메시지로 중복되었다고 알려주기
+      // 여기에 중복된 경우 에러메시지로 중복되었다고 알려주기 setDuplicationCheck 이걸로 중복검사 false 주기
       // return
     } catch (error) {
       console.log('중복 검사 오류', error);
