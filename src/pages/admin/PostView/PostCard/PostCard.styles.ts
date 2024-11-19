@@ -2,16 +2,33 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 700px;
+  height: 100%;
   margin: 40px auto;
   padding: 20px;
   border-radius: 8px;
+  background-color:#f2f2f2;
 `;
 
-export const Category = styled.h2`
+export const Category = styled.h2<{ category: string }>`
   font-size: 14px;
   font-weight: normal;
-  color: #333;
   margin: 10px 0;
+  width: fit-content;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: ${(props) => {
+    switch (props.category) {
+      case '스터디':
+        return '#B7A8F0'; 
+      case '취업정보':
+        return '#4CAF50';
+      case '등업':
+        return '#FFC107'; 
+      default:
+        return '#BDBDBD'; 
+    }
+  }};
+  color: white;
 `;
 
 export const Title = styled.h1`
@@ -41,7 +58,7 @@ export const Date = styled.span`
 
 export const Content = styled.p`
   font-size: 16px;
-  height: 400px;
+  height: 600px;
   color: #333;
   line-height: 1.6;
   word-break: break-word;

@@ -9,6 +9,7 @@ import { USER_API } from '@routes/apiRoutes';
 import Input from '@components/Input/Input';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
+import { SuccessToast } from '@utils/ToastUtils';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
@@ -18,6 +19,7 @@ const LoginPage = () => {
   const { login } = useUserStore();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
+  const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
   const { LOGIN } = USER_API;
 
@@ -55,7 +57,11 @@ const LoginPage = () => {
       if (res.message === '로그인 성공') {
         console.log(res.data.user);
         login(res.data.user);
-        navigate(MAIN_PAGE_URL);
+        if (res.data.user.level.name === '관리자') {
+          navigate(ADMIN_MAIN)
+        } else {
+          navigate(MAIN_PAGE_URL);
+        }
       }
     } catch (error) {
       console.error('로그인 오류', error);
