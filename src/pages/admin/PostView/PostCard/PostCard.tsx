@@ -14,12 +14,12 @@ interface PostCardProps {
     date: string;
     content: string;
   };
-  user: string; // writer랑 일치하면 수정,삭제 가능
+  user?: string; // writer랑 일치하면 수정,삭제 가능
   level?: string; // 관리자이면 모든 글 수정, 삭제 가능
   onDelete: (postId: string) => void;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, user, level, onDelete }) => {
+const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
   const { openAlert } = useAlertStore();
   const navigate = useNavigate();
 

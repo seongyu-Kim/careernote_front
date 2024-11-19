@@ -1,12 +1,12 @@
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
+import { NavbarContainer } from 'components';
 import PostCard from '@pages/admin/PostView/PostCard/PostCard';
 import React, { useEffect, useState } from 'react';
-import { COMMON_API } from '@routes/apiRoutes';
+import { BOARD_API } from '@routes/apiRoutes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
 import apiUtils from '@utils/apiUtils';
 import { useUserStore } from '@stores/userStore';
-const { READ_NOTICE, DELETE_NOTICE } = COMMON_API;
+const { DETAILS_BOARD } = BOARD_API;
 interface PostProps {
   title: string;
   content: string;
@@ -15,22 +15,21 @@ interface PostProps {
   writer: string;
   id: string;
 }
-const PostView: React.FC = () => {
+const PostView = () => {
   const { postId } = useParams();
   const { closeAlert } = useAlertStore();
-  const user = useUserStore((state) => state.user?.nickName as string);
+  const userName = useUserStore((state) => state.user?.nickName);
   const navigate = useNavigate();
   const [post, setPost] = useState<PostProps>({
-    title: '제목',
-    content: '내용',
-    category: '취업정보',
-    date: '2023-03-21',
-    writer: '리온이누나',
+    title: '',
+    content: '',
+    category: '',
+    date: '',
+    writer: '',
     id: '',
   }); // api 준비되면 빈 값으로 교체
 
   useEffect(() => {
-    console.log(user);
     if (!postId) {
       console.error('해당 postId가 없습니다.');
       return;
@@ -38,12 +37,18 @@ const PostView: React.FC = () => {
     const fetchPostDetails = async () => {
       try {
         const response = await apiUtils({
-          url: READ_NOTICE(postId),
+          url: DETAILS_BOARD(postId),
           method: 'GET',
         });
 
         console.log('서버 응답 데이터:', response);
-        setPost(response.data);
+        // 서버에서 받은 데이터를 가공
+        const updatedPost: PostProps = {
+          ...response,
+          date: new Date(response.updatedAt).toLocaleString(),
+          writer: response.user.nickname
+        };
+        setPost(updatedPost);
       } catch (error) {
         console.error('게시글 상세 조회 요청 실패:', error);
       }
@@ -55,7 +60,7 @@ const PostView: React.FC = () => {
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: DELETE_NOTICE(postId),
+        url: DETAILS_BOARD(postId),
         method: 'DELETE',
       });
       if (response.status === 200) {
@@ -74,7 +79,7 @@ const PostView: React.FC = () => {
       <NavbarContainer>
         <PostCard
           post={post}
-          user={user} //user가 writer랑 일치해야만 수정, 삭제 버튼 떠야함
+          user={userName} //user가 writer랑 일치해야만 수정, 삭제 버튼 떠야함
           onDelete={() => handleDelete(postId as string)}
         />
       </NavbarContainer>
