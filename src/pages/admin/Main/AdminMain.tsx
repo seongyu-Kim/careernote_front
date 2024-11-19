@@ -86,22 +86,22 @@ const AdminMain = () => {
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
 
   // 모든 게시글 데이터 가져오기
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await apiUtils({
-          url: ALL_BOARD,
-          method: 'GET',
-        });
-        console.log('게시글 데이터:', response);
-        setPosts(response.data);
-      } catch (error) {
-        console.error('게시글 데이터 가져오기 실패:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await apiUtils({
+  //         url: ALL_BOARD,
+  //         method: 'GET',
+  //       });
+  //       console.log('게시글 데이터:', response);
+  //       setPosts(response.data);
+  //     } catch (error) {
+  //       console.error('게시글 데이터 가져오기 실패:', error);
+  //     }
+  //   };
 
-    fetchPosts();
-  }, []);
+  //   fetchPosts();
+  // }, []);
 
   // 게시판 카테고리 선택
   const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
