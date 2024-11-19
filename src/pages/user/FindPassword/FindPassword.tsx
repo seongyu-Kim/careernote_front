@@ -8,11 +8,6 @@ import React, { useEffect, useState } from 'react';
 import { USER_API } from '@routes/apiRoutes';
 import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
-import {
-  FindPasswordButtonContainer,
-  ModalBackground,
-  ModalContainer,
-} from '@styles/Authentication/Authentication.styled';
 
 export const FindPassword = () => {
   const [setEmailCheckMessage, setSetEmailCheckMessage] = useState<string>('');
@@ -97,7 +92,11 @@ export const FindPassword = () => {
                   width="100%"
                   border="none"
                   backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
-                  textColor="white">
+                  textColor="white"
+                  useHover={!inputFieldChecked}
+                  useTransition={true}
+                  transitionDuration={0.3}
+                  hoverBackgroundColor="#3F82AC">
                   전송
                 </Button>
               </Styled.FindPasswordButtonContainer>

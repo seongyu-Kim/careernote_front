@@ -107,7 +107,7 @@ const Register = () => {
 
     try {
       const res = await apiUtils({
-        url: `http://kdt-react-1-team01.elicecoding.com:3002${SIGNUP}`,
+        url: SIGNUP,
         method: 'POST',
         data: resData,
         withAuth: false,
@@ -122,7 +122,13 @@ const Register = () => {
 
   return (
     <Styled.PageBackground>
-      <Styled.Container height="85%">
+      <button
+        onClick={() => {
+          console.log(SIGNUP);
+        }}>
+        버튼
+      </button>
+      <Styled.Container height="800px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text>Sign Up</Styled.Text>
@@ -161,7 +167,7 @@ const Register = () => {
               placeholderText="비밀번호 확인."
               checkMessage={confirmPasswordCheckMessage}
             />
-            <Styled.Divider>
+            <Styled.Divider tabIndex={-1}>
               {notAccorPassword && (
                 <Styled.PasswordErrorMessage>
                   <IoAlertCircleOutline />
@@ -184,7 +190,11 @@ const Register = () => {
                 width="40%"
                 backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                 border="none"
-                textColor="white">
+                textColor="white"
+                useHover={!inputFieldChecked}
+                useTransition={true}
+                transitionDuration={0.3}
+                hoverBackgroundColor="#3F82AC">
                 회원가입
               </Button>
             </Styled.RegisterButtonContainer>

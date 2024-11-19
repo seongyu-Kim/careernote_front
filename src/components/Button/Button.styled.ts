@@ -1,25 +1,5 @@
 import styled from 'styled-components';
-
-export interface ButtonProps {
-  borderRadius: string;
-  textColor: string;
-  backgroundColor: string;
-  border: string;
-  width: string;
-  height: string;
-  padding: string;
-  position: 'absolute' | 'relative' | 'fixed' | 'sticky' | 'static' | 'inherit';
-  top?: string;
-  bottom?: string;
-  left?: string;
-  right?: string;
-  useTransition?: boolean;
-  useHover?: boolean;
-  hoverBackgroundColor?: string;
-  hoverScale?: number;
-  transitionDuration?: number;
-  fontSize?: string;
-}
+import { ButtonProps } from '@/type/button';
 
 export const DefaultButton = styled.button<ButtonProps>`
   display: flex;

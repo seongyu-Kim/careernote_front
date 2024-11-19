@@ -48,7 +48,7 @@ const LoginPage = () => {
     };
     try {
       const res = await apiUtils({
-        url: `http://kdt-react-1-team01.elicecoding.com:3002${LOGIN}`,
+        url: LOGIN,
         method: 'POST',
         data: resData,
         withAuth: false,
@@ -63,12 +63,12 @@ const LoginPage = () => {
   };
   return (
     <Styled.PageBackground>
-      <Styled.Container height="60%">
+      <Styled.Container height="570px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text>Login</Styled.Text>
           <Styled.Form onSubmit={handleSubmitLogin}>
-            <Styled.InputBoxContainer>
+            <Styled.LoginInputBoxContainer>
               <Input
                 onChange={handleInputChange('id')}
                 type="text"
@@ -110,6 +110,8 @@ const LoginPage = () => {
                   textColor="white"
                   backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
                   useHover={!inputFieldChecked}
+                  useTransition={true}
+                  transitionDuration={0.3}
                   hoverBackgroundColor="#3F82AC">
                   로그인
                 </Button>
@@ -124,7 +126,7 @@ const LoginPage = () => {
                   JOIN US
                 </Button>
               </Styled.ButtonContainer>
-            </Styled.InputBoxContainer>
+            </Styled.LoginInputBoxContainer>
           </Styled.Form>
         </Styled.Field>
       </Styled.Container>
