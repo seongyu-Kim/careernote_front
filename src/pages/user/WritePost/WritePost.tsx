@@ -7,19 +7,20 @@ import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
-const { CREATE_BOARD } = BOARD_API;
+const { CREATE_BOARD, DETAILS_BOARD } = BOARD_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
 const WritePost = () => {
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
-  const level = user?.level.name;
   const userId = user?.user_id;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
+  // state가 존재하는지 확인
+  const isEdit = !!state;
   const [category, setCategory] = useState(state?.category || '선택');
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
-
+  const postId = state?.postId;
   const navigate = useNavigate();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,31 +35,40 @@ const WritePost = () => {
     setContent(e.target.value);
   };
   const handleCancle = () => {
-    navigate('/posts'); // 관리자가 아니면 /posts로 이동
+    navigate('/posts');
   };
+
+  // 글 수정/생성 공통 작업 
   const handleSubmit = async () => {
     const data = {
       title,
       content,
-      category: category, // level이 "관리자"인 경우 category를 "공지"로 설정
+      category: category,
       user: userId,
     };
 
     try {
       const response = await apiUtils({
-        url: CREATE_BOARD,
-        method: 'POST',
+        url: isEdit ? DETAILS_BOARD(postId) : CREATE_BOARD,
+        method: isEdit ? 'PUT' : 'POST',
         data: data,
       });
-      if (response.status === 201) {
+
+      if (isEdit) {
+        SuccessToast('게시물이 수정되었습니다.');
+      } else {
         SuccessToast('게시물이 저장되었습니다.');
-        console.log('서버 응답 데이터:', response);
       }
+      console.log('서버 응답 데이터:', response);
     } catch (error) {
       console.error('게시글 등록 혹은 수정 요청 실패:', error);
-      ErrorToast('게시물을 다시 등록하세요.');
+      if (isEdit) {
+        ErrorToast('게시물 수정 중 오류가 발생했습니다.');
+      } else {
+        ErrorToast('게시물 등록 중 오류가 발생했습니다.');
+      }
+      navigate('/posts');
     }
-    navigate('/posts');
   };
   return (
     <NavbarContainer>

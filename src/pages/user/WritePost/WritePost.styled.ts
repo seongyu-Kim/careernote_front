@@ -2,9 +2,11 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 700px;
+  height: 100%;
   margin: 40px auto;
   padding: 20px;
   border-radius: 8px;
+  background-color:#f2f2f2;
 `;
 
 export const AdminNotice = styled.h2`
@@ -35,7 +37,7 @@ export const InputField = styled.input`
   border-radius: 5px;
   font-size: 14px;
   box-sizing: border-box;
-  background-color: rgba(179, 213, 235, 0.2);
+  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 export const SelectCategory = styled.select`
@@ -45,19 +47,19 @@ export const SelectCategory = styled.select`
   border-radius: 5px;
   font-size: 14px;
   box-sizing: border-box;
-  background-color: rgba(179, 213, 235, 0.2);
+  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 export const TextareaField = styled.textarea`
   width: 100%;
-  height: 500px;
+  height: 600px;
   padding: 10px;
   margin-bottom: 15px;
   border: none;
   border-radius: 5px;
   font-size: 14px;
   box-sizing: border-box;
-  background-color: rgba(179, 213, 235, 0.2);
+  background-color: rgba(255, 255, 255, 0.7);
   margin-top: 10px;
 `;
 
