@@ -8,6 +8,7 @@ import UserSection from '@pages/admin/Main/Dnd/UserSection';
 import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
 import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
 const { ALL_BOARD, CATEGORY } = BOARD_API;
 const { DETAILS_BOARD } = BOARD_API;  //공지 외 카테고리 RUD api 주소
@@ -56,6 +57,7 @@ const AdminMain = () => {
   // 모든 사용자 데이터 가져오기
   useEffect(() => {
     const fetchUsers = async () => {
+
       try {
         const response = await apiUtils({
           url: ALL_USER,
@@ -64,11 +66,11 @@ const AdminMain = () => {
         console.log('사용자 데이터:', response);
         // postCount 계산 후 상태 업데이트
         const updatedUsers = response.data.map((user: any) => ({
-          id: user._id, // id 필드 매핑
+          id: user._id,
           email: user.email,
           nickname: user.nickname,
-          level: user.level,
-          postCount: user.boards?.length || 0, // boards 길이 계산
+          level: user.level?.name || '알 수 없음',
+          postCount: user.boards?.length || 0,
         }));
 
         setUsers(updatedUsers); // 상태 업데이트
@@ -134,10 +136,11 @@ const AdminMain = () => {
       });
       if (response.status === 200) {
         console.log('게시글 삭제 성공 응답 데이터:', response);
-        alert(`게시글 ${id} 삭제되었습니다.`);
+        SuccessToast(`게시글 ${id} 삭제되었습니다.`);
       }
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
+      ErrorToast('게시물 삭제에 실패했습니다.')
     }
     closeAlert();
   };
@@ -158,10 +161,10 @@ const AdminMain = () => {
       // 상태 업데이트
       //setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
       console.log('사용자 탈퇴 성공했습니다.');
-      alert(`${id} 사용자가 탈퇴되었습니다.`);
+      SuccessToast(`${id} 사용자가 탈퇴되었습니다.`);
     } catch (error) {
       console.error('사용자 탈퇴 중 오류 발생:', error);
-      alert(`${id}사용자 탈퇴에 실패했습니다.`);
+      ErrorToast(`${id}사용자 탈퇴에 실패했습니다.`);
     } finally {
       closeAlert(); // 모달 닫기
     }

@@ -53,7 +53,7 @@ const PostList: React.FC<PostListProps> = ({
       {!isMyPost ? (
         <Styled.ButtonBox>
           {isAdmin ? (
-            <Styled.WriteButton onClick={() => navigate('/write')}>
+            <Styled.WriteButton onClick={() => navigate('/admin-write')}>
               <LuPencilLine />
               공지 쓰기
             </Styled.WriteButton>

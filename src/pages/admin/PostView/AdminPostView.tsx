@@ -1,4 +1,4 @@
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
+import { NavbarContainer } from 'components';
 import PostCard from '@pages/admin/PostView/PostCard/PostCard';
 import { NOTICE_API } from '@routes/apiRoutes';
 import { useAlertStore } from '@stores/store';
@@ -6,6 +6,7 @@ import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { SuccessToast } from '@utils/ToastUtils';
 const { DETAILS_BOARD } = NOTICE_API;
 interface PostProps {
   title: string;
@@ -29,7 +30,7 @@ const AdminPostView = () => {
   });
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
-  const level = user?.levelName;
+  const level = user?.level.name;
   const username = user?.nickName;
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const AdminPostView = () => {
   }, [postId]);
 
   const handleDelete = (postId: string) => {
-    console.log(`게시글 ${postId}이 삭제되었습니다.`);
+    SuccessToast(`게시글 ${postId}이 삭제되었습니다.`);
     // 삭제 API 호출 (postId를 이용)
     closeAlert();
     navigate('/admin');
