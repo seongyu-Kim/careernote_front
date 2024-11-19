@@ -1,13 +1,13 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
 import Button from '@components/Button/Button';
-import { IoAlertCircleOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { USER_API } from '@routes/apiRoutes';
 import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
+import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 
 //추후 컴포넌트 분리
 const Register = () => {
@@ -90,7 +90,6 @@ const Register = () => {
       inputConfirmPassword === ''
     ) {
       setNotAccorPassword('모든 필드를 채워주세요');
-      console.log(11);
       return;
     }
 
@@ -122,12 +121,6 @@ const Register = () => {
 
   return (
     <Styled.PageBackground>
-      <button
-        onClick={() => {
-          console.log(SIGNUP);
-        }}>
-        버튼
-      </button>
       <Styled.Container height="800px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
@@ -167,14 +160,7 @@ const Register = () => {
               placeholderText="비밀번호 확인."
               checkMessage={confirmPasswordCheckMessage}
             />
-            <Styled.Divider tabIndex={-1}>
-              {notAccorPassword && (
-                <Styled.PasswordErrorMessage>
-                  <IoAlertCircleOutline />
-                  {notAccorPassword}
-                </Styled.PasswordErrorMessage>
-              )}
-            </Styled.Divider>
+            <InputErrorMessage message={notAccorPassword} confirm={true} />
             <Styled.RegisterButtonContainer>
               <Button
                 onClick={() => navigate(LOGIN_PAGE_URL)}

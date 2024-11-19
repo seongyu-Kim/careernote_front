@@ -1,4 +1,3 @@
-// import * as Styled from '@components/common/Modal/FindPasswordModal/FindPassword.styled';
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
 import Button from '@components/Button/Button';
@@ -45,7 +44,7 @@ export const FindPassword = () => {
     const resData = { email: inputEmail };
     try {
       const res = await apiUtils({
-        url: `http://kdt-react-1-team01.elicecoding.com:3002${REQUEST_RESET_PASSWORD}`,
+        url: REQUEST_RESET_PASSWORD,
         method: 'POST',
         data: resData,
         withAuth: false,
