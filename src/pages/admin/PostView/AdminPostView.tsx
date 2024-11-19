@@ -1,12 +1,12 @@
 import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
 import PostCard from '@pages/admin/PostView/PostCard/PostCard';
-import { COMMON_API } from '@routes/apiRoutes';
+import { NOTICE_API } from '@routes/apiRoutes';
 import { useAlertStore } from '@stores/store';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-const { READ_NOTICE, DELETE_NOTICE } = COMMON_API;
+const { DETAILS_BOARD } = NOTICE_API;
 interface PostProps {
   title: string;
   content: string;
@@ -41,7 +41,7 @@ const AdminPostView = () => {
     const fetchPostDetails = async () => {
       try {
         const response = await apiUtils({
-          url: READ_NOTICE(postId),
+          url: DETAILS_BOARD(postId),
           method: 'GET',
         });
 
@@ -49,7 +49,8 @@ const AdminPostView = () => {
         // 서버에서 받은 데이터를 가공
         const updatedPost: PostProps = {
           ...response,
-          date: new Date(response.updatedAt).toLocaleString(), // updatedAt을 가공하여 date에 저장
+          date: new Date(response.updatedAt).toLocaleString(),
+          writer: '관리자'
         };
         setPost(updatedPost);
       } catch (error) {

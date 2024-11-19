@@ -1,12 +1,12 @@
 import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
 import PostCard from '@pages/admin/PostView/PostCard/PostCard';
 import React, { useEffect, useState } from 'react';
-import { COMMON_API } from '@routes/apiRoutes';
+import { BOARD_API } from '@routes/apiRoutes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
 import apiUtils from '@utils/apiUtils';
 import { useUserStore } from '@stores/userStore';
-const { READ_NOTICE, DELETE_NOTICE } = COMMON_API;
+const { DETAILS_BOARD } = BOARD_API;
 interface PostProps {
   title: string;
   content: string;
@@ -37,7 +37,7 @@ const PostView = () => {
     const fetchPostDetails = async () => {
       try {
         const response = await apiUtils({
-          url: READ_NOTICE(postId),
+          url: DETAILS_BOARD(postId),
           method: 'GET',
         });
 
@@ -60,7 +60,7 @@ const PostView = () => {
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: DELETE_NOTICE(postId),
+        url: DETAILS_BOARD(postId),
         method: 'DELETE',
       });
       if (response.status === 200) {

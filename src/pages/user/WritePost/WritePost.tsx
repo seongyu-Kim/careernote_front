@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as Styled from '@pages/user/WritePost/WritePost.styled';
 import Button from '@components/Button/Button';
 import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
-import { COMMON_API } from '@routes/apiRoutes';
+import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-const { CREATE_NOTICE, UPDATE_NOTICE } = COMMON_API;
-
+const { CREATE_NOTICE } = NOTICE_API;
+const { CREATE_BOARD } = BOARD_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 const WritePost = () => {
   // userStore에서 로그인 사용자 정보 가져오기
@@ -50,7 +50,7 @@ const WritePost = () => {
     //관리자일 경우 url UPDATE_NOTIC로 바꿔야함
     try {
       const response = await apiUtils({
-        url: CREATE_NOTICE,
+        url: CREATE_BOARD,
         method: method,
         data: data,
       });

@@ -9,10 +9,10 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@pages/admin/Main/Dnd/UserSection';
 import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
-import { USER_API, BOARD_API, COMMON_API } from '@routes/apiRoutes';
+import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
 const { ALL_BOARD, CATEGORY } = BOARD_API;
-const { DELETE_NOTICE } = COMMON_API;
+const { DETAILS_BOARD } = BOARD_API;  //공지 외 카테고리 RUD api 주소
 
 const dummyPosts = [
   {
@@ -85,7 +85,7 @@ const AdminMain = () => {
   const piakMembers = users.filter((user) => user.level === '삐약이');
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
 
-  // 모든 게시글 데이터 가져오기
+  // 모든 게시글 데이터 가져오기 (공지랑 게시글 따로 불러와야함)
   // useEffect(() => {
   //   const fetchPosts = async () => {
   //     try {
@@ -131,7 +131,7 @@ const AdminMain = () => {
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: DELETE_NOTICE(id),
+        url: DETAILS_BOARD(id), // 공지 외 다른 카테고리 삭제 api
         method: 'DELETE',
       });
       if (response.status === 200) {
