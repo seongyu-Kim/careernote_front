@@ -48,7 +48,7 @@ const LoginPage = () => {
     };
     try {
       const res = await apiUtils({
-        url: `http://kdt-react-1-team01.elicecoding.com:3002${LOGIN}`,
+        url: LOGIN,
         method: 'POST',
         data: resData,
         withAuth: false,
