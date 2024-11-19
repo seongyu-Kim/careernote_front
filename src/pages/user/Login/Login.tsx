@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
   const { isOpen, setIsOpen, setModalState } = useModal();
-  const { login } = useUserStore();
+  const { login, logout, user, token, isLogin } = useUserStore();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const REGISTER_PAGE_URL = ROUTE_LINK.REGISTER.link;
@@ -41,7 +41,6 @@ const LoginPage = () => {
 
   const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('로그인 제출!');
     const resData = {
       userEmail: inputId,
       password: inputPassword,
@@ -54,6 +53,7 @@ const LoginPage = () => {
         withAuth: false,
       });
       if (res.message === '로그인 성공') {
+        console.log(res.data.user);
         login(res.data.user);
         navigate(MAIN_PAGE_URL);
       }
@@ -63,6 +63,15 @@ const LoginPage = () => {
   };
   return (
     <Styled.PageBackground>
+      <button onClick={logout}>로그아웃 테스트</button>
+      <button
+        onClick={() => {
+          console.log('유저', user);
+          console.log(`토큰: ${token}`);
+          console.log(`로그인 상태:${isLogin}`);
+        }}>
+        유저 정보 및 토큰 확인
+      </button>
       <Styled.Container height="570px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
