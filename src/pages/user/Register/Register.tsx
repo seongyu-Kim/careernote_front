@@ -107,7 +107,7 @@ const Register = () => {
 
     try {
       const res = await apiUtils({
-        url: `http://kdt-react-1-team01.elicecoding.com:3002${SIGNUP}`,
+        url: SIGNUP,
         method: 'POST',
         data: resData,
         withAuth: false,
@@ -122,6 +122,12 @@ const Register = () => {
 
   return (
     <Styled.PageBackground>
+      <button
+        onClick={() => {
+          console.log(SIGNUP);
+        }}>
+        버튼
+      </button>
       <Styled.Container height="800px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
