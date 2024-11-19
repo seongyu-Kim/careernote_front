@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
 import apiUtils from '@utils/apiUtils';
 import { useUserStore } from '@stores/userStore';
+import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
+
 const { DETAILS_BOARD } = BOARD_API;
 interface PostProps {
   title: string;
@@ -63,12 +65,13 @@ const PostView = () => {
         url: DETAILS_BOARD(postId),
         method: 'DELETE',
       });
-      if (response.status === 200) {
+      if (response.status === 200 || 201) {
         console.log('게시글 삭제 성공 응답 데이터:', response);
-        alert(`게시글 ${postId} 삭제되었습니다.`);
+        SuccessToast(`게시글 ${postId} 삭제되었습니다.`);
       }
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
+      ErrorToast('다시 시도해주세요.')
     }
     closeAlert();
     navigate('/posts');

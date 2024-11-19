@@ -6,13 +6,14 @@ import { NavbarContainer } from 'components';
 import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-const { CREATE_NOTICE } = NOTICE_API;
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 const { CREATE_BOARD } = BOARD_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
+
 const WritePost = () => {
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
-  const level = user?.levelName;
+  const level = user?.level.name;
   const userId = user?.user_id;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
   const [category, setCategory] = useState(state?.category || '선택');
@@ -33,78 +34,60 @@ const WritePost = () => {
     setContent(e.target.value);
   };
   const handleCancle = () => {
-    if (level === '관리자') {
-      navigate('/admin'); // 관리자는 /admin으로 이동
-    } else {
-      navigate('/posts'); // 관리자가 아니면 /posts로 이동
-    }
+    navigate('/posts'); // 관리자가 아니면 /posts로 이동
   };
   const handleSubmit = async () => {
     const data = {
       title,
       content,
-      category: level === '관리자' ? '공지' : category, // level이 "관리자"인 경우 category를 "공지"로 설정
+      category: category, // level이 "관리자"인 경우 category를 "공지"로 설정
       user: userId,
     };
-    const method = level === '관리자' ? 'PUT' : 'POST';
-    //관리자일 경우 url UPDATE_NOTIC로 바꿔야함
+
     try {
       const response = await apiUtils({
         url: CREATE_BOARD,
-        method: method,
+        method: 'POST',
         data: data,
       });
-      if (response.status === 200) {
-        alert('게시물이 저장되었습니다.');
+      if (response.status === 201) {
+        SuccessToast('게시물이 저장되었습니다.');
         console.log('서버 응답 데이터:', response);
       }
     } catch (error) {
       console.error('게시글 등록 혹은 수정 요청 실패:', error);
-      alert('게시물을 다시 등록하세요.');
+      ErrorToast('게시물을 다시 등록하세요.');
     }
-    if (level === '관리자') {
-      navigate('/admin'); // 관리자는 /admin으로 이동
-    } else {
-      navigate('/posts'); // 관리자가 아니면 /posts로 이동
-    }
+    navigate('/posts');
   };
   return (
     <NavbarContainer>
       <Styled.Container>
-        {/* 관리자일 경우 "공지"를 상단에 표시 */}
-        {level === '관리자' && <Styled.AdminNotice>공지</Styled.AdminNotice>}
-        <div>
-          <Styled.FormFieldGroup>
-            <div style={{ flex: 3, display: 'flex' }}>
-              <Styled.Label style={{ width: '50px' }}>제목</Styled.Label>
-              <Styled.InputField
-                type="text"
-                placeholder="제목을 입력해 주세요."
-                value={title}
-                onChange={handleTitleChange}
-                style={{ width: level === '관리자' ? '610px' : '100%' }} // 관리자일 경우 넓은 너비 적용
-              />
-            </div>
-            <div style={{ flex: 1, display: 'flex' }}>
-              {level === '관리자' ? (
-                <></>
-              ) : (
-                // 관리자 아닌 경우 선택 가능한 카테고리 셀렉트박스
-                <>
-                  <Styled.Label>카테고리</Styled.Label>
-                  <Styled.SelectCategory value={category} onChange={handleCategoryChange}>
-                    {CategoryOptions.map((option, index) => (
-                      <option key={index} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </Styled.SelectCategory>
-                </>
-              )}
-            </div>
-          </Styled.FormFieldGroup>
-        </div>
 
+        <Styled.FormFieldGroup>
+          <div style={{ flex: 3, display: 'flex' }}>
+            <Styled.Label>제목</Styled.Label>
+            <Styled.InputField
+              type="text"
+              placeholder="제목을 입력해 주세요."
+              value={title}
+              onChange={handleTitleChange}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div style={{ flex: 1, display: 'flex' }}>
+            <>
+              <Styled.Label>카테고리</Styled.Label>
+              <Styled.SelectCategory value={category} onChange={handleCategoryChange}>
+                {CategoryOptions.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Styled.SelectCategory>
+            </>
+          </div>
+        </Styled.FormFieldGroup>
         <div>
           <Styled.Label style={{ marginBottom: '10px' }}>내용</Styled.Label>
           <Styled.TextareaField
