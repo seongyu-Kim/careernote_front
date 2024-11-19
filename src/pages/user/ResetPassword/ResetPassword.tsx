@@ -3,11 +3,12 @@ import logo from '@assets/icon.png';
 import Button from '@components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { ROUTE_LINK } from '@routes/routes';
-import { IoAlertCircleOutline } from 'react-icons/io5';
 import React, { useEffect, useState } from 'react';
 import InputChecker from '@components/InputChecker/InputChecker';
 import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
+import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
+import { REG_EX } from '@utils/RegEx';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
@@ -18,7 +19,7 @@ const ResetPassword = () => {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const navigate = useNavigate();
 
-  const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
+  const { passwordRegEx } = REG_EX;
   const { RESET_PASSWORD } = USER_API;
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 
@@ -60,7 +61,7 @@ const ResetPassword = () => {
     };
     try {
       const res = await apiUtils({
-        url: `http://kdt-react-1-team01.elicecoding.com:3002${RESET_PASSWORD}`,
+        url: RESET_PASSWORD,
         method: 'PUT',
         data: resData,
         withAuth: false,
@@ -94,14 +95,7 @@ const ResetPassword = () => {
               valid={passwordRegEx.test(inputConfirmPassword)}
               checkMessage={confirmPasswordCheckMessage}
             />
-            <Styled.Divider tabIndex={-1}>
-              {errorMsg == '' ? null : (
-                <Styled.PasswordErrorMessage>
-                  <IoAlertCircleOutline />
-                  {errorMsg}
-                </Styled.PasswordErrorMessage>
-              )}
-            </Styled.Divider>
+            <InputErrorMessage message={errorMsg} confirm={true} />
             <Styled.PasswordButtonContainer>
               <Button
                 disabled={inputFieldChecked}
