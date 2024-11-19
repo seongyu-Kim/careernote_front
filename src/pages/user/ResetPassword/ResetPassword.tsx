@@ -57,7 +57,7 @@ const ResetPassword = () => {
   const handleSubmitResetPassword = async () => {
     const resData = {
       password: inputPassword,
-      // token: 토큰 가져와서 넣어주기
+      // token: 토큰 가져와서 넣어주기 Bearer, Authorization
     };
     try {
       const res = await apiUtils({
