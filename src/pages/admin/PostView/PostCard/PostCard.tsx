@@ -32,13 +32,16 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
         writer: post.writer,
         date: post.date,
         content: post.content,
+        postId: post.id
       },
     });
   };
 
   return (
     <Styled.Container>
-      <Styled.Category>{post.category}</Styled.Category>
+      <Styled.Category category={post.category ?? '공지'}>
+        {post.category ?? '공지'}
+      </Styled.Category>
       <Styled.Title>{post.title}</Styled.Title>
       <Styled.Writer>{post.writer}</Styled.Writer>
       <Styled.Date>{post.date}</Styled.Date>

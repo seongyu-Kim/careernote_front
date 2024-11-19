@@ -20,7 +20,8 @@ interface PostProps {
 const PostView = () => {
   const { postId } = useParams();
   const { closeAlert } = useAlertStore();
-  const userName = useUserStore((state) => state.user?.nickName);
+  //const userName = useUserStore((state) => state.user?.nickName);
+  const userName = '닉넴';
   const navigate = useNavigate();
   const [post, setPost] = useState<PostProps>({
     title: '',
@@ -29,7 +30,7 @@ const PostView = () => {
     date: '',
     writer: '',
     id: '',
-  }); // api 준비되면 빈 값으로 교체
+  });
 
   useEffect(() => {
     if (!postId) {
@@ -44,11 +45,14 @@ const PostView = () => {
         });
 
         console.log('서버 응답 데이터:', response);
-        // 서버에서 받은 데이터를 가공
+
         const updatedPost: PostProps = {
-          ...response,
+          id: response._id,
+          title: response.title,
+          content: response.content,
+          category: response.category.name,
+          writer: response.user.nickname,
           date: new Date(response.updatedAt).toLocaleString(),
-          writer: response.user.nickname
         };
         setPost(updatedPost);
       } catch (error) {

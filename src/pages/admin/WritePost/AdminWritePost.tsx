@@ -38,10 +38,8 @@ const AdminWritePost = () => {
         method: 'POST',
         data: data,
       });
-      if (response.status === 200) {
-        SuccessToast('게시물이 저장되었습니다.');
-        console.log('서버 응답 데이터:', response);
-      }
+      SuccessToast('게시물이 저장되었습니다.');
+      console.log('서버 응답 데이터:', response);
     } catch (error) {
       console.error('공지 등록 요청 실패:', error);
       ErrorToast('공지를 다시 등록하세요.');
