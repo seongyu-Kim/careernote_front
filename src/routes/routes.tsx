@@ -4,7 +4,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import Main from '@pages/user/Main/Main';
 import Login from '@pages/user/Login/Login';
 import Register from '@pages/user/Register/Register';
-import Mypage from '@pages/user/MyPage/Mypage';
 import ResetPassword from '@pages/user/ResetPassword/ResetPassword';
 import PostView from '@pages/user/PostView/PostView';
 import WritePost from '@pages/user/WritePost/WritePost';
@@ -52,7 +51,7 @@ const routes = [
       },
       {
         path: ROUTE_LINK.MYPAGE.path,
-        element: <Mypage />,
+        element: <Main />,
       },
       {
         path: ROUTE_LINK.POST_VIEW.path,

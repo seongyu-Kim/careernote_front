@@ -21,9 +21,9 @@ export const Logo = styled.button`
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);
-
   cursor: pointer;
 `;
+
 export const LogoImg = styled.img`
   width: 164px;
   height: 51px;
@@ -36,7 +36,14 @@ export const LogoutBox = styled.div`
   gap: 10px;
 `;
 
-//사이드바
+export const UserNameText = styled.div`
+  color: #325366;
+`;
+
+export const Logout = styled.div`
+  cursor: pointer;
+`;
+
 const slideIn = keyframes`
   from {
     transform: translateX(-100%);
@@ -91,6 +98,16 @@ export const Hr = styled.hr`
   border: none;
   border-top: 1px solid #d9d9d9;
   margin: 15px;
+`;
+
+export const UserInfoDetails = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+`;
+
+export const UserInfoItem = styled.div`
+  cursor: pointer;
 `;
 
 export const QuitBtn = styled.button`
