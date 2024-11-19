@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import * as Styled from '@pages/user/WritePost/WritePost.styled';
+import * as Styled from './WritePost.styled';
 import Button from '@components/Button/Button';
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
+import { NavbarContainer } from 'components';
 import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';

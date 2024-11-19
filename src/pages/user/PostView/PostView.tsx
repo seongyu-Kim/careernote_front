@@ -1,4 +1,4 @@
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
+import { NavbarContainer } from 'components';
 import PostCard from '@pages/admin/PostView/PostCard/PostCard';
 import React, { useEffect, useState } from 'react';
 import { BOARD_API } from '@routes/apiRoutes';

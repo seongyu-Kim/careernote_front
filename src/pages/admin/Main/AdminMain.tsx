@@ -1,9 +1,7 @@
-import Pagination from '@components/Pagination/Pagination';
-import PostList from '@components/PostList/PostList';
+import { NavbarContainer, PostList, Pagination } from 'components';
 import { useAlertStore } from '@stores/store';
 import React, { useEffect, useState } from 'react';
-import * as Styled from '@pages/admin/Main/AdminMain.styled';
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
+import * as Styled from './AdminMain.styled';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@pages/admin/Main/Dnd/UserSection';
