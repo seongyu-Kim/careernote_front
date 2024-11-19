@@ -1,11 +1,17 @@
 import React from 'react';
 import * as Styled from './NavbarContainer.styled';
-import Navbar from '@components/Navbar/Navbar';
+import { Navbar } from 'components';
 
-const NavbarContainer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface NavbarContainerProps {
+  children: React.ReactNode;
+}
+
+const categories = ['자유게시판', '공지', '등업', '취업', '스터디'];
+
+const NavbarContainer = ({ children }: NavbarContainerProps) => {
   return (
     <Styled.MainBox>
-      <Navbar />
+      <Navbar categories={categories} />
       <Styled.ContentBox>{children}</Styled.ContentBox>
     </Styled.MainBox>
   );

@@ -6,13 +6,11 @@ export const PostListContainer = styled.div<{ width: string }>`
   width: ${(props) => props.width || '75rem'};
 `;
 
-export const LogoImg = styled.img`
-  /* width: 20%; */
-  width: 693px;
-  height: 220px;
-  justify-content: center;
-
-  margin: 40px 0;
+export const MyPostText = styled.div`
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
 `;
 
 export const PostHeader = styled.div`
@@ -79,4 +77,9 @@ export const TableCell = styled.div<{ isTitle?: boolean }>`
   &:hover {
     text-decoration: ${(props) => (props.isTitle ? 'underline' : 'none')};
   }
+`;
+
+export const NoDataText = styled.div`
+  text-align: center;
+  margin-top: 10px;
 `;
