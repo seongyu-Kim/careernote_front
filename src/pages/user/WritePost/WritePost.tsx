@@ -6,7 +6,7 @@ import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
 import { COMMON_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-const { CREATE_NOTICE } = COMMON_API;
+const { CREATE_NOTICE, UPDATE_NOTICE } = COMMON_API;
 
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 const WritePost = () => {
@@ -14,7 +14,6 @@ const WritePost = () => {
   const user = useUserStore((state) => state.user);
   const level = user?.levelName;
   const userId = user?.user_id;
-
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
   const [category, setCategory] = useState(state?.category || '선택');
   const [title, setTitle] = useState(state?.title || '');
@@ -47,10 +46,12 @@ const WritePost = () => {
       category: level === '관리자' ? '공지' : category, // level이 "관리자"인 경우 category를 "공지"로 설정
       user: userId,
     };
+    const method = level === '관리자' ? 'PUT' : 'POST';
+    //관리자일 경우 url UPDATE_NOTIC로 바꿔야함
     try {
       const response = await apiUtils({
         url: CREATE_NOTICE,
-        method: 'POST',
+        method: method,
         data: data,
       });
       if (response.status === 200) {
@@ -61,7 +62,11 @@ const WritePost = () => {
       console.error('게시글 등록 혹은 수정 요청 실패:', error);
       alert('게시물을 다시 등록하세요.');
     }
-    navigate('/posts');
+    if (level === '관리자') {
+      navigate('/admin'); // 관리자는 /admin으로 이동
+    } else {
+      navigate('/posts'); // 관리자가 아니면 /posts로 이동
+    }
   };
   return (
     <NavbarContainer>

@@ -52,11 +52,7 @@ const AdminMain = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
   const [category, setCategory] = useState('all');
-  const [users, setUsers] = useState<User[]>([
-    { id: '11', email: 'elice@naver.com', postCount: 0, level: '삐약이', nickname: 'dd' },
-    { id: '2', email: 'aro123@naver.com', postCount: 12, level: '삐약이', nickname: 'dd' },
-    { id: '3', email: 'tteam123@naver.com', postCount: 12, level: '꼬꼬닭', nickname: 'dd' },
-  ]); // 유저 상태
+  const [users, setUsers] = useState<User[]>([]); // 유저 상태
   const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
 
   // 모든 사용자 데이터 가져오기
@@ -68,7 +64,16 @@ const AdminMain = () => {
           method: 'GET',
         });
         console.log('사용자 데이터:', response);
-        setUsers(response);
+        // postCount 계산 후 상태 업데이트
+        const updatedUsers = response.data.map((user: any) => ({
+          id: user._id, // id 필드 매핑
+          email: user.email,
+          nickname: user.nickname,
+          level: user.level,
+          postCount: user.boards?.length || 0, // boards 길이 계산
+        }));
+
+        setUsers(updatedUsers); // 상태 업데이트
       } catch (error) {
         console.error('사용자 데이터 가져오기 실패:', error);
       }
@@ -89,7 +94,7 @@ const AdminMain = () => {
           method: 'GET',
         });
         console.log('게시글 데이터:', response);
-        setPosts(response);
+        setPosts(response.data);
       } catch (error) {
         console.error('게시글 데이터 가져오기 실패:', error);
       }
