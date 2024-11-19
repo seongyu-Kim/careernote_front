@@ -56,6 +56,7 @@ const AdminMain = () => {
   // 모든 사용자 데이터 가져오기
   useEffect(() => {
     const fetchUsers = async () => {
+
       try {
         const response = await apiUtils({
           url: ALL_USER,
@@ -64,11 +65,11 @@ const AdminMain = () => {
         console.log('사용자 데이터:', response);
         // postCount 계산 후 상태 업데이트
         const updatedUsers = response.data.map((user: any) => ({
-          id: user._id, // id 필드 매핑
+          id: user._id,
           email: user.email,
           nickname: user.nickname,
-          level: user.level,
-          postCount: user.boards?.length || 0, // boards 길이 계산
+          level: user.level?.name || '알 수 없음',
+          postCount: user.boards?.length || 0,
         }));
 
         setUsers(updatedUsers); // 상태 업데이트

@@ -12,7 +12,7 @@ const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 const WritePost = () => {
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
-  const level = user?.levelName;
+  const level = user?.level.name;
   const userId = user?.user_id;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
   const [category, setCategory] = useState(state?.category || '선택');
