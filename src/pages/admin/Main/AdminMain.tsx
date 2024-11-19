@@ -1,18 +1,16 @@
-import Pagination from '@components/Pagination/Pagination';
-import PostList from '@components/PostList/PostList';
+import { NavbarContainer, PostList, Pagination } from 'components';
 import { useAlertStore } from '@stores/store';
 import React, { useEffect, useState } from 'react';
-import * as Styled from '@pages/admin/Main/AdminMain.styled';
-import NavbarContainer from '@components/NavbarContainer/NavbarContainer';
+import * as Styled from './AdminMain.styled';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@pages/admin/Main/Dnd/UserSection';
 import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
-import { USER_API, BOARD_API, COMMON_API } from '@routes/apiRoutes';
+import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
 const { ALL_BOARD, CATEGORY } = BOARD_API;
-const { DELETE_NOTICE } = COMMON_API;
+const { DETAILS_BOARD } = BOARD_API;  //공지 외 카테고리 RUD api 주소
 
 const dummyPosts = [
   {
@@ -52,11 +50,7 @@ const AdminMain = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
   const [category, setCategory] = useState('all');
-  const [users, setUsers] = useState<User[]>([
-    { id: '11', email: 'elice@naver.com', postCount: 0, level: '삐약이', nickname: 'dd' },
-    { id: '2', email: 'aro123@naver.com', postCount: 12, level: '삐약이', nickname: 'dd' },
-    { id: '3', email: 'tteam123@naver.com', postCount: 12, level: '꼬꼬닭', nickname: 'dd' },
-  ]); // 유저 상태
+  const [users, setUsers] = useState<User[]>([]); // 유저 상태
   const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
 
   // 모든 사용자 데이터 가져오기
@@ -68,7 +62,16 @@ const AdminMain = () => {
           method: 'GET',
         });
         console.log('사용자 데이터:', response);
-        setUsers(response);
+        // postCount 계산 후 상태 업데이트
+        const updatedUsers = response.data.map((user: any) => ({
+          id: user._id, // id 필드 매핑
+          email: user.email,
+          nickname: user.nickname,
+          level: user.level,
+          postCount: user.boards?.length || 0, // boards 길이 계산
+        }));
+
+        setUsers(updatedUsers); // 상태 업데이트
       } catch (error) {
         console.error('사용자 데이터 가져오기 실패:', error);
       }
@@ -80,23 +83,23 @@ const AdminMain = () => {
   const piakMembers = users.filter((user) => user.level === '삐약이');
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
 
-  // 모든 게시글 데이터 가져오기
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await apiUtils({
-          url: ALL_BOARD,
-          method: 'GET',
-        });
-        console.log('게시글 데이터:', response);
-        setPosts(response);
-      } catch (error) {
-        console.error('게시글 데이터 가져오기 실패:', error);
-      }
-    };
+  // 모든 게시글 데이터 가져오기 (공지랑 게시글 따로 불러와야함)
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await apiUtils({
+  //         url: ALL_BOARD,
+  //         method: 'GET',
+  //       });
+  //       console.log('게시글 데이터:', response);
+  //       setPosts(response.data);
+  //     } catch (error) {
+  //       console.error('게시글 데이터 가져오기 실패:', error);
+  //     }
+  //   };
 
-    fetchPosts();
-  }, []);
+  //   fetchPosts();
+  // }, []);
 
   // 게시판 카테고리 선택
   const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -126,7 +129,7 @@ const AdminMain = () => {
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: DELETE_NOTICE(id),
+        url: DETAILS_BOARD(id), // 공지 외 다른 카테고리 삭제 api
         method: 'DELETE',
       });
       if (response.status === 200) {
