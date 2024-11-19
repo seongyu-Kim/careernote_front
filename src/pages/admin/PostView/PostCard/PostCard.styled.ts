@@ -37,7 +37,11 @@ export const Title = styled.h1`
   font-weight: bold;
   color: #333;
 `;
-
+export const ContainerHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+`;
 export const Writer = styled.h2`
   font-size: 14px;
   font-weight: normal;
@@ -64,10 +68,4 @@ export const Content = styled.p`
   word-break: break-word;
   white-space: pre-wrap; /* 줄 바꿈 유지 */
   margin-bottom: 20px;
-`;
-
-export const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
 `;
