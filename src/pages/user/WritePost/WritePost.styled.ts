@@ -21,11 +21,11 @@ export const FormFieldGroup = styled.div`
 `;
 
 export const Label = styled.label`
-  width: 120px;
-  font-size: 16px;
-  font-weight: bold;
   display: flex;
   align-items: center;
+  min-width: 60px;
+  font-size: 16px;
+  font-weight: bold;
 `;
 
 export const InputField = styled.input`
@@ -58,6 +58,7 @@ export const TextareaField = styled.textarea`
   font-size: 14px;
   box-sizing: border-box;
   background-color: rgba(179, 213, 235, 0.2);
+  margin-top: 10px;
 `;
 
 export const ButtonGroup = styled.div`
