@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import * as Styled from '@components/Alert/Alert.styled';
+import React from 'react';
+import * as Styled from './Alert.styled';
 import Button from '@components/Button/Button';
 import { useAlertStore } from '@stores/store';
 
-const Alert: React.FC = () => {
+const Alert = () => {
   const { isOpen, message, onConfirm, onCancel, closeAlert } = useAlertStore();
 
   // 모달 오픈 시 배경 스크롤 막기
