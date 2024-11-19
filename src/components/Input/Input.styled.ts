@@ -1,25 +1,5 @@
 import styled from 'styled-components';
-
-interface InputProps {
-  placeholderColor: string;
-  width: string;
-  height: string;
-  border: string;
-  borderRadius: string;
-  outline: string;
-  backgroundColor: string;
-  caretColor: string;
-  padding: string;
-  margin: string;
-  position: 'absolute' | 'relative' | 'fixed' | 'sticky' | 'static' | 'inherit';
-  top?: string;
-  bottom?: string;
-  left?: string;
-  right?: string;
-  fontSize?: string;
-  textColor?: string;
-  focusBorderColor?: string;
-}
+import { InputProps } from '@/type/input';
 
 export const DefaultInput = styled.input<InputProps>`
   width: ${(props) => props.width};
