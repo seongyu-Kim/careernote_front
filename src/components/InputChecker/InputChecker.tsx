@@ -124,6 +124,10 @@ const CheckDuplication = ({
   valid,
   validCheck,
 }: CheckDuplicationProps) => {
+  if (!useCheck) {
+    return null;
+  }
+
   const { CHECK_DUPLICATION } = USER_API;
 
   const duplicationCheck = async (type: string) => {
@@ -150,10 +154,6 @@ const CheckDuplication = ({
       console.log('중복 검사 오류', error);
     }
   };
-
-  if (!useCheck) {
-    return null;
-  }
 
   return (
     useCheck && (
