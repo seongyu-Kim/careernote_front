@@ -75,15 +75,7 @@ const PostList: React.FC<PostListProps> = ({
           )}
         </Styled.ButtonBox>
       ) : (
-        <div
-          style={{
-            textAlign: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold',
-            marginBottom: '5px',
-          }}>
-          📝 내가 쓴 글
-        </div>
+        <Styled.MyPostText>📝 내가 쓴 글</Styled.MyPostText>
       )}
 
       {/* 테이블 헤더 */}
@@ -129,7 +121,7 @@ const PostList: React.FC<PostListProps> = ({
           </Styled.PostItem>
         ))
       ) : (
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>작성된 데이터가 없습니다.</div>
+        <Styled.NoDataText>작성된 데이터가 없습니다.</Styled.NoDataText>
       )}
     </Styled.PostListContainer>
   );
