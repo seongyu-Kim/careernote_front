@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import GlobalStyles from '@styles/Globalstyles';
 import { ModalPortal } from '@components/Modal/ModalPortal/ModalPortal';
 import ModalView from '@components/Modal/ModalView/ModalView';
@@ -9,10 +9,12 @@ import Toast from '@components/Toast/Toast';
 import { useUserStore } from '@stores/userStore';
 
 function App() {
-  const { loginRestore } = useUserStore();
+  const navigate = useNavigate(); // useNavigate 훅 사용
+  const { loginRestore, setNavigate } = useUserStore();
   useEffect(() => {
+    setNavigate(navigate);
     loginRestore();
-  }, [loginRestore]);
+  }, [loginRestore, navigate, setNavigate]);
   return (
     <>
       <Toast />
