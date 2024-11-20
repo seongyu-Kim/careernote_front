@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
+import { ErrorToast } from '@utils/ToastUtils';
 
 interface Level {
   _id: string;
@@ -43,6 +44,8 @@ interface UserState {
   } | null;
   token: string | null;
   isLogin: boolean;
+  navigate: Function | null;
+  setNavigate: (navigate: Function) => void;
   login: ({
     _id,
     email,
@@ -58,11 +61,12 @@ interface UserState {
   loginRestore: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   user: null,
   token: null,
   isLogin: false,
-
+  navigate: null,
+  setNavigate: (navigate) => set({ navigate }),
   login: ({
     _id,
     email,
@@ -130,6 +134,11 @@ export const useUserStore = create<UserState>((set) => ({
       } catch (error) {
         set({ user: null, isLogin: false, token: null });
         console.log('유저 정보 재요청 실패', error);
+        const navigate = get().navigate;
+        if (navigate) {
+          ErrorToast('다시 로그인해주세요');
+          navigate('/login'); // /login 페이지로 이동
+        }
       }
     }
   },
