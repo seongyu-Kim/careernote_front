@@ -47,7 +47,7 @@ const Navbar = ({ categories }: NavbarProps) => {
       </Styled.Nav>
 
       {isMenuOpen && (
-        <Styled.Menu isOpen={isMenuOpen}>
+        <Styled.Menu $isOpen={isMenuOpen}>
           <Styled.UserInfo>
             내 정보
             <Styled.UserName>김선규 님 (꼬꼬닭 회원)</Styled.UserName>
@@ -65,7 +65,7 @@ const Navbar = ({ categories }: NavbarProps) => {
           {categories.map((category) => (
             <Styled.MenuItem key={category}>
               <Styled.MenuItemBtn
-                isSelected={selectedMenu === category}
+                $isSelected={selectedMenu === category}
                 onClick={() => handleMenuItemClick(category)}>
                 {category}
               </Styled.MenuItemBtn>
