@@ -1,13 +1,11 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
-import Button from '@components/Button/Button';
+import { Button, InputChecker, InputErrorMessage } from 'components';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { USER_API } from '@routes/apiRoutes';
-import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
-import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 import { REG_EX } from '@utils/RegEx';
 import { useValidCheck } from '@stores/useCheckDuplication';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
@@ -148,21 +146,11 @@ const Register = () => {
 
   return (
     <Styled.PageBackground>
-      <Styled.Container height="800px">
+      <Styled.Container height="830px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text>Sign Up</Styled.Text>
           <Styled.Form onSubmit={handleSubmitUserData}>
-            <InputChecker
-              inputTagType="text"
-              onChange={setInputNickname}
-              valid={nicknameRegEx.test(inputNickname)}
-              placeholderText="닉네임을 입력해주세요."
-              checkMessage={nicknameCheckMessage}
-              useCheckDuplication={true}
-              checkDuplicationValue={inputNickname}
-              checkDuplicationType="nickname"
-            />
             <InputChecker
               inputTagType="text"
               onChange={setInputEmail}
@@ -172,6 +160,16 @@ const Register = () => {
               useCheckDuplication={true}
               checkDuplicationValue={inputEmail}
               checkDuplicationType="email"
+            />
+            <InputChecker
+              inputTagType="text"
+              onChange={setInputNickname}
+              valid={nicknameRegEx.test(inputNickname)}
+              placeholderText="닉네임을 입력해주세요."
+              checkMessage={nicknameCheckMessage}
+              useCheckDuplication={true}
+              checkDuplicationValue={inputNickname}
+              checkDuplicationType="nickname"
             />
             <InputChecker
               inputTagType="password"

@@ -1,14 +1,13 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
-import Button from '@components/Button/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTE_LINK } from '@routes/routes';
 import React, { useEffect, useState } from 'react';
-import InputChecker from '@components/InputChecker/InputChecker';
 import { USER_API } from '@routes/apiRoutes';
 import apiUtils from '@utils/apiUtils';
-import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 import { REG_EX } from '@utils/RegEx';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
+import { Button, InputChecker, InputErrorMessage } from 'components';
 
 const ResetPassword = () => {
   const [inputPassword, setInputPassword] = useState<string>('');
@@ -55,24 +54,29 @@ const ResetPassword = () => {
     }
   }, [inputPassword, inputConfirmPassword]);
 
-  const handleSubmitResetPassword = async () => {
+  const handleSubmitResetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const resData = {
       new_password: inputPassword,
       token: token,
     };
     try {
       const res = await apiUtils({
-        url: RESET_PASSWORD('test'),
+        url: RESET_PASSWORD(token!),
         method: 'PUT',
         data: resData,
         headers: { Authorization: 'Bearer ' },
         withAuth: false,
       });
       if (res.message === '비밀번호 재설정 성공') {
-        navigate(LOGIN_PAGE_URL);
+        SuccessToast('비밀번호 재설정 성공');
+        setTimeout(() => {
+          navigate(LOGIN_PAGE_URL);
+        }, 500);
       }
     } catch (error) {
-      console.log('비밀번호 재설정 오류', error);
+      ErrorToast('비밀번호 재설정 오류');
+      console.error('비밀번호 재설정 오류', error);
     }
   };
 

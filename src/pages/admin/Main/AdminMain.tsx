@@ -11,7 +11,7 @@ import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
 const { ALL_BOARD, CATEGORY } = BOARD_API;
-const { DETAILS_BOARD } = BOARD_API;  //공지 외 카테고리 RUD api 주소
+const { DETAILS_BOARD } = BOARD_API; //공지 외 카테고리 RUD api 주소
 
 const dummyPosts = [
   {
@@ -57,7 +57,6 @@ const AdminMain = () => {
   // 모든 사용자 데이터 가져오기
   useEffect(() => {
     const fetchUsers = async () => {
-
       try {
         const response = await apiUtils({
           url: ALL_USER,
@@ -140,7 +139,7 @@ const AdminMain = () => {
       }
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
-      ErrorToast('게시물 삭제에 실패했습니다.')
+      ErrorToast('게시물 삭제에 실패했습니다.');
     }
     closeAlert();
   };

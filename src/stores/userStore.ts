@@ -55,6 +55,7 @@ interface UserState {
     accessToken,
   }: User) => void;
   logout: () => void;
+  loginRestore: () => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -110,14 +111,26 @@ export const useUserStore = create<UserState>((set) => ({
     localStorage.removeItem('token');
     localStorage.removeItem('isLogin');
   },
+  //새로 고침 시 로그인 상태에 따라 유저 정보 재요청
   loginRestore: async () => {
-    // const user = ???
     const isLogin = localStorage.getItem('isLogin') === 'true';
     const token = localStorage.getItem('token');
-
-    // user 조건 추후 수정
     if (isLogin && token) {
-      set({ isLogin: isLogin, token: token });
+      try {
+        const { USER_ABOUT } = USER_API;
+        const res = await apiUtils({
+          url: USER_ABOUT,
+          method: 'POST',
+          data: { token: localStorage.getItem('token') },
+          withAuth: false,
+        });
+        if (res) {
+          set({ user: res, isLogin: isLogin, token: token });
+        }
+      } catch (error) {
+        set({ user: null, isLogin: false, token: null });
+        console.log('유저 정보 재요청 실패', error);
+      }
     }
   },
 }));
