@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Styled from './PostList.styled';
 import { useNavigate } from 'react-router-dom';
 import { LuPencilLine } from 'react-icons/lu';
@@ -11,12 +11,17 @@ interface Column {
 }
 
 interface Post {
-  id: number;
-  category: string;
+  _id: number;
   title: string;
-  author: string;
-  date: string;
+  category: string;
+  user: User;
+  createdAt: string;
   [key: string]: any;
+}
+interface User {
+  _id: number;
+  nickname: string;
+  level: string;
 }
 
 interface PostListProps {
@@ -38,6 +43,12 @@ const PostList: React.FC<PostListProps> = ({
 }) => {
   const navigate = useNavigate();
   const [isChecked, setChecked] = useState<boolean>(false);
+  //공지 필더링
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
+
+  useEffect(() => {
+    setFilteredPosts(isChecked ? posts.filter((post) => post.category !== '공지') : posts);
+  }, [isChecked, posts]);
 
   const handleCheckboxChange = () => {
     setChecked((prev) => !prev);
@@ -98,24 +109,33 @@ const PostList: React.FC<PostListProps> = ({
 
       {/* 테이블 데이터 */}
       {posts.length > 0 ? (
-        posts.map((item, index) => (
-          <Styled.PostItem key={index}>
-            {columns.map((column) => (
-              <Styled.TableCell
-                key={column.key}
-                isTitle={column.key === 'title'}
-                onClick={column.key === 'title' ? () => handlePostClick(item.id) : undefined}
-                style={{ flex: column.flex }}>
-                {column.render ? column.render(item) : item[column.key]}
-              </Styled.TableCell>
-            ))}
+        posts.map((item) => (
+          <Styled.PostItem key={item.id}>
+            {columns.map((column) => {
+              let value = item[column.key];
+              if (column.key === 'category' && !value) {
+                value = '공지';
+              } else if (column.key === 'user' && typeof value === 'object') {
+                value = value.nickname;
+              }
+
+              return (
+                <Styled.TableCell
+                  key={column.key}
+                  $isTitle={column.key === 'title'}
+                  onClick={column.key === 'title' ? () => handlePostClick(item._id) : undefined}
+                  style={{ flex: column.flex }}>
+                  {value}
+                </Styled.TableCell>
+              );
+            })}
             {isAdmin && onDelete && (
               <Styled.TableCell
                 style={{
                   flex: columns.find((column) => column.key === 'admin')?.flex,
                   textAlign: 'center',
                 }}>
-                <Styled.DeleteBtn onClick={() => onDelete(item.id)}>삭제</Styled.DeleteBtn>
+                <Styled.DeleteBtn onClick={() => onDelete(item._id)}>삭제</Styled.DeleteBtn>
               </Styled.TableCell>
             )}
           </Styled.PostItem>
