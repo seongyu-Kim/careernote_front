@@ -6,9 +6,10 @@ import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SuccessToast } from '@utils/ToastUtils';
-const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
-const { DETAILS_BOARD } = BOARD_API;
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
+import { ROUTE_LINK } from '@routes/routes';
+const { DETAILS_BOARD: DETAILS_NOTICE, CUD_NOTICE } = NOTICE_API;
+const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;
 interface PostProps {
   title: string;
   content: string;
@@ -18,6 +19,7 @@ interface PostProps {
   id: string;
 }
 const AdminPostView = () => {
+  const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
   const { postId } = useParams();
   const { openAlert, closeAlert } = useAlertStore();
   const navigate = useNavigate();
@@ -32,7 +34,8 @@ const AdminPostView = () => {
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
   const level = user?.level.name;
-  //const level = '관리자';
+  const userLevelId = user?.level._id;
+  const userId = user?.user_id
   const username = user?.nickName;
   // 공지 상세 조회
   useEffect(() => {
@@ -92,12 +95,45 @@ const AdminPostView = () => {
     };
     fetchPostDetails();
   }, [postId]);
+  // 게시글 삭제
+  const handleDelete = async (postId: string) => {
+    try {
+      let url;
+      let data;
 
-  const handleDelete = (postId: string) => {
-    SuccessToast(`게시글 ${postId}이 삭제되었습니다.`);
-    // 삭제 API 호출 (postId를 이용)
+      if (post.category === '공지') {
+        // 공지 삭제 요청
+        url = CUD_NOTICE;
+        data = {
+          notice_id: postId,
+          user: userId,
+        };
+      } else {
+        // 일반 게시글 삭제 요청
+        url = CUD_BOARD;
+        data = {
+          board_id: postId,
+          user: userId,
+          level: userLevelId,
+        };
+      }
+
+      // 서버 요청
+      const response = await apiUtils({
+        url,
+        method: 'DELETE',
+        data,
+      });
+      if (response.status === 200 || 201) {
+        console.log('게시글 삭제 성공 응답 데이터:', response);
+        SuccessToast(`게시글 ${postId} 삭제되었습니다.`);
+      }
+    } catch (error) {
+      console.error('게시글 삭제 요청 실패:', error);
+      ErrorToast('다시 시도해주세요.')
+    }
     closeAlert();
-    navigate('/admin');
+    navigate(ADMIN_MAIN);
   };
   return (
     <div>
