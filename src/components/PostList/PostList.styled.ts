@@ -67,17 +67,18 @@ export const Checkbox = styled.input`
   }
 `;
 
-export const TableCell = styled.div<{ isTitle?: boolean }>`
+export const TableCell = styled.div<{ $isTitle?: boolean }>`
   flex: 1;
   text-align: center;
   font-weight: bold;
   padding: 0 8px;
-  cursor: ${(props) => (props.isTitle ? 'pointer' : 'default')};
+  cursor: ${(props) => (props.$isTitle ? 'pointer' : 'default')};
 
   &:hover {
-    text-decoration: ${(props) => (props.isTitle ? 'underline' : 'none')};
+    text-decoration: ${(props) => (props.$isTitle ? 'underline' : 'none')};
   }
 `;
+
 
 export const NoDataText = styled.div`
   text-align: center;
