@@ -65,7 +65,7 @@ const ResetPassword = () => {
         url: RESET_PASSWORD(token!),
         method: 'PUT',
         data: resData,
-        headers: { Authorization: 'Bearer ' },
+        headers: { Authorization: 'Bearer ', token: token! },
         withAuth: false,
       });
       if (res.message === '비밀번호 재설정 성공') {
