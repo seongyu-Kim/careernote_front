@@ -140,15 +140,25 @@ const CheckDuplication = ({
     try {
       const res = await apiUtils({
         url: CHECK_DUPLICATION,
+        method: 'POST',
         data: type === 'nickname' ? { nickname: resData } : { email: resData },
+        // data: { nickname: 'test' },
         withAuth: false,
       });
       console.log('res = ', res);
-      if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
-        errorMsg!('사용가능'); // 나중에 초록색으로
+      if (
+        res.message === '사용 가능한 닉네임입니다' ||
+        res.message === '사용 가능한 이메일입니다'
+      ) {
+        console.log('사용가능');
+        // errorMsg!('사용가능'); // 나중에 초록색으로
         return validCheck!(true);
       }
-      if (res.err) {
+      if (
+        res.message === '이미 존재하는 닉네임 입니다' ||
+        res.message === '이미 존재하는 이메일 입니다'
+      ) {
+        console.log('사용불가');
         errorMsg!('사용불가');
         return validCheck!(false);
       }

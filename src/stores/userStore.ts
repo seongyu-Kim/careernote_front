@@ -96,7 +96,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     set(newState);
 
-    localStorage.setItem('token', JSON.stringify(newState.token));
+    localStorage.setItem('token', newState.token);
     localStorage.setItem('isLogin', JSON.stringify(newState.isLogin));
   },
   logout: async () => {
