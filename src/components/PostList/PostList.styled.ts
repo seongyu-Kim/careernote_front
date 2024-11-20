@@ -29,11 +29,11 @@ export const DeleteBtn = styled.div`
   padding: 5px 0;
 `;
 
-export const PostItem = styled.div`
+export const PostItem = styled.div<{ $isNotice?: boolean }>`
   display: flex;
   text-align: center;
   padding: 9px;
-  background-color: #ececec;
+  background-color: ${(props) => (props.$isNotice ? '#ffccd5' : '#ececec')};
 `;
 
 export const ButtonBox = styled.div`
@@ -78,7 +78,6 @@ export const TableCell = styled.div<{ $isTitle?: boolean }>`
     text-decoration: ${(props) => (props.$isTitle ? 'underline' : 'none')};
   }
 `;
-
 
 export const NoDataText = styled.div`
   text-align: center;
