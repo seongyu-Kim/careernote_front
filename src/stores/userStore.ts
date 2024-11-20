@@ -134,12 +134,12 @@ export const useUserStore = create<UserState>((set, get) => ({
       } catch (error) {
         set({ user: null, isLogin: false, token: null });
         console.log('유저 정보 재요청 실패', error);
-        const navigate = get().navigate;
-        if (navigate) {
-          ErrorToast('다시 로그인해주세요');
-          navigate('/login'); // /login 페이지로 이동
-        }
       }
+    }
+    const navigate = get().navigate;
+    if (navigate) {
+      ErrorToast('다시 로그인해주세요');
+      navigate('/login'); // /login 페이지로 이동
     }
   },
 }));
