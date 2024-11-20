@@ -9,54 +9,54 @@ import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
 import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
+import { useUserStore } from '@stores/userStore';
+import { useLocation } from 'react-router-dom';
 const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
-const { ALL_BOARD, CATEGORY } = BOARD_API;
-const { DETAILS_BOARD } = BOARD_API; //공지 외 카테고리 RUD api 주소
-
-const dummyPosts = [
-  {
-    id: 1,
-    category: '자유게시판',
-    title: '첫 번째 게시글',
-    author: '김선규',
-    date: '2024-11-13',
-  },
-  {
-    id: 2,
-    category: '공지',
-    title: '두 번째 게시글',
-    author: '박주호',
-    date: '2024-11-12',
-  },
-  {
-    id: 3,
-    category: '취업',
-    title: '세 번째 게시글',
-    author: '이주영',
-    date: '2024-11-11',
-  },
-];
+const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API;  //공지 외 카테고리 RUD api 주소
+interface UserProp {
+  _id: number;
+  nickname: string;
+  level: string;
+}
+interface Post {
+  _id: number;
+  title: string;
+  category: string;
+  user: UserProp;
+  createdAt: string;
+}
 
 const AdminMain = () => {
+  const { ALL_NOTICES } = NOTICE_API;
+  const { ALL_BOARD } = BOARD_API;
   // pagination
   const savedPage = sessionStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
-  const [posts, setPosts] = useState(dummyPosts);
-  const postsPerPage = 20;
+  const [posts, setPosts] = useState<Post[]>([]);
+  const postsPerPage = 10;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  const currentPosts = (posts || []).slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil((posts || []).length / postsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    sessionStorage.setItem('currentPage', page.toString());
+  };
 
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
+  const userId = useUserStore((state) => state.user?.user_id);
+  const userLevel = useUserStore((state) => state.user?.level._id);
   const [category, setCategory] = useState('all');
   const [users, setUsers] = useState<User[]>([]); // 유저 상태
-  const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
+  //const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
 
   // 모든 사용자 데이터 가져오기
   useEffect(() => {
     const fetchUsers = async () => {
+
       try {
         const response = await apiUtils({
           url: ALL_USER,
@@ -101,6 +101,43 @@ const AdminMain = () => {
 
   //   fetchPosts();
   // }, []);
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await apiUtils({
+          url: ALL_NOTICES,
+          method: 'GET',
+        });
+        console.log('공지:', response);
+        return response.Notices;
+      } catch (error) {
+        console.error('공지 가져오기 실패:', error);
+        return [];
+      }
+    };
+
+    const fetchPosts = async () => {
+      try {
+        const response = await apiUtils({
+          url: ALL_BOARD,
+          method: 'GET',
+        });
+        console.log('게시글:', response);
+        return response.boards;
+      } catch (error) {
+        console.error('게시글 가져오기 실패:', error);
+        return [];
+      }
+    };
+
+    const fetchAll = async () => {
+      const [notices, posts] = await Promise.all([fetchNotices(), fetchPosts()]);
+
+      setPosts([...notices, ...posts]);
+    };
+
+    fetchAll();
+  }, []);
 
   // 게시판 카테고리 선택
   const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -127,16 +164,22 @@ const AdminMain = () => {
   };
   // 게시글 삭제 함수
   const handleDeleteConfirm = async (id: number) => {
+    const data = {
+      "board_id": id,
+      "user": userId,
+      "level": userLevel
+    };
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: DETAILS_BOARD(id), // 공지 외 다른 카테고리 삭제 api
+        url: CUD_BOARD, // 공지 외 다른 카테고리 삭제 api
         method: 'DELETE',
+        data: data
       });
-      if (response.status === 200) {
-        console.log('게시글 삭제 성공 응답 데이터:', response);
-        SuccessToast(`게시글 ${id} 삭제되었습니다.`);
-      }
+
+      console.log('게시글 삭제 성공 응답 데이터:', response);
+      SuccessToast(`게시글 ${id} 삭제되었습니다.`);
+
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
       ErrorToast('게시물 삭제에 실패했습니다.');
@@ -154,7 +197,7 @@ const AdminMain = () => {
       await apiUtils({
         url: USER_DELETE,
         method: 'DELETE',
-        data: { id },
+        data: { 'user_id': id },
       });
 
       // 상태 업데이트
@@ -169,10 +212,6 @@ const AdminMain = () => {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    sessionStorage.setItem('currentPage', page.toString());
-  };
 
   // 사용자 레벨 변경 처리 함수 수정 필요,,, 어떤 값 넘겨줘야하는지 미정
   const handleUserLevelChange = async (user: User, newLevel: UserLevel) => {
@@ -195,15 +234,12 @@ const AdminMain = () => {
   };
 
   //postlist수정
+  //테이블 데이터
   const columns = [
     { key: 'category', label: '카테고리', flex: '1' },
-    {
-      key: 'title',
-      label: '제목',
-      flex: '3',
-    },
-    { key: 'author', label: '작성자', flex: '1' },
-    { key: 'date', label: '작성일', flex: '1' },
+    { key: 'title', label: '제목', flex: '3' },
+    { key: 'user', label: '작성자', flex: '1' },
+    { key: 'createdAt', label: '작성일', flex: '1' },
   ];
   return (
     <NavbarContainer>
@@ -241,14 +277,7 @@ const AdminMain = () => {
             </select>
           </Styled.CategorySelect>
           <Styled.PostListContainer>
-            <PostList
-              //postlist수정
-              columns={columns}
-              posts={dummyPosts}
-              width="100%"
-              onDelete={handleDelete}
-              isAdmin={isAdmin}
-            />
+            <PostList posts={currentPosts} columns={columns} width="100%" onDelete={handleDelete} isAdmin={isAdmin} />
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

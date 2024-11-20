@@ -7,10 +7,12 @@ import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
-const { CREATE_BOARD, DETAILS_BOARD } = BOARD_API;
+import { ROUTE_LINK } from '@routes/routes';
+const { CUD_BOARD, DETAILS_BOARD } = BOARD_API;
 const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
 const WritePost = () => {
+  const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
@@ -22,7 +24,6 @@ const WritePost = () => {
   const [content, setContent] = useState(state?.content || '');
   const postId = state?.postId;
   const navigate = useNavigate();
-
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -45,11 +46,12 @@ const WritePost = () => {
       content,
       category: category,
       user: userId,
+      board_id: postId
     };
 
     try {
       const response = await apiUtils({
-        url: isEdit ? DETAILS_BOARD(postId) : CREATE_BOARD,
+        url: CUD_BOARD,
         method: isEdit ? 'PUT' : 'POST',
         data: data,
       });
@@ -67,37 +69,26 @@ const WritePost = () => {
       } else {
         ErrorToast('게시물 등록 중 오류가 발생했습니다.');
       }
-      navigate('/posts');
-    }
+    } navigate(MAIN_PAGE_URL);
   };
   return (
     <NavbarContainer>
       <Styled.Container>
-
-        <Styled.FormFieldGroup>
-          <div style={{ flex: 3, display: 'flex' }}>
-            <Styled.Label>제목</Styled.Label>
-            <Styled.InputField
-              type="text"
-              placeholder="제목을 입력해 주세요."
-              value={title}
-              onChange={handleTitleChange}
-              style={{ width: '100%' }}
-            />
-          </div>
-          <div style={{ flex: 1, display: 'flex' }}>
-            <>
-              <Styled.Label>카테고리</Styled.Label>
-              <Styled.SelectCategory value={category} onChange={handleCategoryChange}>
-                {CategoryOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </Styled.SelectCategory>
-            </>
-          </div>
-        </Styled.FormFieldGroup>
+        <Styled.Label>제목</Styled.Label>
+        <Styled.InputField
+          type="text"
+          placeholder="제목을 입력해 주세요."
+          value={title}
+          onChange={handleTitleChange}
+        />
+        <Styled.Label>카테고리</Styled.Label>
+        <Styled.SelectCategory value={category} onChange={handleCategoryChange}>
+          {CategoryOptions.map((option, index) => (
+            <option key={index} value={option}>
+              {option}
+            </option>
+          ))}
+        </Styled.SelectCategory>
         <div>
           <Styled.Label style={{ marginBottom: '10px' }}>내용</Styled.Label>
           <Styled.TextareaField
