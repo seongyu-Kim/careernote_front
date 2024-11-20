@@ -142,30 +142,21 @@ const CheckDuplication = ({
         url: CHECK_DUPLICATION,
         method: 'POST',
         data: type === 'nickname' ? { nickname: resData } : { email: resData },
-        // data: { nickname: 'test' },
         withAuth: false,
       });
-      console.log('res = ', res);
       if (
-        res.message === '사용 가능한 닉네임입니다' ||
-        res.message === '사용 가능한 이메일입니다'
+        res.message === '사용가능한 닉네임 입니다' ||
+        res.message === '사용가능한 이메일 입니다'
       ) {
         console.log('사용가능');
-        // errorMsg!('사용가능'); // 나중에 초록색으로
         return validCheck!(true);
       }
-      if (
-        res.message === '이미 존재하는 닉네임 입니다' ||
-        res.message === '이미 존재하는 이메일 입니다'
-      ) {
-        console.log('사용불가');
-        errorMsg!('사용불가');
-        return validCheck!(false);
-      }
-      // 여기에 중복된 경우 에러메시지로 중복되었다고 알려주기 setDuplicationCheck 이걸로 중복검사 false 주기
-      // if (res.message === '')
-      // return
+      // console.log('사용불가');
+      // errorMsg!('사용불가');
+      // return validCheck!(false);
     } catch (error) {
+      errorMsg!('사용불가');
+      validCheck!(false);
       console.log('중복 검사 오류', error);
     }
   };
