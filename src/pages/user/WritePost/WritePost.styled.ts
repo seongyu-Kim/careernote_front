@@ -19,7 +19,7 @@ export const AdminNotice = styled.h2`
 export const FormFieldGroup = styled.div`
   display: flex;
   margin-bottom: 40px;
-  gap: 10px;
+  align-items: center;
 `;
 
 export const Label = styled.label`
@@ -28,6 +28,7 @@ export const Label = styled.label`
   min-width: 60px;
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 10px;
 `;
 
 export const InputField = styled.input`
@@ -38,6 +39,7 @@ export const InputField = styled.input`
   font-size: 14px;
   box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
 `;
 
 export const SelectCategory = styled.select`
@@ -48,6 +50,7 @@ export const SelectCategory = styled.select`
   font-size: 14px;
   box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
 `;
 
 export const TextareaField = styled.textarea`

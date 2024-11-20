@@ -10,7 +10,7 @@ export const Nav = styled.nav`
   padding: 0 20px;
   background-color: #79b0cb;
   color: white;
-  z-index: 10000;
+  z-index: 100;
 `;
 
 export const MenuButton = styled.div`

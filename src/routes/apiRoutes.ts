@@ -13,15 +13,15 @@ export const USER_API = {
 };
 
 export const BOARD_API = {
-  ALL_BOARD: `${BASE_URL}/api/board`, // 게시글 목록 조회
+  ALL_BOARD: `${BASE_URL}/api/board`, // 전체 게시글 목록 조회
   CATEGORY: (category: string) => `${BASE_URL}/api/board/category/${category}`, // 게시글 by 카테고리
-  CREATE_BOARD: `${BASE_URL}/api/board`, // 게시글 생성
-  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 게시물 RUD
+  CUD_BOARD: `${BASE_URL}/api/board`, // 게시글 (CREATE,UPDATE,DELETE)
+  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 게시물 상세 조회(READ)
 };
 
 export const NOTICE_API = {
-  ALL_NOTICES: `${BASE_URL}/api/notice`, // 공지 목록 조회
-  CREATE_NOTICE: `${BASE_URL}/api/notice`, // 공지 생성
-  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/notice/${id}`, // 공지 RUD
+  ALL_NOTICES: `${BASE_URL}/api/notice`, // 전체 공지 목록 조회
+  CUD_NOTICE: `${BASE_URL}/api/notice`, // 공지 (CREATE,UPDATE,DELETE)
+  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/notice/${id}`, // 공지 상세 조회(READ)
 };
 //const response = await axios.get(BOARD_ROUTE_API.READ_BOARD(id)); 사용 예시
