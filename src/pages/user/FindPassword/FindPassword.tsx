@@ -39,6 +39,7 @@ export const FindPassword = () => {
   const handleSubmitSendEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputFieldChecked) {
+      console.log('실행');
       return;
     }
     const resData = { email: inputEmail };
@@ -49,12 +50,11 @@ export const FindPassword = () => {
         data: resData,
         withAuth: false,
       });
-      console.log(res);
       if (res.message === '재설정 링크 전송 성공') {
         console.log('재설정 링크 전송 완료.');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

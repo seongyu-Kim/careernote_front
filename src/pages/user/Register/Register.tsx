@@ -10,6 +10,7 @@ import apiUtils from '@utils/apiUtils';
 import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 import { REG_EX } from '@utils/RegEx';
 import { useValidCheck } from '@stores/useCheckDuplication';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 
 //추후 컴포넌트 분리
 const Register = () => {
@@ -134,9 +135,13 @@ const Register = () => {
       });
       if (res.message === '회원가입 성공') {
         resetValidCheck();
-        navigate(LOGIN_PAGE_URL);
+        SuccessToast('회원가입 성공');
+        setTimeout(() => {
+          navigate(LOGIN_PAGE_URL);
+        }, 500);
       }
     } catch (error) {
+      ErrorToast('회원가입 실패');
       console.error('회원가입 오류', error);
     }
   };

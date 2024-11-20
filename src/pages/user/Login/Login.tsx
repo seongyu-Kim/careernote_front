@@ -9,7 +9,7 @@ import { USER_API } from '@routes/apiRoutes';
 import Input from '@components/Input/Input';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-import { SuccessToast } from '@utils/ToastUtils';
+import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
@@ -58,12 +58,18 @@ const LoginPage = () => {
         console.log(res.data.user);
         login(res.data.user);
         if (res.data.user.level.name === '관리자') {
-          navigate(ADMIN_MAIN)
-        } else {
-          navigate(MAIN_PAGE_URL);
+          SuccessToast('로그인 성공');
+          setTimeout(() => {
+            navigate(ADMIN_MAIN);
+          }, 500);
         }
+        SuccessToast('로그인 성공');
+        setTimeout(() => {
+          navigate(MAIN_PAGE_URL);
+        }, 500);
       }
     } catch (error) {
+      ErrorToast('로그인 실패');
       console.error('로그인 오류', error);
     }
   };

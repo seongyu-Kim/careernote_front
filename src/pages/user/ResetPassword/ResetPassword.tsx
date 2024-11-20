@@ -1,7 +1,7 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
 import Button from '@components/Button/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTE_LINK } from '@routes/routes';
 import React, { useEffect, useState } from 'react';
 import InputChecker from '@components/InputChecker/InputChecker';
@@ -17,6 +17,7 @@ const ResetPassword = () => {
   const [passwordCheckMessage, setPasswordCheckMessage] = useState<string>(''); // 패스워드 유효성 체크 메시지
   const [confirmPasswordCheckMessage, setConfirmPasswordCheckMessage] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
   const [errorMsg, setErrorMsg] = useState<string>('');
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const { passwordRegEx } = REG_EX;
@@ -56,14 +57,15 @@ const ResetPassword = () => {
 
   const handleSubmitResetPassword = async () => {
     const resData = {
-      password: inputPassword,
-      // token: 토큰 가져와서 넣어주기 Bearer, Authorization
+      new_password: inputPassword,
+      token: token,
     };
     try {
       const res = await apiUtils({
-        url: RESET_PASSWORD,
+        url: RESET_PASSWORD('test'),
         method: 'PUT',
         data: resData,
+        headers: { Authorization: 'Bearer ' },
         withAuth: false,
       });
       if (res.message === '비밀번호 재설정 성공') {
