@@ -129,11 +129,14 @@ export const useUserStore = create<UserState>((set, get) => ({
           withAuth: false,
         });
         if (res) {
+          // 추후 조건 수정
           set({ user: res, isLogin: isLogin, token: token });
+          return;
         }
       } catch (error) {
         set({ user: null, isLogin: false, token: null });
         console.log('유저 정보 재요청 실패', error);
+        return;
       }
     }
     const navigate = get().navigate;

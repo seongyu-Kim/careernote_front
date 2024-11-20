@@ -11,7 +11,9 @@ import { useUserStore } from '@stores/userStore';
 function App() {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const { setNavigate } = useUserStore();
-  setNavigate(navigate);
+  useEffect(() => {
+    setNavigate(navigate);
+  }, []);
 
   return (
     <>
