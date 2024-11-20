@@ -7,8 +7,9 @@ import { useAlertStore } from '@stores/store';
 import apiUtils from '@utils/apiUtils';
 import { useUserStore } from '@stores/userStore';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
+import { ROUTE_LINK } from '@routes/routes';
 
-const { DETAILS_BOARD } = BOARD_API;
+const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;
 const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
 
 interface PostProps {
@@ -20,10 +21,14 @@ interface PostProps {
   id: string;
 }
 const PostView = () => {
+  const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const { postId } = useParams();
   const { closeAlert } = useAlertStore();
-  //const userName = useUserStore((state) => state.user?.nickName);
-  const userName = '닉넴';
+  const user = useUserStore((state) => state.user);
+  const userId = user?.user_id;
+  const userLevelId = user?.level._id;
+  const userName = useUserStore((state) => state.user?.nickName);
+  const userLevel = useUserStore((state) => state.user?.level.name);
   const navigate = useNavigate();
   const [post, setPost] = useState<PostProps>({
     title: '',
@@ -39,64 +44,66 @@ const PostView = () => {
       console.error('해당 postId가 없습니다.');
       return;
     }
+
     const fetchPostDetails = async () => {
       try {
-        const response = await apiUtils({
+        // 공지 API 시도
+        const noticeResponse = await apiUtils({
           url: DETAILS_NOTICE(postId),
           method: 'GET',
         });
 
-        console.log('서버 응답 데이터:', response);
-        // 서버에서 받은 데이터를 가공
-        const updatedPost: PostProps = {
-          ...response,
-          date: new Date(response.updatedAt).toLocaleString(),
-          writer: '관리자'
-        };
-        setPost(updatedPost);
-      } catch (error) {
-        console.error('게시글 상세 조회 요청 실패:', error);
-      }
-    };
-    fetchPostDetails();
-  }, [postId]);
-  // 공지 외 상세조회
-  useEffect(() => {
-    if (!postId) {
-      console.error('해당 postId가 없습니다.');
-      return;
-    }
-    const fetchPostDetails = async () => {
-      try {
-        const response = await apiUtils({
-          url: DETAILS_BOARD(postId),
-          method: 'GET',
-        });
-
-        console.log('서버 응답 데이터:', response);
+        console.log('공지 상세 데이터:', noticeResponse);
 
         const updatedPost: PostProps = {
-          id: response._id,
-          title: response.title,
-          content: response.content,
-          category: response.category.name,
-          writer: response.user.nickname,
-          date: new Date(response.updatedAt).toLocaleString(),
+          ...noticeResponse,
+          date: new Date(noticeResponse.updatedAt).toLocaleString(),
+          writer: '관리자',
         };
         setPost(updatedPost);
-      } catch (error) {
-        console.error('게시글 상세 조회 요청 실패:', error);
+      } catch (noticeError) {
+        console.warn('공지 API 실패, 일반 게시글 API 시도:', noticeError);
+
+        try {
+          // 공지 API 실패 시 일반 게시글 API 호출
+          const boardResponse = await apiUtils({
+            url: DETAILS_BOARD(postId),
+            method: 'GET',
+          });
+
+          console.log('게시글 상세 데이터:', boardResponse);
+
+          const updatedPost: PostProps = {
+            id: boardResponse._id,
+            title: boardResponse.title,
+            content: boardResponse.content,
+            category: boardResponse.category.name,
+            writer: boardResponse.user.nickname,
+            date: new Date(boardResponse.updatedAt).toLocaleString(),
+          };
+          setPost(updatedPost);
+        } catch (boardError) {
+          console.error('게시글 상세 조회 실패:', boardError);
+        }
       }
     };
+
     fetchPostDetails();
   }, [postId]);
 
+  // 게시글 삭제
   const handleDelete = async (postId: string) => {
+    const data = {
+      "board_id": postId,
+      "user": userId,
+      "level": userLevelId
+    }
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: DETAILS_BOARD(postId),
+        url: CUD_BOARD,
         method: 'DELETE',
+        data: data
       });
       if (response.status === 200 || 201) {
         console.log('게시글 삭제 성공 응답 데이터:', response);
@@ -107,7 +114,7 @@ const PostView = () => {
       ErrorToast('다시 시도해주세요.')
     }
     closeAlert();
-    navigate('/posts');
+    navigate(MAIN_PAGE_URL);
   };
 
   return (
