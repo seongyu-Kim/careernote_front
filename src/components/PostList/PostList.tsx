@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as Styled from './PostList.styled';
 import { useNavigate } from 'react-router-dom';
 import { LuPencilLine } from 'react-icons/lu';
+import { useUserStore } from '@stores/userStore';
+import { SuccessToast } from '@utils/ToastUtils';
 
 interface Column {
   key: string;
@@ -18,6 +20,7 @@ interface Post {
   createdAt: string;
   [key: string]: any;
 }
+
 interface User {
   _id: number;
   nickname: string;
@@ -43,24 +46,57 @@ const PostList: React.FC<PostListProps> = ({
 }) => {
   const navigate = useNavigate();
   const [isChecked, setChecked] = useState<boolean>(false);
-  //공지 필더링
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
+  const { isLogin } = useUserStore();
 
+  // 공지 숨기기 체크박스 처리
   useEffect(() => {
-    setFilteredPosts(isChecked ? posts.filter((post) => post.category !== '공지') : posts);
+    setFilteredPosts(
+      isChecked ? posts.filter((post) => post.category && post.category.trim() !== '') : posts,
+    );
   }, [isChecked, posts]);
 
+  //날짜 포멧팅
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
+  //체크박스
   const handleCheckboxChange = () => {
     setChecked((prev) => !prev);
   };
-
+  //상세보기
   const handlePostClick = (id: number) => {
+    if (!isLogin) {
+      SuccessToast('로그인을 먼저 진행해 주세요');
+      return;
+    }
     navigate(`/posts/${id}`);
+  };
+  //관리자 상세보기
+  const handleAdminPostClick = (id: number) => {
+    if (!isLogin) {
+      SuccessToast('로그인을 먼저 진행해 주세요');
+      return;
+    }
+    navigate(`/admin/posts/${id}`);
+  };
+  //글쓰기
+  const handleWriteClick = () => {
+    if (!isLogin) {
+      SuccessToast('로그인을 먼저 진행해 주세요');
+      return;
+    }
+    navigate('/write');
   };
 
   return (
     <Styled.PostListContainer width={width}>
-      {/* 테이블 버튼 옵션 */}
       {!isMyPost ? (
         <Styled.ButtonBox>
           {isAdmin ? (
@@ -70,7 +106,7 @@ const PostList: React.FC<PostListProps> = ({
             </Styled.WriteButton>
           ) : (
             <>
-              <Styled.WriteButton onClick={() => navigate('/write')}>
+              <Styled.WriteButton onClick={handleWriteClick}>
                 <LuPencilLine />
                 글쓰기
               </Styled.WriteButton>
@@ -89,7 +125,6 @@ const PostList: React.FC<PostListProps> = ({
         <Styled.MyPostText>📝 내가 쓴 글</Styled.MyPostText>
       )}
 
-      {/* 테이블 헤더 */}
       <Styled.PostHeader>
         {columns.map((column) => (
           <Styled.TableCell key={column.key} style={{ flex: column.flex, textAlign: 'center' }}>
@@ -107,22 +142,35 @@ const PostList: React.FC<PostListProps> = ({
         )}
       </Styled.PostHeader>
 
-      {/* 테이블 데이터 */}
-      {posts.length > 0 ? (
-        posts.map((item) => (
-          <Styled.PostItem key={item.id}>
+      {filteredPosts.length > 0 ? (
+        filteredPosts.map((item) => (
+          <Styled.PostItem key={item._id}>
             {columns.map((column) => {
               let value = item[column.key];
-              if (column.key === 'user' && typeof value === 'object' && value !== null) {
-                value = value.nickname;
-              } else if (column.key === 'category' && !value) {
-                value = '공지';
+
+              // 탈퇴, user가 없는 사용자
+              if (column.key === 'user') {
+                value = value ? value.nickname : '알 수 없는 사용자';
+              }
+
+              // category 필드가 없는
+              if (column.key === 'category') {
+                value = value || '공지';
+              }
+
+              // 'createdAt' 날짜 포맷팅
+              if (column.key === 'createdAt' && value) {
+                value = formatDate(value);
               }
               return (
                 <Styled.TableCell
                   key={column.key}
                   $isTitle={column.key === 'title'}
-                  onClick={column.key === 'title' ? () => handlePostClick(item._id) : undefined}
+                  onClick={
+                    column.key === 'title'
+                      ? () => (isAdmin ? handleAdminPostClick(item._id) : handlePostClick(item._id))
+                      : undefined
+                  }
                   style={{ flex: column.flex }}>
                   {value}
                 </Styled.TableCell>
