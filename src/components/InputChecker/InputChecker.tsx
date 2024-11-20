@@ -5,6 +5,7 @@ import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { useValidCheck } from '@stores/useCheckDuplication';
 import { Input, Button, InputErrorMessage } from 'components';
+import axios from 'axios';
 
 interface InputCheckerProps {
   inputTagType: string;
@@ -127,24 +128,25 @@ const CheckDuplication = ({
   }
 
   const { CHECK_DUPLICATION } = USER_API;
-
   const duplicationCheck = async (type: string) => {
     if (!value) {
       return;
     }
     const resData = value;
     try {
-      console.log('1');
       const res = await apiUtils({
         url: CHECK_DUPLICATION,
         data: type === 'nickname' ? { nickname: resData } : { email: resData },
         withAuth: false,
       });
-      console.log(resData);
-      console.log(res);
+      console.log('res = ', res);
       if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
         console.log('사용가능!');
         return validCheck!(true);
+      }
+      if (res.err) {
+        console.log('사용불가');
+        return validCheck!(false);
       }
       // 여기에 중복된 경우 에러메시지로 중복되었다고 알려주기 setDuplicationCheck 이걸로 중복검사 false 주기
       // if (res.message === '')

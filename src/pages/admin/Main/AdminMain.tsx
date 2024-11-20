@@ -241,14 +241,14 @@ const AdminMain = () => {
             </select>
           </Styled.CategorySelect>
           <Styled.PostListContainer>
-            <PostList
-              //postlist수정
-              columns={columns}
-              posts={dummyPosts}
-              width="100%"
-              onDelete={handleDelete}
-              isAdmin={isAdmin}
-            />
+            {/*<PostList*/}
+            {/*  //postlist수정*/}
+            {/*  columns={columns}*/}
+            {/*  posts={dummyPosts}*/}
+            {/*  width="100%"*/}
+            {/*  onDelete={handleDelete}*/}
+            {/*  isAdmin={isAdmin}*/}
+            {/*/>*/}
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
