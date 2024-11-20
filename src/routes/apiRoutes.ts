@@ -9,7 +9,7 @@ export const USER_API = {
   LOGOUT: `${BASE_URL}/api/user/logout`, // 로그아웃
   REQUEST_RESET_PASSWORD: `${BASE_URL}/api/user/requestResetPassword`, //비밀번호 재설정 링크 요청
   RESET_PASSWORD: (token: string) => `${BASE_URL}/api/user/resetPassword/${token}`, // 비밀번호 재설정
-  USER_DELETE: `${BASE_URL}/api/user/delete`, // 유저 탈퇴
+  USER_DELETE: `${BASE_URL}/api/user`, // 유저 탈퇴
   USER_ABOUT: `${BASE_URL}/api/user/about`,
 };
 
