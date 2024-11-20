@@ -3,7 +3,7 @@ import { useState } from 'react';
 import useCategoryStore from '@stores/useCategoryStore';
 import { useLocation } from 'react-router-dom';
 import { NavbarContainer, PostList, Pagination } from 'components';
-import landing from '@assets/landing.png';
+import Banner from '@assets/Banner.png';
 import * as Styled from './Main.styled';
 
 interface Post {
@@ -376,7 +376,7 @@ const Main = () => {
 
   return (
     <NavbarContainer>
-      <Styled.LogoImg src={landing} alt="Landing" />
+      <Styled.LogoImg src={Banner} alt="Landing" />
       <PostList isMyPost={isMyPost} posts={currentPosts} columns={columns} />
       <Pagination
         currentPage={currentPage}

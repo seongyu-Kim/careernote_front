@@ -1,7 +1,7 @@
 import { NavbarContainer } from 'components';
 import PostCard from '@pages/admin/PostView/PostCard/PostCard';
 import React, { useEffect, useState } from 'react';
-import { BOARD_API } from '@routes/apiRoutes';
+import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAlertStore } from '@stores/store';
 import apiUtils from '@utils/apiUtils';
@@ -9,6 +9,8 @@ import { useUserStore } from '@stores/userStore';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
 
 const { DETAILS_BOARD } = BOARD_API;
+const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
+
 interface PostProps {
   title: string;
   content: string;
@@ -31,7 +33,34 @@ const PostView = () => {
     writer: '',
     id: '',
   });
+  // 공지 상세 조회
+  useEffect(() => {
+    if (!postId) {
+      console.error('해당 postId가 없습니다.');
+      return;
+    }
+    const fetchPostDetails = async () => {
+      try {
+        const response = await apiUtils({
+          url: DETAILS_NOTICE(postId),
+          method: 'GET',
+        });
 
+        console.log('서버 응답 데이터:', response);
+        // 서버에서 받은 데이터를 가공
+        const updatedPost: PostProps = {
+          ...response,
+          date: new Date(response.updatedAt).toLocaleString(),
+          writer: '관리자'
+        };
+        setPost(updatedPost);
+      } catch (error) {
+        console.error('게시글 상세 조회 요청 실패:', error);
+      }
+    };
+    fetchPostDetails();
+  }, [postId]);
+  // 공지 외 상세조회
   useEffect(() => {
     if (!postId) {
       console.error('해당 postId가 없습니다.');
