@@ -79,19 +79,6 @@ export const TableCell = styled.div<{ $isTitle?: boolean }>`
   }
 `;
 
-// export const TableCell = styled.div.withConfig({
-//   shouldForwardProp: (prop) => prop !== 'isTitle', // isTitle prop을 DOM에 전달하지 않도록 설정
-// })<{ isTitle?: boolean }>`
-//   flex: 1;
-//   text-align: center;
-//   font-weight: bold;
-//   padding: 0 8px;
-//   cursor: ${(props) => (props.isTitle ? 'pointer' : 'default')};
-
-//   &:hover {
-//     text-decoration: ${(props) => (props.isTitle ? 'underline' : 'none')};
-//   }
-// `;
 
 export const NoDataText = styled.div`
   text-align: center;
