@@ -59,6 +59,7 @@ const PostView = () => {
           ...noticeResponse,
           date: new Date(noticeResponse.updatedAt).toLocaleString(),
           writer: '관리자',
+          category: '공지'
         };
         setPost(updatedPost);
       } catch (noticeError) {
@@ -77,8 +78,8 @@ const PostView = () => {
             id: boardResponse._id,
             title: boardResponse.title,
             content: boardResponse.content,
-            category: boardResponse.category.name,
-            writer: boardResponse.user.nickname,
+            category: boardResponse.category?.name || '알 수 없음',
+            writer: boardResponse.user?.nickname || '알 수 없는 사용자',
             date: new Date(boardResponse.updatedAt).toLocaleString(),
           };
           setPost(updatedPost);
