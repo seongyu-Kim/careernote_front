@@ -23,14 +23,10 @@ interface PostCardProps {
 const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
   const { openAlert } = useAlertStore();
   const navigate = useNavigate();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 메뉴 상태
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
-
   const handleEdit = () => {
     // 수정할 글의 데이터를 state로 전달하여 /write 페이지로 이동
-    navigate('/write', {
+    const targetPath = post.category === '공지' ? '/admin-write' : '/write';
+    navigate(targetPath, {
       state: {
         category: post.category,
         title: post.title,
@@ -45,7 +41,7 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
     {
       label: '수정',
       action: handleEdit,
-      visible: post.writer === user, // 작성자 본인만 수정 가능
+      visible: post.writer === user || (level === '관리자' && post.category === '공지'),
     },
     {
       label: '삭제',
@@ -66,8 +62,8 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
           noOptionsMessage="권한 없음"
         />
       </Styled.ContainerHeader>
-      <Styled.Title>{post.title}</Styled.Title>
-      <Styled.Writer>{post.writer}</Styled.Writer>
+      <Styled.Title>{post.title || '탈퇴한 사용자의 글 입니다.'}</Styled.Title>
+      <Styled.Writer>{post.writer || '알 수 없는 사용자'}</Styled.Writer>
       <Styled.Date>{post.date}</Styled.Date>
       <Styled.Content>{post.content}</Styled.Content>
     </Styled.Container>

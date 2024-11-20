@@ -107,7 +107,7 @@ const PostView = () => {
       });
       if (response.status === 200 || 201) {
         console.log('게시글 삭제 성공 응답 데이터:', response);
-        SuccessToast(`게시글 ${postId} 삭제되었습니다.`);
+        SuccessToast(`게시글이 삭제되었습니다.`);
       }
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);

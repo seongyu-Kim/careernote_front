@@ -61,6 +61,7 @@ const LoginPage = () => {
           setTimeout(() => {
             navigate(ADMIN_MAIN);
           }, 500);
+          return;
         }
         SuccessToast('로그인 성공');
         setTimeout(() => {

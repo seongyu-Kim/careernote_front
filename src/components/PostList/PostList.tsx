@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as Styled from './PostList.styled';
 import { useNavigate } from 'react-router-dom';
 import { LuPencilLine } from 'react-icons/lu';
+import { useUserStore } from '@stores/userStore';
+import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
 
 interface Column {
   key: string;
@@ -30,7 +32,7 @@ interface PostListProps {
   width?: string;
   isAdmin?: boolean;
   isMyPost?: boolean;
-  onDelete?: (id: number) => void;
+  onDelete?: (id: number, category: string) => void;
 }
 
 const PostList: React.FC<PostListProps> = ({
@@ -45,17 +47,42 @@ const PostList: React.FC<PostListProps> = ({
   const [isChecked, setChecked] = useState<boolean>(false);
   //공지 필더링
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
+  const { user, isLogin, logout } = useUserStore();
 
   useEffect(() => {
     setFilteredPosts(isChecked ? posts.filter((post) => post.category !== '공지') : posts);
   }, [isChecked, posts]);
 
+  //체크박스
   const handleCheckboxChange = () => {
     setChecked((prev) => !prev);
   };
 
+  //상세보기
   const handlePostClick = (id: number) => {
+    if (!isLogin) {
+      SuccessToast('로그인을 먼저 진행해 주세요');
+      return;
+    }
     navigate(`/posts/${id}`);
+  };
+
+  // 관리자 상세보기
+  const handleAdminPostClick = (id: number) => {
+    if (!isLogin) {
+      SuccessToast('로그인을 먼저 진행해 주세요');
+      return;
+    }
+    navigate(`/admin/posts/${id}`);
+  };
+
+  //글쓰기
+  const handleWriteClick = () => {
+    if (!isLogin) {
+      SuccessToast('로그인을 먼저 진행해 주세요');
+      return;
+    }
+    navigate('/write'); // 글쓰기 페이지로 이동
   };
 
   return (
@@ -70,7 +97,7 @@ const PostList: React.FC<PostListProps> = ({
             </Styled.WriteButton>
           ) : (
             <>
-              <Styled.WriteButton onClick={() => navigate('/write')}>
+              <Styled.WriteButton onClick={handleWriteClick}>
                 <LuPencilLine />
                 글쓰기
               </Styled.WriteButton>
@@ -110,19 +137,33 @@ const PostList: React.FC<PostListProps> = ({
       {/* 테이블 데이터 */}
       {posts.length > 0 ? (
         posts.map((item) => (
-          <Styled.PostItem key={item.id}>
+          <Styled.PostItem
+            key={item._id}
+          // $isNotice={column.key === 'category' && !item[column.key]}
+          >
             {columns.map((column) => {
               let value = item[column.key];
-              if (column.key === 'user' && typeof value === 'object' && value !== null) {
-                value = value.nickname;
+
+              if (column.key === 'user') {
+                if (value && typeof value === 'object') {
+                  value = value.nickname || '알 수 없는 사용자'; // nickname이 없으면 기본값 설정
+                } else {
+                  value = '알 수 없는 사용자'; // user 객체가 null 또는 undefined인 경우
+                }
               } else if (column.key === 'category' && !value) {
                 value = '공지';
               }
+
+              ////
               return (
                 <Styled.TableCell
                   key={column.key}
                   $isTitle={column.key === 'title'}
-                  onClick={column.key === 'title' ? () => handlePostClick(item._id) : undefined}
+                  onClick={
+                    column.key === 'title'
+                      ? () => (isAdmin ? handleAdminPostClick(item._id) : handlePostClick(item._id))
+                      : undefined
+                  }
                   style={{ flex: column.flex }}>
                   {value}
                 </Styled.TableCell>
@@ -134,7 +175,7 @@ const PostList: React.FC<PostListProps> = ({
                   flex: columns.find((column) => column.key === 'admin')?.flex,
                   textAlign: 'center',
                 }}>
-                <Styled.DeleteBtn onClick={() => onDelete(item._id)}>삭제</Styled.DeleteBtn>
+                <Styled.DeleteBtn onClick={() => onDelete(item._id, item.category)}>삭제</Styled.DeleteBtn>
               </Styled.TableCell>
             )}
           </Styled.PostItem>
