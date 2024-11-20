@@ -10,11 +10,11 @@ import { useUserStore } from '@stores/userStore';
 
 function App() {
   const navigate = useNavigate(); // useNavigate 훅 사용
-  const { loginRestore, setNavigate } = useUserStore();
+  const { setNavigate } = useUserStore();
   useEffect(() => {
     setNavigate(navigate);
-    loginRestore();
-  }, [loginRestore, navigate, setNavigate]);
+  }, []);
+
   return (
     <>
       <Toast />

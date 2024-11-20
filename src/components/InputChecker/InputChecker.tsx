@@ -5,7 +5,6 @@ import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { useValidCheck } from '@stores/useCheckDuplication';
 import { Input, Button, InputErrorMessage } from 'components';
-import axios from 'axios';
 
 interface InputCheckerProps {
   inputTagType: string;
@@ -16,6 +15,7 @@ interface InputCheckerProps {
   useCheckDuplication?: boolean;
   checkDuplicationType?: string;
   checkDuplicationValue?: string;
+  errorMsg?: (value: string) => void;
 }
 
 interface CheckDuplicationProps {
@@ -24,6 +24,7 @@ interface CheckDuplicationProps {
   value: string | undefined;
   valid: boolean;
   validCheck?: React.Dispatch<React.SetStateAction<boolean>>;
+  errorMsg?: (value: string) => void;
 }
 
 const InputChecker = ({
@@ -35,6 +36,7 @@ const InputChecker = ({
   useCheckDuplication = false, // 중복 검사 사용 여부
   checkDuplicationType = '', //이메일 닉네임 지정
   checkDuplicationValue, // 이거 따라서 중복 확인 요청 api 보내게
+  errorMsg,
 }: InputCheckerProps) => {
   const [duplicationCheck, setDuplicationCheck] = useState(false);
   const { setValidCheck } = useValidCheck();
@@ -86,6 +88,7 @@ const InputChecker = ({
             value={checkDuplicationValue}
             valid={valid}
             validCheck={setDuplicationCheck}
+            errorMsg={errorMsg}
           />
         </Styled.InputWrapper>
         <InputErrorMessage message={checkMessage} />
@@ -122,6 +125,7 @@ const CheckDuplication = ({
   value,
   valid,
   validCheck,
+  errorMsg,
 }: CheckDuplicationProps) => {
   if (!useCheck) {
     return null;
@@ -136,16 +140,26 @@ const CheckDuplication = ({
     try {
       const res = await apiUtils({
         url: CHECK_DUPLICATION,
+        method: 'POST',
         data: type === 'nickname' ? { nickname: resData } : { email: resData },
+        // data: { nickname: 'test' },
         withAuth: false,
       });
       console.log('res = ', res);
-      if (res.message === '사용 가능한 닉네임과 이메일 입니다') {
-        console.log('사용가능!');
+      if (
+        res.message === '사용 가능한 닉네임입니다' ||
+        res.message === '사용 가능한 이메일입니다'
+      ) {
+        console.log('사용가능');
+        // errorMsg!('사용가능'); // 나중에 초록색으로
         return validCheck!(true);
       }
-      if (res.err) {
+      if (
+        res.message === '이미 존재하는 닉네임 입니다' ||
+        res.message === '이미 존재하는 이메일 입니다'
+      ) {
         console.log('사용불가');
+        errorMsg!('사용불가');
         return validCheck!(false);
       }
       // 여기에 중복된 경우 에러메시지로 중복되었다고 알려주기 setDuplicationCheck 이걸로 중복검사 false 주기
