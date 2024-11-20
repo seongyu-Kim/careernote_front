@@ -73,7 +73,7 @@ export const useUserStore = create<UserState>((set) => ({
     __v,
     accessToken,
   }: User) => {
-    set({
+    const newState = {
       user: {
         user_id: _id,
         email,
@@ -87,8 +87,12 @@ export const useUserStore = create<UserState>((set) => ({
       },
       isLogin: true,
       token: accessToken,
-    });
-    localStorage.setItem('token', JSON.stringify(accessToken));
+    };
+
+    set(newState);
+
+    localStorage.setItem('token', JSON.stringify(newState.token));
+    localStorage.setItem('isLogin', JSON.stringify(newState.isLogin));
   },
   logout: async () => {
     const { LOGOUT } = USER_API;
@@ -104,5 +108,27 @@ export const useUserStore = create<UserState>((set) => ({
     }
     set({ user: null, isLogin: false, token: null });
     localStorage.removeItem('token');
+    localStorage.removeItem('isLogin');
+  },
+  loginRestore: async () => {
+    // const user = ???
+    const isLogin = localStorage.getItem('isLogin') === 'true';
+    const token = localStorage.getItem('token');
+
+    // user 조건 추후 수정
+    if (isLogin && token) {
+      set({ isLogin: isLogin, token: token });
+    }
   },
 }));
+
+// restoreLogin: async () => {
+//   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+//
+//   const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+//   const token = localStorage.getItem('token');
+//
+//   if (isLoggedIn && storedUser && token) {
+//     set({ user: storedUser, token, isLoggedIn: true });
+//   }
+// },
