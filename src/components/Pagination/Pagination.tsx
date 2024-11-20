@@ -31,7 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       <Styled.PageButton
         onClick={handlePrevClick}
         disabled={currentPage === 1}
-        isDisabled={currentPage === 1}>
+        $isDisabled={currentPage === 1}>
         Prev
       </Styled.PageButton>
 
@@ -39,7 +39,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         <Styled.PageButton
           key={page}
           onClick={() => handlePageClick(page)}
-          isSelected={currentPage === page}>
+          $isSelected={currentPage === page}>
           {page}
         </Styled.PageButton>
       ))}
@@ -47,7 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       <Styled.PageButton
         onClick={handleNextClick}
         disabled={currentPage === totalPages}
-        isDisabled={currentPage === totalPages}>
+        $isDisabled={currentPage === totalPages}>
         Next
       </Styled.PageButton>
     </Styled.PaginationContainer>
