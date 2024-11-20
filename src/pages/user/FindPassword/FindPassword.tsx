@@ -22,10 +22,10 @@ export const FindPassword = () => {
     if (inputEmail.length > 0 && emailRegEx.test(inputEmail)) {
       setSetEmailCheckMessage('');
       setInputFieldChecked(false);
-    } else {
-      setSetEmailCheckMessage('유효한 이메일 형식이 아닙니다.');
-      setInputFieldChecked(true);
+      return;
     }
+    setSetEmailCheckMessage('유효한 이메일 형식이 아닙니다.');
+    setInputFieldChecked(true);
   }, [inputEmail]);
 
   useEffect(() => {
@@ -39,7 +39,8 @@ export const FindPassword = () => {
   const handleSubmitSendEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputFieldChecked) {
-      alert('비어있음');
+      console.log('실행');
+      return;
     }
     const resData = { email: inputEmail };
     try {
@@ -49,12 +50,11 @@ export const FindPassword = () => {
         data: resData,
         withAuth: false,
       });
-      console.log(res);
       if (res.message === '재설정 링크 전송 성공') {
         console.log('재설정 링크 전송 완료.');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

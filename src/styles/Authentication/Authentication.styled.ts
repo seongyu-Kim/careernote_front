@@ -56,7 +56,7 @@ export const Container = styled.div<Props>`
 `;
 
 export const Field = styled.div<Props>`
-  width: 450px;
+  width: 500px;
   height: 100%;
   display: flex;
   flex-direction: column;
