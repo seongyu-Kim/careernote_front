@@ -1,12 +1,10 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import React, { useEffect, useState } from 'react';
-import Input from '@components/Input/Input';
-import Button from '@components/Button/Button';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
-import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 import { useValidCheck } from '@stores/useCheckDuplication';
+import { Input, Button, InputErrorMessage } from 'components';
 
 interface InputCheckerProps {
   inputTagType: string;

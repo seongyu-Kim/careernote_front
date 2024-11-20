@@ -1,15 +1,14 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
-import Button from '@components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { useModal } from '@stores/store';
 import { USER_API } from '@routes/apiRoutes';
-import Input from '@components/Input/Input';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
+import { Button, Input } from 'components';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
