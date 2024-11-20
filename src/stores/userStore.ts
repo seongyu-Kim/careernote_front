@@ -121,14 +121,3 @@ export const useUserStore = create<UserState>((set) => ({
     }
   },
 }));
-
-// restoreLogin: async () => {
-//   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-//
-//   const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
-//   const token = localStorage.getItem('token');
-//
-//   if (isLoggedIn && storedUser && token) {
-//     set({ user: storedUser, token, isLoggedIn: true });
-//   }
-// },
