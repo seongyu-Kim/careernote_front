@@ -55,6 +55,7 @@ interface UserState {
     accessToken,
   }: User) => void;
   logout: () => void;
+  loginRestore: () => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -73,7 +74,7 @@ export const useUserStore = create<UserState>((set) => ({
     __v,
     accessToken,
   }: User) => {
-    set({
+    const newState = {
       user: {
         user_id: _id,
         email,
@@ -87,8 +88,12 @@ export const useUserStore = create<UserState>((set) => ({
       },
       isLogin: true,
       token: accessToken,
-    });
-    localStorage.setItem('token', JSON.stringify(accessToken));
+    };
+
+    set(newState);
+
+    localStorage.setItem('token', JSON.stringify(newState.token));
+    localStorage.setItem('isLogin', JSON.stringify(newState.isLogin));
   },
   logout: async () => {
     const { LOGOUT } = USER_API;
@@ -104,5 +109,28 @@ export const useUserStore = create<UserState>((set) => ({
     }
     set({ user: null, isLogin: false, token: null });
     localStorage.removeItem('token');
+    localStorage.removeItem('isLogin');
+  },
+  //새로 고침 시 로그인 상태에 따라 유저 정보 재요청
+  loginRestore: async () => {
+    const isLogin = localStorage.getItem('isLogin') === 'true';
+    const token = localStorage.getItem('token');
+    if (isLogin && token) {
+      try {
+        const { USER_ABOUT } = USER_API;
+        const res = await apiUtils({
+          url: USER_ABOUT,
+          method: 'POST',
+          data: { token: localStorage.getItem('token') },
+          withAuth: false,
+        });
+        if (res) {
+          set({ user: res, isLogin: isLogin, token: token });
+        }
+      } catch (error) {
+        set({ user: null, isLogin: false, token: null });
+        console.log('유저 정보 재요청 실패', error);
+      }
+    }
   },
 }));

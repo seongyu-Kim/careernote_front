@@ -10,9 +10,9 @@ import apiUtils from '@utils/apiUtils';
 import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
+import { useLocation } from 'react-router-dom';
 const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
-const { ALL_BOARD, CATEGORY } = BOARD_API;
-const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;  //공지 외 카테고리 RUD api 주소
+const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API;  //공지 외 카테고리 RUD api 주소
 interface UserProp {
   _id: number;
   nickname: string;
@@ -44,7 +44,6 @@ const AdminMain = () => {
     setCurrentPage(page);
     sessionStorage.setItem('currentPage', page.toString());
   };
-
 
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
@@ -183,7 +182,7 @@ const AdminMain = () => {
 
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
-      ErrorToast('게시물 삭제에 실패했습니다.')
+      ErrorToast('게시물 삭제에 실패했습니다.');
     }
     closeAlert();
   };
@@ -235,15 +234,12 @@ const AdminMain = () => {
   };
 
   //postlist수정
+  //테이블 데이터
   const columns = [
     { key: 'category', label: '카테고리', flex: '1' },
-    {
-      key: 'title',
-      label: '제목',
-      flex: '3',
-    },
-    { key: 'author', label: '작성자', flex: '1' },
-    { key: 'date', label: '작성일', flex: '1' },
+    { key: 'title', label: '제목', flex: '3' },
+    { key: 'user', label: '작성자', flex: '1' },
+    { key: 'createdAt', label: '작성일', flex: '1' },
   ];
   return (
     <NavbarContainer>

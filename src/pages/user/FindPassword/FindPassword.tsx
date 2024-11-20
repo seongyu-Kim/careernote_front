@@ -1,13 +1,13 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
-import Button from '@components/Button/Button';
 import { MdClose } from 'react-icons/md';
 import { useModal } from '@stores/store';
 import React, { useEffect, useState } from 'react';
 import { USER_API } from '@routes/apiRoutes';
-import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
 import { REG_EX } from '@utils/RegEx';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
+import { Button, InputChecker } from 'components';
 
 export const FindPassword = () => {
   const [setEmailCheckMessage, setSetEmailCheckMessage] = useState<string>('');
@@ -22,10 +22,10 @@ export const FindPassword = () => {
     if (inputEmail.length > 0 && emailRegEx.test(inputEmail)) {
       setSetEmailCheckMessage('');
       setInputFieldChecked(false);
-    } else {
-      setSetEmailCheckMessage('유효한 이메일 형식이 아닙니다.');
-      setInputFieldChecked(true);
+      return;
     }
+    setSetEmailCheckMessage('유효한 이메일 형식이 아닙니다.');
+    setInputFieldChecked(true);
   }, [inputEmail]);
 
   useEffect(() => {
@@ -39,7 +39,8 @@ export const FindPassword = () => {
   const handleSubmitSendEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputFieldChecked) {
-      alert('비어있음');
+      console.log('실행');
+      return;
     }
     const resData = { email: inputEmail };
     try {
@@ -49,12 +50,15 @@ export const FindPassword = () => {
         data: resData,
         withAuth: false,
       });
-      console.log(res);
-      if (res.message === '재설정 링크 전송 성공') {
-        console.log('재설정 링크 전송 완료.');
+      if (
+        res.message ===
+        '입력하신 이메일로 비밀번호 변경을 위한 링크를 발송 하였습니다. 1시간 이내 비밀번호 변경 바랍니다'
+      ) {
+        SuccessToast('메일 전송 성공');
       }
     } catch (error) {
-      console.log(error);
+      ErrorToast('이메일 전송 실패.');
+      console.error(error);
     }
   };
 

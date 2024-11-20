@@ -1,22 +1,21 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
-import Button from '@components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { useModal } from '@stores/store';
 import { USER_API } from '@routes/apiRoutes';
-import Input from '@components/Input/Input';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-import { SuccessToast } from '@utils/ToastUtils';
+import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
+import { Button, Input } from 'components';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
   const { isOpen, setIsOpen, setModalState } = useModal();
-  const { login, logout, user, token, isLogin } = useUserStore();
+  const { login } = useUserStore();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
@@ -58,26 +57,23 @@ const LoginPage = () => {
         console.log(res.data.user);
         login(res.data.user);
         if (res.data.user.level.name === '관리자') {
-          navigate(ADMIN_MAIN)
-        } else {
-          navigate(MAIN_PAGE_URL);
+          SuccessToast('로그인 성공');
+          setTimeout(() => {
+            navigate(ADMIN_MAIN);
+          }, 500);
         }
+        SuccessToast('로그인 성공');
+        setTimeout(() => {
+          navigate(MAIN_PAGE_URL);
+        }, 500);
       }
     } catch (error) {
+      ErrorToast('로그인 실패');
       console.error('로그인 오류', error);
     }
   };
   return (
     <Styled.PageBackground>
-      <button onClick={logout}>로그아웃 테스트</button>
-      <button
-        onClick={() => {
-          console.log('유저', user);
-          console.log(`토큰: ${token}`);
-          console.log(`로그인 상태:${isLogin}`);
-        }}>
-        유저 정보 및 토큰 확인
-      </button>
       <Styled.Container height="570px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />

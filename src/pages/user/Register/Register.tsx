@@ -1,14 +1,14 @@
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import logo from '@assets/icon.png';
-import Button from '@components/Button/Button';
+import { Button, InputChecker, InputErrorMessage } from 'components';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { ROUTE_LINK } from '@routes/routes';
 import { USER_API } from '@routes/apiRoutes';
-import InputChecker from '@components/InputChecker/InputChecker';
 import apiUtils from '@utils/apiUtils';
-import InputErrorMessage from '@components/InputErrorMessage/InputErrorMessage';
 import { REG_EX } from '@utils/RegEx';
+import { useValidCheck } from '@stores/useCheckDuplication';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 
 //추후 컴포넌트 분리
 const Register = () => {
@@ -23,11 +23,10 @@ const Register = () => {
   const [passwordCheckMessage, setPasswordCheckMessage] = useState<string>(''); // 패스워드 유효성 체크 메시지
   const [confirmPasswordCheckMessage, setConfirmPasswordCheckMessage] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
   const [notAccorPassword, setNotAccorPassword] = useState<string>(''); // 패스워드 불일치 시 에러 메세지 추후 리팩토링
+  const { validCheck, setValidCheck, resetValidCheck } = useValidCheck();
   const navigate = useNavigate();
 
-  const { nicknameRegEx } = REG_EX;
-  const { emailRegEx } = REG_EX;
-  const { passwordRegEx } = REG_EX;
+  const { nicknameRegEx, emailRegEx, passwordRegEx } = REG_EX;
 
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
   const { SIGNUP } = USER_API;
@@ -39,8 +38,18 @@ const Register = () => {
     const passwordValid = inputPassword.length >= 8 && passwordRegEx.test(inputPassword);
     const confirmPasswordValid =
       inputConfirmPassword.length >= 8 && passwordRegEx.test(inputConfirmPassword);
+    const nickNameDuplication = validCheck.nickName;
+    const emailDuplication = validCheck.email;
 
-    if (passwordMatching && nicknameValid && emailValid && passwordValid && confirmPasswordValid) {
+    if (
+      passwordMatching &&
+      nicknameValid &&
+      emailValid &&
+      passwordValid &&
+      confirmPasswordValid &&
+      nickNameDuplication &&
+      emailDuplication
+    ) {
       setInputFieldChecked(false);
     } else {
       setInputFieldChecked(true);
@@ -78,10 +87,24 @@ const Register = () => {
       setPasswordConfirmStatus(false);
       setNotAccorPassword('비밀번호가 일치하지 않습니다.');
     }
-  }, [inputNickname, inputEmail, inputPassword, inputConfirmPassword]);
+  }, [
+    inputNickname,
+    inputEmail,
+    inputPassword,
+    inputConfirmPassword,
+    validCheck.nickName,
+    validCheck.email,
+  ]);
+
+  useEffect(() => {
+    setValidCheck('nickName', false);
+  }, [inputNickname]);
+
+  useEffect(() => {
+    setValidCheck('email', false);
+  }, [inputEmail]);
 
   const handleSubmitUserData = async (event: React.FormEvent<HTMLFormElement>) => {
-    //모든 필드가 채워져있는지 확인
     event.preventDefault();
     if (
       inputNickname === '' ||
@@ -92,18 +115,15 @@ const Register = () => {
       setNotAccorPassword('모든 필드를 채워주세요');
       return;
     }
-
     if (!passwordConfirmStatus) {
       setNotAccorPassword('비밀번호가 일치하지 않습니다.');
       return;
     }
-
     const resData = {
       email: inputEmail,
       password: inputPassword,
       nickname: inputNickname,
     };
-
     try {
       const res = await apiUtils({
         url: SIGNUP,
@@ -112,30 +132,25 @@ const Register = () => {
         withAuth: false,
       });
       if (res.message === '회원가입 성공') {
-        navigate(LOGIN_PAGE_URL);
+        resetValidCheck();
+        SuccessToast('회원가입 성공');
+        setTimeout(() => {
+          navigate(LOGIN_PAGE_URL);
+        }, 500);
       }
     } catch (error) {
+      ErrorToast('회원가입 실패');
       console.error('회원가입 오류', error);
     }
   };
 
   return (
     <Styled.PageBackground>
-      <Styled.Container height="800px">
+      <Styled.Container height="830px">
         <Styled.Field>
           <Styled.MainLogo src={logo} alt="로고 이미지" />
           <Styled.Text>Sign Up</Styled.Text>
           <Styled.Form onSubmit={handleSubmitUserData}>
-            <InputChecker
-              inputTagType="text"
-              onChange={setInputNickname}
-              valid={nicknameRegEx.test(inputNickname)}
-              placeholderText="닉네임을 입력해주세요."
-              checkMessage={nicknameCheckMessage}
-              useCheckDuplication={true}
-              checkDuplicationValue={inputNickname}
-              checkDuplicationType="nickname"
-            />
             <InputChecker
               inputTagType="text"
               onChange={setInputEmail}
@@ -145,6 +160,16 @@ const Register = () => {
               useCheckDuplication={true}
               checkDuplicationValue={inputEmail}
               checkDuplicationType="email"
+            />
+            <InputChecker
+              inputTagType="text"
+              onChange={setInputNickname}
+              valid={nicknameRegEx.test(inputNickname)}
+              placeholderText="닉네임을 입력해주세요."
+              checkMessage={nicknameCheckMessage}
+              useCheckDuplication={true}
+              checkDuplicationValue={inputNickname}
+              checkDuplicationType="nickname"
             />
             <InputChecker
               inputTagType="password"

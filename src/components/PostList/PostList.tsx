@@ -113,12 +113,11 @@ const PostList: React.FC<PostListProps> = ({
           <Styled.PostItem key={item.id}>
             {columns.map((column) => {
               let value = item[column.key];
-              if (column.key === 'category' && !value) {
-                value = '공지';
-              } else if (column.key === 'user' && typeof value === 'object') {
+              if (column.key === 'user' && typeof value === 'object' && value !== null) {
                 value = value.nickname;
+              } else if (column.key === 'category' && !value) {
+                value = '공지';
               }
-
               return (
                 <Styled.TableCell
                   key={column.key}
