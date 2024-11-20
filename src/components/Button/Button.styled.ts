@@ -19,6 +19,9 @@ export const DefaultButton = styled.button<ButtonProps>`
   right: ${(props) => props.right};
   font-size: ${(props) => props.fontSize};
   cursor: pointer;
+  &:focus {
+    outline: none;
+  }
 
   ${(props) =>
     props.useTransition &&
