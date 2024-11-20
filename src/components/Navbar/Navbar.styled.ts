@@ -64,7 +64,7 @@ const slideOut = keyframes`
 `;
 
 interface MenuProps {
-  isOpen: boolean;
+  $isOpen: boolean;
 }
 
 export const Menu = styled.div<MenuProps>`
@@ -77,8 +77,8 @@ export const Menu = styled.div<MenuProps>`
   display: flex;
   flex-direction: column;
 
-  transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
-  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s forwards;
+  transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(-100%)')};
+  animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.3s forwards;
 `;
 
 export const UserInfo = styled.div`
@@ -135,7 +135,7 @@ export const MenuItem = styled.div`
 `;
 
 interface MenuItemBtnProps {
-  isSelected: boolean;
+  $isSelected: boolean;
 }
 
 export const MenuItemBtn = styled.button<MenuItemBtnProps>`
@@ -143,8 +143,8 @@ export const MenuItemBtn = styled.button<MenuItemBtnProps>`
   padding: 30px;
   width: 100%;
   border: none;
-  color: ${({ isSelected }) => (isSelected ? '#79B0CB' : '#325366')};
-  background-color: ${({ isSelected }) => (isSelected ? '#ffffff' : '#f5f5f5')};
+  color: ${({ $isSelected }) => ($isSelected ? '#79B0CB' : '#325366')};
+  background-color: ${({ $isSelected }) => ($isSelected ? '#ffffff' : '#f5f5f5')};
   text-align: left;
   cursor: pointer;
 `;
