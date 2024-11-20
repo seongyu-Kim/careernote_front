@@ -343,36 +343,6 @@ interface User {
   nickname: string;
   level: string;
 }
-//공지
-// {
-//   "_id": "673c81624fb83f29da6d1978",
-//   "title": "정우 여섯번째 글",
-//   "user": {
-//       "_id": "673c4fead43295e68c4525d7",
-//       "nickname": "정우관리자",
-//       "level": "673bf4d566d0a99161d942c1"
-//   },
-//   "content": "정우 여섯번째 글내용",
-//   "createdAt": "2024-11-19T12:15:30.401Z",
-//   "updatedAt": "2024-11-19T12:15:30.401Z",
-//   "__v": 0
-// },
-
-//게시글
-// {
-//   "_id": "673c85d3c283a3c822fedfcb",
-//   "title": "정우 글 수정하는것1.",
-//   "user": {
-//       "_id": "673c278248f2b5120fd25db9",
-//       "nickname": "빠알간두볼",
-//       "level": "673bf4d566d0a99161d942bf"
-//   },
-//   "content": "글 수정하기 위해서 하는 스터디1",
-//   "category": "스터디",
-//   "createdAt": "2024-11-19T12:34:27.618Z",
-//   "updatedAt": "2024-11-19T12:37:51.298Z",
-//   "__v": 0
-// },
 
 const Main = () => {
   const location = useLocation();

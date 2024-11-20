@@ -160,6 +160,7 @@ const Register = () => {
               useCheckDuplication={true}
               checkDuplicationValue={inputEmail}
               checkDuplicationType="email"
+              errorMsg={setEmailCheckMessage}
             />
             <InputChecker
               inputTagType="text"
@@ -170,6 +171,7 @@ const Register = () => {
               useCheckDuplication={true}
               checkDuplicationValue={inputNickname}
               checkDuplicationType="nickname"
+              errorMsg={setNicknameCheckMessage}
             />
             <InputChecker
               inputTagType="password"
