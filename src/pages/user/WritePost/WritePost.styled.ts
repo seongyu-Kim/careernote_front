@@ -50,7 +50,13 @@ export const SelectCategory = styled.select`
   font-size: 14px;
   box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 10px;
+`;
+
+export const WarningText = styled.div`
+  color: #E25151;
   margin-bottom: 20px;
+  font-size: 12px;
 `;
 
 export const TextareaField = styled.textarea`
