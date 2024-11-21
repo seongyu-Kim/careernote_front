@@ -31,39 +31,18 @@ const AdminWritePost = () => {
   const handleCancle = () => {
     navigate('/admin'); // 관리자는 /admin으로 이동
   };
-  // const handleSubmit = async () => {
-  //   const data = {
-  //     title,
-  //     content,
-  //     user: userId,
-  //   };
 
-  //   try {
-  //     const response = await apiUtils({
-  //       url: CUD_NOTICE,
-  //       method: 'POST',
-  //       data: data,
-  //     });
-  //     SuccessToast('게시물이 저장되었습니다.');
-  //     console.log('서버 응답 데이터:', response);
-  //   } catch (error) {
-  //     console.error('공지 등록 요청 실패:', error);
-  //     ErrorToast('공지를 다시 등록하세요.');
-  //   }
-  //   navigate('/admin');
-  // };
   // 글 수정/생성 공통 작업 
   const handleSubmit = async () => {
     // 공통 데이터
     let data: any;
-
     if (isEdit) {
       // 수정 요청 시 데이터 구조
       data = {
         notice_id: postId, // 수정할 공지 ID
         title,
         content,
-        level: userLevelId, // 사용자 레벨 (필요한 경우)
+        user: userId,
       };
     } else {
       // 생성 요청 시 데이터 구조

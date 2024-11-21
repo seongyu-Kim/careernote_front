@@ -26,7 +26,7 @@ const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionP
         }}>
         <Styled.UserList>
           {users.map((user) => (
-            <DraggableUser key={user.email} user={user} onDelete={() => onDelete(user._id as string)} />
+            <DraggableUser key={user.email} user={user} onDelete={() => onDelete(user.id as string)} />
           ))}
         </Styled.UserList>
       </Styled.UserSection>

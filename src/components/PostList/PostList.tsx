@@ -33,7 +33,7 @@ interface PostListProps {
   width?: string;
   isAdmin?: boolean;
   isMyPost?: boolean;
-  onDelete?: (id: number) => void;
+  onDelete?: (id: number, category: string) => void;
 }
 
 const PostList: React.FC<PostListProps> = ({
@@ -162,6 +162,8 @@ const PostList: React.FC<PostListProps> = ({
               if (column.key === 'createdAt' && value) {
                 value = formatDate(value);
               }
+
+              ////
               return (
                 <Styled.TableCell
                   key={column.key}
@@ -182,7 +184,7 @@ const PostList: React.FC<PostListProps> = ({
                   flex: columns.find((column) => column.key === 'admin')?.flex,
                   textAlign: 'center',
                 }}>
-                <Styled.DeleteBtn onClick={() => onDelete(item._id)}>삭제</Styled.DeleteBtn>
+                <Styled.DeleteBtn onClick={() => onDelete(item._id, item.category)}>삭제</Styled.DeleteBtn>
               </Styled.TableCell>
             )}
           </Styled.PostItem>
