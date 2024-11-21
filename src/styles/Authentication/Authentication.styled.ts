@@ -15,11 +15,11 @@ export const PageBackground = styled.div`
 `;
 //모달 백그라운드
 export const ModalBackground = styled.div`
-  z-index: 2;
+  z-index: 200;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: rgba(179, 179, 179, 0.6);
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   display: flex;
