@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { useValidCheck } from '@stores/useCheckDuplication';
-import { Input, Button, InputErrorMessage, AuthenticationInput } from 'components';
+import { Button, InputErrorMessage, AuthenticationInput } from 'components';
 
 interface InputCheckerProps {
   forValue?: string;
@@ -157,13 +157,14 @@ const CheckDuplication = ({
         onClick={() => duplicationCheck(dataType)}
         width="30%"
         height="40px"
-        border={!valid ? 'none' : '1px solid #b3d5eb'}
-        textColor={!valid ? 'white' : '#79b0c8'}
+        border="none"
+        textColor="white"
         disabled={!valid}
-        backgroundColor={!valid ? 'gray' : 'white'}
+        backgroundColor={!valid ? 'gray' : '#79b0c8'}
         useHover={valid}
+        hoverBackgroundColor="#3F82AC"
         useTransition={true}
-        transitionDuration={0.5}>
+        transitionDuration={0.3}>
         중복 확인
       </Button>
     )
