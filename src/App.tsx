@@ -10,9 +10,10 @@ import { useUserStore } from '@stores/userStore';
 
 function App() {
   const navigate = useNavigate(); // useNavigate 훅 사용
-  const { setNavigate } = useUserStore();
+  const { setNavigate, loginRestore } = useUserStore();
   useEffect(() => {
     setNavigate(navigate);
+    loginRestore();
   }, []);
 
   return (

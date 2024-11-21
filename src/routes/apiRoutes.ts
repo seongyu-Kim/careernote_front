@@ -8,9 +8,9 @@ export const USER_API = {
   LOGIN: `${BASE_URL}/api/user/login`, // 로그인
   LOGOUT: `${BASE_URL}/api/user/logout`, // 로그아웃
   REQUEST_RESET_PASSWORD: `${BASE_URL}/api/user/requestResetPassword`, //비밀번호 재설정 링크 요청
-  RESET_PASSWORD: (token: string) => `${BASE_URL}/api/user/resetPassword/${token}`, // 비밀번호 재설정
+  RESET_PASSWORD: `${BASE_URL}/api/user/resetPassword/`, // 비밀번호 재설정
   USER_DELETE: `${BASE_URL}/api/user`, // 유저 탈퇴
-  USER_ABOUT: `${BASE_URL}/api/user/about`,
+  USER_ABOUT: `${BASE_URL}/api/user/aboutMe`,
   USER_LEVEL_CHANGE: `${BASE_URL}/api/user/updateLevel`
 };
 
@@ -27,3 +27,13 @@ export const NOTICE_API = {
   DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/notice/${id}`, // 공지 상세 조회(READ)
 };
 //const response = await axios.get(BOARD_ROUTE_API.READ_BOARD(id)); 사용 예시
+
+export const BOARD_COMMENT_API ={
+  BOARD_COMMENTS: (id:string| number)=>`${BASE_URL}/api/boardcomment/${id}`,
+  CUD_BOARD_COMMENT: `${BASE_URL}/api/boardcomment`
+};
+
+export const NOTICE_COMMENT_API ={
+  NOTICE_COMMENTS: (id:string| number)=>`${BASE_URL}/api/noticecomment/${id}`,
+  CUD_NOTICE_COMMENT: `${BASE_URL}/api/noticecomment`
+};
