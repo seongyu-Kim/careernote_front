@@ -15,7 +15,7 @@ export const PageBackground = styled.div`
 `;
 //모달 백그라운드
 export const ModalBackground = styled.div`
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   height: 100%;
   background: rgba(179, 179, 179, 0.6);
@@ -28,6 +28,7 @@ export const ModalBackground = styled.div`
 `;
 //모달 박스
 export const ModalContainer = styled.div`
+  z-index: 4;
   width: 450px;
   height: 570px;
   border-radius: 9px;

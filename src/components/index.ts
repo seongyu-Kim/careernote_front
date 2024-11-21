@@ -8,4 +8,5 @@ export { default as DropDown } from './DropDown/DropDown';
 export { default as Input } from './Input/Input';
 export { default as InputChecker } from './InputChecker/InputChecker';
 export { default as InputErrorMessage } from './InputErrorMessage/InputErrorMessage';
+export { default as AuthenticationInput } from './AuthenticationInput/AuthenticationInput';
 export { default as Toast } from './Toast/Toast';

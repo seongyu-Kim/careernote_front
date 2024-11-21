@@ -82,6 +82,7 @@ export const FindPassword = () => {
           <Styled.Form onSubmit={handleSubmitSendEmail}>
             <Styled.InputBoxContainer>
               <InputChecker
+                forValue="findEmail"
                 inputTagType="text"
                 placeholderText="이메일을 입력해주세요."
                 onChange={setInputEmail}
