@@ -87,20 +87,42 @@ export const UserInfo = styled.div`
   color: #325366;
   font-weight: bold;
   align-items: center;
-  margin-top: 10px;
 `;
-
+export const MyInfoTitle = styled.h2`
+  font-size: 18px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+`;
 export const UserName = styled.div`
-  margin-top: 40px;
+  margin-right: 5px;
 `;
-
+export const NickNameContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
 export const Hr = styled.hr`
   width: 220px;
   border: none;
   border-top: 1px solid #d9d9d9;
   margin: 15px;
 `;
-
+export const UserLevel = styled.div`
+  margin: 5px 0;
+  background-color: #86B886;
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+  font-weight: normal;
+  font-size: 12px;
+`;
+export const EditBtnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 10px;
+`;
 export const UserInfoDetails = styled.div`
   display: flex;
   justify-content: space-between;
