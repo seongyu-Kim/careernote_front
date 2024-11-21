@@ -54,31 +54,31 @@ const AdminMain = () => {
   const [users, setUsers] = useState<User[]>([]); // 유저 상태
   //const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
 
-  // 모든 사용자 데이터 가져오기
+  // 사용자 데이터를 가져오는 함수
+  const fetchUsers = async () => {
+    try {
+      const response = await apiUtils({
+        url: ALL_USER,
+        method: 'GET',
+      });
+      console.log('사용자 데이터:', response);
+      // postCount 계산 후 상태 업데이트
+      const updatedUsers = response.data.map((user: any) => ({
+        id: user._id,
+        email: user.email,
+        nickname: user.nickname,
+        level: user.level?.name || '알 수 없음',
+        postCount: user.boards?.length || 0,
+      }));
+
+      setUsers(updatedUsers); // 상태 업데이트
+    } catch (error) {
+      console.error('사용자 데이터 가져오기 실패:', error);
+    }
+  };
+
+  // 초기 데이터 가져오기
   useEffect(() => {
-    const fetchUsers = async () => {
-
-      try {
-        const response = await apiUtils({
-          url: ALL_USER,
-          method: 'GET',
-        });
-        console.log('사용자 데이터:', response);
-        // postCount 계산 후 상태 업데이트
-        const updatedUsers = response.data.map((user: any) => ({
-          id: user._id,
-          email: user.email,
-          nickname: user.nickname,
-          level: user.level?.name || '알 수 없음',
-          postCount: user.boards?.length || 0,
-        }));
-
-        setUsers(updatedUsers); // 상태 업데이트
-      } catch (error) {
-        console.error('사용자 데이터 가져오기 실패:', error);
-      }
-    };
-
     fetchUsers();
   }, []);
   // '삐약이 회원'과 '꼬꼬닭 회원'으로 유저를 그룹화
@@ -210,7 +210,7 @@ const AdminMain = () => {
   };
 
   // 사용자 탈퇴 Alert
-  const handleUserDelete = (id: string) => {
+  const handleUserDelete = async (id: string) => {
     openAlert('이 회원을 탈퇴시키겠습니까?', () => handleUserDeleteConfirm(id)); // 모달 열기
   };
   // 사용자 탈퇴 함수
@@ -226,6 +226,7 @@ const AdminMain = () => {
       //setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
       console.log('사용자 탈퇴 성공했습니다.');
       SuccessToast(`${id} 사용자가 탈퇴되었습니다.`);
+      await fetchUsers();
     } catch (error) {
       console.error('사용자 탈퇴 중 오류 발생:', error);
       ErrorToast(`${id}사용자 탈퇴에 실패했습니다.`);

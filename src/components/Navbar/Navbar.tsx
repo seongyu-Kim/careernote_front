@@ -7,6 +7,9 @@ import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
+import { Button } from '..';
+import EditNicknameForm from '@components/Form/EditNickNameForm/EditNickNameForm';
+import EditPasswordForm from '@components/Form/EditPasswordForm/EditPasswordForm';
 const { USER_DELETE } = USER_API;
 
 interface NavbarProps {
@@ -20,6 +23,10 @@ const Navbar = ({ categories }: NavbarProps) => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string>('자유게시판');
+
+  const [isEditing, setIsEditing] = useState(false); // 닉네임 편집 상태
+  const [nickName, setNickName] = useState(user?.nickName || ''); // 닉네임 상태
+
 
   //햄버거 메뉴
   const toggleMenu = () => {
@@ -74,6 +81,19 @@ const Navbar = ({ categories }: NavbarProps) => {
     }
   };
 
+  const [isEditingNickname, setIsEditingNickname] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+
+  const handleNicknameSave = (nickname: string) => {
+    console.log('닉네임 저장:', nickname);
+    setIsEditingNickname(false);
+  };
+
+  const handlePasswordSave = (currentPassword: string, newPassword: string) => {
+    console.log('비밀번호 저장:', { currentPassword, newPassword });
+    setIsEditingPassword(false);
+  };
+
   return (
     <>
       {isLogin && user ? (
@@ -94,10 +114,36 @@ const Navbar = ({ categories }: NavbarProps) => {
           {isMenuOpen && (
             <Styled.Menu $isOpen={isMenuOpen}>
               <Styled.UserInfo>
-                내 정보
-                <Styled.UserName>
-                  {user?.nickName} 님 ({user?.level?.name} 회원)
-                </Styled.UserName>
+                <Styled.MyInfoTitle>
+                  내 정보
+                </Styled.MyInfoTitle>
+                <Styled.NickNameContainer>
+                  <Styled.UserName>
+                    {user?.nickName} 님
+                  </Styled.UserName>
+                  <Styled.UserLevel>
+                    {user?.level?.name} 등급
+                  </Styled.UserLevel>
+                </Styled.NickNameContainer>
+                <Styled.EditBtnContainer>
+                  <Button
+                    border='1px solid #79b0cb'
+                    textColor='#79b0cb' fontSize='12px'
+                    padding='3px'
+                    onClick={() => setIsEditingNickname((prev) => !prev)}>
+                    닉네임 변경
+                  </Button>
+                  <Button
+                    border='1px solid #79b0cb'
+                    textColor='#79b0cb'
+                    fontSize='12px'
+                    padding='3px'
+                    onClick={() => setIsEditingPassword((prev) => !prev)}>
+                    비말번호 변경
+                  </Button>
+                </Styled.EditBtnContainer>
+                {isEditingNickname && <EditNicknameForm onSave={handleNicknameSave} />}
+                {isEditingPassword && <EditPasswordForm onSave={handlePasswordSave} />}
                 <Styled.Hr />
                 <Styled.UserInfoDetails>
                   <Styled.UserInfoItem onClick={() => navigate('/mypage')}>
@@ -131,7 +177,8 @@ const Navbar = ({ categories }: NavbarProps) => {
             <Styled.Logout onClick={() => navigate('/login')}>Login</Styled.Logout>
           </Styled.LogoutBox>
         </Styled.Nav>
-      )}
+      )
+      }
     </>
   );
 };
