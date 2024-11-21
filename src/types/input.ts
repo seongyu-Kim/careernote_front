@@ -1,9 +1,11 @@
 import React, { ReactNode } from 'react';
 
 export interface InputProps {
+  forValue?: string;
   children?: ReactNode;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  labelPlaceHolder?: string; //추가
   placeholderColor?: string;
   type?: string;
   value?: string;
@@ -24,4 +26,5 @@ export interface InputProps {
   fontSize?: string;
   textColor?: string;
   focusBorderColor?: string;
+  isActive?: boolean;
 }

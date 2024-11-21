@@ -73,7 +73,6 @@ export const MyInfo = () => {
           className="close"
           onClick={() => {
             setIsOpen(false);
-            // setInputFieldChecked(true);
           }}
         />
         <Styled.ModalField>

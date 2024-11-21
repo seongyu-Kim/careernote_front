@@ -1,5 +1,4 @@
-import Button from '@components/Button/Button';
-import Input from '@components/Input/Input';
+import { Button, AuthenticationInput } from 'components';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ErrorToast } from '@utils/ToastUtils';
@@ -46,11 +45,12 @@ const EditPasswordForm = ({
 
   return (
     <InputContainer>
-      <Input
+      <AuthenticationInput
+        forValue="currentPassword"
         type="password"
         value={currentPassword}
         onChange={(e) => setCurrentPassword(e.target.value)}
-        placeholder="현재 비밀번호를 입력하세요"
+        labelPlaceHolder="현재 비밀번호"
         width="100%"
         height="40px"
         border="1px solid #b3d5eb"
@@ -59,11 +59,12 @@ const EditPasswordForm = ({
         padding="3%"
         placeholderColor="#79b0c8"
       />
-      <Input
+      <AuthenticationInput
+        forValue="newPassword"
         type="password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
-        placeholder="새 비밀번호를 입력하세요"
+        labelPlaceHolder="새 비밀번호"
         width="100%"
         height="40px"
         border="1px solid #b3d5eb"
@@ -72,11 +73,12 @@ const EditPasswordForm = ({
         padding="3%"
         placeholderColor="#79b0c8"
       />
-      <Input
+      <AuthenticationInput
+        forValue="confirmPassword"
         type="password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
-        placeholder="새 비밀번호 확인"
+        labelPlaceHolder="새 비밀번호 확인"
         width="100%"
         height="40px"
         border="1px solid #b3d5eb"
