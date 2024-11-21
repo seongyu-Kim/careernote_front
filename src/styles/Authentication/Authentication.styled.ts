@@ -95,6 +95,7 @@ export const TextContainer = styled.div`
   gap: 5px;
   .myInfoIcon {
     color: #3a5265;
+    cursor: pointer;
   }
 `;
 
