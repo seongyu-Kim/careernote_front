@@ -8,13 +8,13 @@ import { USER_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
-import { Button, Input } from 'components';
+import { Button, AuthenticationInput } from 'components';
 
 const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen, setModalState } = useModal();
+  const { setIsOpen, setModalState } = useModal();
   const { login } = useUserStore();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
@@ -81,35 +81,22 @@ const LoginPage = () => {
           <Styled.Text>Login</Styled.Text>
           <Styled.Form onSubmit={handleSubmitLogin}>
             <Styled.LoginInputBoxContainer>
-              <Input
+              <AuthenticationInput
+                forValue="email"
+                labelPlaceHolder="이메일"
                 onChange={handleInputChange('id')}
-                type="text"
-                placeholder="아이디를 입력하세요."
-                width="100%"
-                height="40px"
-                border="1px solid #b3d5eb"
-                backgroundColor="#f0f7fb"
-                caretColor="#79b0c8"
-                padding="3%"
-                placeholderColor="#79b0c8"
               />
-              <Input
-                onChange={handleInputChange('password')}
+              <AuthenticationInput
+                forValue="password"
                 type="password"
-                placeholder="비밀번호를 입력하세요."
-                width="100%"
-                height="40px"
-                border="1px solid #b3d5eb"
-                backgroundColor="#f0f7fb"
-                caretColor="#79b0c8"
-                padding="3%"
-                placeholderColor="#79b0c8"
+                labelPlaceHolder="비밀번호"
+                onChange={handleInputChange('password')}
               />
               <Styled.FindPasswordBox>
                 <span
                   onClick={() => {
                     setModalState('findPassword');
-                    setIsOpen(isOpen);
+                    setIsOpen(true);
                   }}>
                   비밀번호 찾기
                 </span>

@@ -152,10 +152,11 @@ const Register = () => {
           <Styled.Text>Sign Up</Styled.Text>
           <Styled.Form onSubmit={handleSubmitUserData}>
             <InputChecker
+              forValue="email"
               inputTagType="text"
               onChange={setInputEmail}
               valid={emailRegEx.test(inputEmail)}
-              placeholderText="이메일을 입력해주세요."
+              placeholderText="이메일"
               checkMessage={emailCheckMessage}
               useCheckDuplication={true}
               checkDuplicationValue={inputEmail}
@@ -163,10 +164,11 @@ const Register = () => {
               errorMsg={setEmailCheckMessage}
             />
             <InputChecker
+              forValue="nickName"
               inputTagType="text"
               onChange={setInputNickname}
               valid={nicknameRegEx.test(inputNickname)}
-              placeholderText="닉네임을 입력해주세요."
+              placeholderText="닉네임"
               checkMessage={nicknameCheckMessage}
               useCheckDuplication={true}
               checkDuplicationValue={inputNickname}
@@ -174,17 +176,19 @@ const Register = () => {
               errorMsg={setNicknameCheckMessage}
             />
             <InputChecker
+              forValue="password"
               inputTagType="password"
               onChange={setInputPassword}
               valid={passwordRegEx.test(inputPassword)}
-              placeholderText="비밀번호를 입력해주세요."
+              placeholderText="비밀번호"
               checkMessage={passwordCheckMessage}
             />
             <InputChecker
+              forValue="confirmPassword"
               inputTagType="password"
               onChange={setInputConfirmPassword}
               valid={passwordRegEx.test(inputConfirmPassword)}
-              placeholderText="비밀번호 확인."
+              placeholderText="비밀번호 확인"
               checkMessage={confirmPasswordCheckMessage}
             />
             <InputErrorMessage message={notAccorPassword} confirm={true} />

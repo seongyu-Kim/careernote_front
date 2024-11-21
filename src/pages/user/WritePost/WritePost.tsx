@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Styled from './WritePost.styled';
 import Button from '@components/Button/Button';
@@ -9,7 +9,6 @@ import apiUtils from '@utils/apiUtils';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
 const { CUD_BOARD, DETAILS_BOARD } = BOARD_API;
-const CategoryOptions = ['선택', '등업', '취업정보', '스터디'];
 
 const WritePost = () => {
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
@@ -23,8 +22,19 @@ const WritePost = () => {
   const [category, setCategory] = useState(state?.category || '선택');
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
+  //김
+  const [categoryOptions, setCategoryOptions] = useState<string[]>(['선택']);
   const postId = state?.postId;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.level.name === '삐약이') {
+      setCategoryOptions(['선택', '등업']);
+    } else if (user?.level.name === '꼬꼬닭') {
+      setCategoryOptions(['선택', '등업', '취업정보', '스터디']);
+    }
+  }, [user?.level.name]);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -40,14 +50,14 @@ const WritePost = () => {
     navigate('/posts');
   };
 
-  // 글 수정/생성 공통 작업 
+  // 글 수정/생성 공통 작업
   const handleSubmit = async () => {
     const data = {
       title,
       content,
       category: category,
       user: userId,
-      board_id: postId
+      board_id: postId,
     };
 
     try {
@@ -70,7 +80,8 @@ const WritePost = () => {
       } else {
         ErrorToast('게시물 등록 중 오류가 발생했습니다.');
       }
-    } navigate(MAIN_PAGE_URL);
+    }
+    navigate(MAIN_PAGE_URL);
   };
   return (
     <NavbarContainer>
@@ -84,12 +95,9 @@ const WritePost = () => {
         />
         <Styled.Label>카테고리</Styled.Label>
         <Styled.SelectCategory value={category} onChange={handleCategoryChange}>
-          {CategoryOptions.map((option, index) => (
-            <option
-              key={index}
-              value={option}
-              disabled={userLevelName === '삐약이' && option !== '등업' && option !== '선택'} // '삐약이'일 때 '등업' 외 모든 옵션 비활성화>
-            > {option}
+          {categoryOptions.map((option, index) => (
+            <option key={index} value={option}>
+              {option}
             </option>
           ))}
         </Styled.SelectCategory>
