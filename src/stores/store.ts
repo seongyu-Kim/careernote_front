@@ -13,8 +13,8 @@ interface AlertStore {
 interface ModalState {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  modalState: '' | 'findPassword';
-  setModalState: (modalState: '' | 'findPassword') => void;
+  modalState: '' | 'findPassword' | 'MyInfo';
+  setModalState: (modalState: '' | 'findPassword' | 'MyInfo') => void;
 }
 
 export const useAlertStore = create<AlertStore>((set) => ({
@@ -30,7 +30,7 @@ export const useAlertStore = create<AlertStore>((set) => ({
 export const useModal = create<ModalState>((set) => ({
   isOpen: false,
   modalState: '',
-  setIsOpen: (isOpen: boolean) => set({ isOpen: !isOpen }),
+  setIsOpen: (isOpen: boolean) => set({ isOpen: isOpen }),
   setModalState: (value) => {
     set({ modalState: value });
   },
