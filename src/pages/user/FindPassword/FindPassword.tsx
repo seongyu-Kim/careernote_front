@@ -72,7 +72,7 @@ export const FindPassword = () => {
         <MdClose
           className="close"
           onClick={() => {
-            setIsOpen(isOpen);
+            setIsOpen(false);
             setInputFieldChecked(true);
           }}
         />

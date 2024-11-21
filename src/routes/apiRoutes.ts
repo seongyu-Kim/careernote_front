@@ -10,7 +10,9 @@ export const USER_API = {
   REQUEST_RESET_PASSWORD: `${BASE_URL}/api/user/requestResetPassword`, //비밀번호 재설정 링크 요청
   RESET_PASSWORD: `${BASE_URL}/api/user/resetPassword/`, // 비밀번호 재설정
   USER_DELETE: `${BASE_URL}/api/user`, // 유저 탈퇴
-  USER_ABOUT: `${BASE_URL}/api/user/aboutMe`,
+  USER_ABOUT: `${BASE_URL}/api/user/aboutMe`, // 토큰으로 유저 정보 다시 불러오기
+  UPDATE_PASSWORD: `${BASE_URL}/api/user/updatePassword`, // 비밀번호 변경
+  UPDATE_NICKNAME: `${BASE_URL}/api/user/updateNickname`,
 };
 
 export const BOARD_API = {
