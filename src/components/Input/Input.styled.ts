@@ -10,6 +10,7 @@ export const DefaultInput = styled.input<InputProps>`
   background-color: ${(props) => props.backgroundColor};
   caret-color: ${(props) => props.caretColor};
   padding: ${(props) => props.padding};
+  cursor: text;
   &::placeholder {
     color: ${(props) => props.placeholderColor};
   }

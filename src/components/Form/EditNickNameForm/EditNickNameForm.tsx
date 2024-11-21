@@ -38,8 +38,9 @@ const EditNicknameForm = ({ onSave }: { onSave: (nickname: string) => void }) =>
   return (
     <InputContainer>
       <InputChecker
+        forValue="changeNickname"
         inputTagType="text"
-        placeholderText="닉네임을 입력해주세요"
+        placeholderText="새 닉네임"
         onChange={setNickname}
         valid={nicknameRegEx.test(nickname)}
         checkMessage={nicknameCheckMessage}

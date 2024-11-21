@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { useValidCheck } from '@stores/useCheckDuplication';
-import { Input, Button, InputErrorMessage } from 'components';
+import { Input, Button, InputErrorMessage, AuthenticationInput } from 'components';
 
 interface InputCheckerProps {
+  forValue?: string;
   inputTagType: string;
   placeholderText: string;
   onChange: (value: string) => void;
@@ -28,6 +29,7 @@ interface CheckDuplicationProps {
 }
 
 const InputChecker = ({
+  forValue,
   inputTagType, //인풋 타입 ex) text
   placeholderText,
   onChange,
@@ -68,17 +70,11 @@ const InputChecker = ({
       <Styled.InputBoxContainer>
         <Styled.InputWrapper>
           <Styled.InputLabel>
-            <Input
-              onChange={handleInputChange}
+            <AuthenticationInput
+              forValue={forValue}
               type={inputTagType}
-              placeholder={placeholderText}
-              width="100%"
-              height="40px"
-              border="1px solid #b3d5eb"
-              backgroundColor="#f0f7fb"
-              caretColor="#79b0c8"
-              padding="3%"
-              placeholderColor="#79b0c8"
+              labelPlaceHolder={placeholderText}
+              onChange={handleInputChange}
             />
             {duplicationCheck && <FaRegCheckCircle className="checkIcon" />}
           </Styled.InputLabel>
@@ -99,17 +95,11 @@ const InputChecker = ({
     <Styled.InputBoxContainer>
       <Styled.InputWrapper>
         <Styled.InputLabel>
-          <Input
-            onChange={handleInputChange}
+          <AuthenticationInput
+            forValue={forValue}
             type={inputTagType}
-            placeholder={placeholderText}
-            width="100%"
-            height="40px"
-            border="1px solid #b3d5eb"
-            backgroundColor="#f0f7fb"
-            caretColor="#79b0c8"
-            padding="3%"
-            placeholderColor="#79b0c8"
+            labelPlaceHolder={placeholderText}
+            onChange={handleInputChange}
           />
           {valid && <FaRegCheckCircle className="checkIcon" />}
         </Styled.InputLabel>
