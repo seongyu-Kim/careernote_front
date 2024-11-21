@@ -58,22 +58,22 @@ const ResetPassword = () => {
     event.preventDefault();
     const resData = {
       new_password: inputPassword,
-      token: token,
     };
     try {
       const res = await apiUtils({
-        url: RESET_PASSWORD(token!),
+        url: RESET_PASSWORD,
         method: 'PUT',
         data: resData,
-        headers: { Authorization: 'Bearer ', token: token! },
-        withAuth: false,
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.message === '비밀번호 재설정 성공') {
+      if (res.message === '비밀번호가 정상적으로 변경되었습니다') {
         SuccessToast('비밀번호 재설정 성공');
         setTimeout(() => {
           navigate(LOGIN_PAGE_URL);
         }, 500);
       }
+      if (res.message === '토큰이 만료되었습니다.' || res.message === '유효하지 않은 토큰입니다.')
+        ErrorToast('비밀번호 재설정 실패');
     } catch (error) {
       ErrorToast('비밀번호 재설정 오류');
       console.error('비밀번호 재설정 오류', error);
