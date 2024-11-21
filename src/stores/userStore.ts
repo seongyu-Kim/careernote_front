@@ -23,11 +23,13 @@ interface User {
   email: string;
   nickname: string;
   level: Level;
+  deleted: boolean;
   boards: Board[];
   createdAt: string;
   updatedAt: string;
   __v: number;
   accessToken: string;
+  resetPasswordToken: string | '';
 }
 
 interface UserState {
@@ -36,11 +38,13 @@ interface UserState {
     email: string;
     nickName: string;
     level: Level;
+    deleted?: boolean;
     boards: Board[];
     created_at: string;
     updated_at: string;
     __v: number;
     accessToken: string;
+    resetPasswordToken: string;
   } | null;
   token: string | null;
   isLogin: boolean;
@@ -51,11 +55,13 @@ interface UserState {
     email,
     nickname,
     level,
+    deleted,
     boards,
     createdAt,
     updatedAt,
     __v,
     accessToken,
+    resetPasswordToken,
   }: User) => void;
   logout: () => void;
   loginRestore: () => void;
@@ -72,11 +78,13 @@ export const useUserStore = create<UserState>((set, get) => ({
     email,
     nickname,
     level,
+    deleted,
     boards,
     createdAt,
     updatedAt,
     __v,
     accessToken,
+    resetPasswordToken,
   }: User) => {
     const newState = {
       user: {
@@ -84,18 +92,19 @@ export const useUserStore = create<UserState>((set, get) => ({
         email,
         nickName: nickname,
         level,
+        deleted,
         boards,
         created_at: createdAt,
         updated_at: updatedAt,
         __v,
         accessToken,
+        resetPasswordToken,
       },
       isLogin: true,
       token: accessToken,
     };
 
     set(newState);
-
     localStorage.setItem('token', newState.token);
     localStorage.setItem('isLogin', JSON.stringify(newState.isLogin));
   },
@@ -124,13 +133,27 @@ export const useUserStore = create<UserState>((set, get) => ({
         const { USER_ABOUT } = USER_API;
         const res = await apiUtils({
           url: USER_ABOUT,
-          method: 'POST',
-          data: { token: localStorage.getItem('token') },
-          withAuth: false,
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
-        if (res) {
+        if (res.message === '로그인 유저 정보 조회 성공') {
           // 추후 조건 수정
-          set({ user: res, isLogin: isLogin, token: token });
+          set({
+            user: {
+              user_id: res.data._id,
+              email: res.data.email,
+              nickName: res.data.nickname,
+              level: res.data.level,
+              deleted: res.data.deleted || false,
+              boards: res.data.boards,
+              created_at: res.data.createdAt,
+              updated_at: res.data.updatedAt,
+              __v: res.data.__v,
+              accessToken: res.data.accessToken,
+              resetPasswordToken: res.data.resetPasswordToken,
+            },
+            isLogin: isLogin,
+            token: token,
+          });
           return;
         }
       } catch (error) {
