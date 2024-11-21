@@ -14,7 +14,7 @@ const LoginPage = () => {
   const [inputId, setInputId] = useState<string>('');
   const [inputPassword, setInputPassword] = useState<string>('');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-  const { isOpen, setIsOpen, setModalState } = useModal();
+  const { setIsOpen, setModalState } = useModal();
   const { login } = useUserStore();
   const navigate = useNavigate();
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
@@ -109,7 +109,7 @@ const LoginPage = () => {
                 <span
                   onClick={() => {
                     setModalState('findPassword');
-                    setIsOpen(isOpen);
+                    setIsOpen(true);
                   }}>
                   비밀번호 찾기
                 </span>
