@@ -11,6 +11,7 @@ export const USER_API = {
   RESET_PASSWORD: (token: string) => `${BASE_URL}/api/user/resetPassword/${token}`, // 비밀번호 재설정
   USER_DELETE: `${BASE_URL}/api/user`, // 유저 탈퇴
   USER_ABOUT: `${BASE_URL}/api/user/about`,
+  USER_LEVEL_CHANGE: `${BASE_URL}/api/user/updateLevel`
 };
 
 export const BOARD_API = {

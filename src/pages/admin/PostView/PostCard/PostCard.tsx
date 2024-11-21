@@ -62,7 +62,7 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
           noOptionsMessage="권한 없음"
         />
       </Styled.ContainerHeader>
-      <Styled.Title>{post.title || '탈퇴한 사용자의 글 입니다.'}</Styled.Title>
+      <Styled.Title>{post.title || '알 수 없는 글'}</Styled.Title>
       <Styled.Writer>{post.writer || '알 수 없는 사용자'}</Styled.Writer>
       <Styled.Date>{post.date}</Styled.Date>
       <Styled.Content>{post.content}</Styled.Content>

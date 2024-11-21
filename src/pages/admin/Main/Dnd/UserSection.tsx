@@ -7,14 +7,19 @@ interface UserSectionProps {
   title: string;
   level: UserLevel;
   users: User[];
-  onUserDrop: (user: User, newLevel: UserLevel) => void;
+  onUserDrop: (user: string, newLevel: UserLevel) => void;
   onDelete: (id: string) => void;
 }
 {
   /**드래그앤드랍 영역 */
 }
 const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionProps) => {
-  const [{ isOver }, drop] = useUserDrop((user) => onUserDrop(user, level));
+  const [{ isOver }, drop] = useUserDrop((user: User) => {
+    const newLevel = user.level === '삐약이' ? '꼬꼬닭' : '삐약이';
+    if (user && user.id) {
+      onUserDrop(user.id, newLevel);
+    }
+  });
 
   return (
     <>
@@ -26,7 +31,7 @@ const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionP
         }}>
         <Styled.UserList>
           {users.map((user) => (
-            <DraggableUser key={user.email} user={user} onDelete={() => onDelete(user.id as string)} />
+            <DraggableUser key={user.email} user={user} onDelete={() => onDelete(user.id)} />
           ))}
         </Styled.UserList>
       </Styled.UserSection>
