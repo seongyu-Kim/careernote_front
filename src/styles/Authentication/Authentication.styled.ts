@@ -88,6 +88,16 @@ export const Text = styled.p<Props>`
   color: #3a5265;
 `;
 
+export const TextContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 5px;
+  .myInfoIcon {
+    color: #3a5265;
+  }
+`;
+
 export const Form = styled.form`
   width: 75%;
   height: 100%;
@@ -135,11 +145,15 @@ export const RegisterButtonContainer = styled(ButtonContainer)`
   justify-content: center;
   margin: 0 0 10% 0;
 `;
+//내 정보 버튼 컨테이너
+export const MyInfoButtonContainer = styled(ButtonContainer)`
+  margin: 0;
+`;
 //비밀 번호 재설정 컨테이너
 export const PasswordButtonContainer = styled(ButtonContainer)`
   margin: 10% 0 8% 0;
 `;
-//비밀번호 재설정 컨테이너
+//비밀번호 찾기 컨테이너
 export const FindPasswordButtonContainer = styled(ButtonContainer)`
   align-items: center;
 `;
@@ -147,6 +161,9 @@ export const Divider = styled.div`
   width: 100%;
   margin: 7%;
   position: relative;
+`;
+export const MyInfoDivider = styled(Divider)`
+  margin: 5% 0 0 0;
 `;
 
 export const ErrorMessage = styled.p`
