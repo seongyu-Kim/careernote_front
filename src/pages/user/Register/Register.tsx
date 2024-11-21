@@ -188,7 +188,7 @@ const Register = () => {
               inputTagType="password"
               onChange={setInputConfirmPassword}
               valid={passwordRegEx.test(inputConfirmPassword)}
-              placeholderText="비밀번호 확인."
+              placeholderText="비밀번호 확인"
               checkMessage={confirmPasswordCheckMessage}
             />
             <InputErrorMessage message={notAccorPassword} confirm={true} />

@@ -9,7 +9,7 @@ export const InputWrapper = styled.div`
 
 export const Label = styled.label<{ isActive: boolean }>`
   position: absolute;
-  left: 16px;
+  left: 10px;
   top: ${(props) => (props.isActive ? '-9px' : '50%')};
   font-size: ${(props) => (props.isActive ? '15px' : '16px')};
   color: ${(props) => (props.isActive ? '#79b0c8' : '#79b0c8')};
@@ -20,6 +20,7 @@ export const Label = styled.label<{ isActive: boolean }>`
   background-color: ${(props) => (props.isActive ? 'white' : 'none')};
   padding: 0 5px 0 5px;
   border-radius: 8px;
+  user-select: none;
 `;
 
 export const AuthenticationInput = styled.input<InputProps>`
@@ -37,7 +38,7 @@ export const AuthenticationInput = styled.input<InputProps>`
   }
   &:focus {
     border-color: ${(props) => (props.isActive ? '#79b0c8' : '#79b0c8')};
-    box-shadow: ${(props) => (props.isActive ? '0 2px 4px rgba(121, 176, 200, 0.4)' : 'none')};
+    box-shadow: ${(props) => (props.isActive ? '0 2px 6px rgba(0, 0, 0, 0.4)' : 'none')};
     transition:
       border-color 0.3s ease,
       box-shadow 0.3s ease; /* 포커스 상태에서도 서서히 변화 */
