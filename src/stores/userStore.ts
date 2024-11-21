@@ -128,6 +128,9 @@ export const useUserStore = create<UserState>((set, get) => ({
   loginRestore: async () => {
     const isLogin = localStorage.getItem('isLogin') === 'true';
     const token = localStorage.getItem('token');
+    if (!isLogin && !token) {
+      return;
+    }
     if (isLogin && token) {
       try {
         const { USER_ABOUT } = USER_API;
