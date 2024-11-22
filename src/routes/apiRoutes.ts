@@ -13,7 +13,11 @@ export const USER_API = {
   USER_ABOUT: `${BASE_URL}/api/user/aboutMe`, // 토큰으로 유저 정보 다시 불러오기
   UPDATE_PASSWORD: `${BASE_URL}/api/user/updatePassword`, // 비밀번호 변경
   UPDATE_NICKNAME: `${BASE_URL}/api/user/updateNickname`,
-  USER_LEVEL_CHANGE: `${BASE_URL}/api/user/updateLevel`
+  USER_LEVEL_CHANGE: `${BASE_URL}/api/user/updateLevel`,
+};
+
+export const ADMIN_API = {
+  CREATE_CATEGORY: `${BASE_URL}/api/category/create`,
 };
 
 export const BOARD_API = {
@@ -30,12 +34,12 @@ export const NOTICE_API = {
 };
 //const response = await axios.get(BOARD_ROUTE_API.READ_BOARD(id)); 사용 예시
 
-export const BOARD_COMMENT_API ={
-  BOARD_COMMENTS: (id:string| number)=>`${BASE_URL}/api/boardcomment/${id}`,
-  CUD_BOARD_COMMENT: `${BASE_URL}/api/boardcomment`
+export const BOARD_COMMENT_API = {
+  BOARD_COMMENTS: (id: string | number) => `${BASE_URL}/api/boardcomment/${id}`,
+  CUD_BOARD_COMMENT: `${BASE_URL}/api/boardcomment`,
 };
 
-export const NOTICE_COMMENT_API ={
-  NOTICE_COMMENTS: (id:string| number)=>`${BASE_URL}/api/noticecomment/${id}`,
-  CUD_NOTICE_COMMENT: `${BASE_URL}/api/noticecomment`
+export const NOTICE_COMMENT_API = {
+  NOTICE_COMMENTS: (id: string | number) => `${BASE_URL}/api/noticecomment/${id}`,
+  CUD_NOTICE_COMMENT: `${BASE_URL}/api/noticecomment`,
 };
