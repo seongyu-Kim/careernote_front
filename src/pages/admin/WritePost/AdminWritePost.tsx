@@ -79,7 +79,7 @@ const AdminWritePost = () => {
       } else {
         ErrorToast('게시물 등록 중 오류가 발생했습니다.');
       }
-    } navigate(ADMIN_MAIN);
+    } navigate(`/admin/post/${postId}`);
   };
 
   return (

@@ -39,10 +39,9 @@ const Comment = ({ nickName, content, date, isOwnComment, levelName, onEdit, onD
 
       {isEditing ? (
         <>
-          <Styled.EditInput
-            type="text"
+          <Styled.EditTextArea
             value={editedContent}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditedContent(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditedContent(e.target.value)}
           />
           <Styled.Actions>
             <Styled.ActionButton onClick={handleEditConfirm}>수정 완료</Styled.ActionButton>
