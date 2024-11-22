@@ -15,6 +15,7 @@ const WritePost = () => {
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
+  const userLevelName = user?.level.name;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
   // state가 존재하는지 확인
   const isEdit = !!state;
@@ -100,6 +101,11 @@ const WritePost = () => {
             </option>
           ))}
         </Styled.SelectCategory>
+        {userLevelName === '삐약이' && (
+          <Styled.WarningText>
+            다른 카테고리 글을 작성하려면, 먼저 등업 글을 작성해 주세요.
+          </Styled.WarningText>
+        )}
         <div>
           <Styled.Label style={{ marginBottom: '10px' }}>내용</Styled.Label>
           <Styled.TextareaField

@@ -11,7 +11,8 @@ import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
 import { useLocation } from 'react-router-dom';
-const { UPDATE_INFO, ALL_USER, USER_DELETE } = USER_API;
+import { usePostStore } from '@stores/usePostStore';
+const { UPDATE_INFO, USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API;  //공지 외 카테고리 RUD api 주소
 interface UserProp {
@@ -28,18 +29,18 @@ interface Post {
 }
 
 const AdminMain = () => {
-  const { ALL_NOTICES } = NOTICE_API;
-  const { ALL_BOARD } = BOARD_API;
-  // pagination
+  const { filteredPosts, setCategory, fetchAllPosts, selectedCategory } = usePostStore();
+
   const savedPage = sessionStorage.getItem('currentPage');
   const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
-  const [posts, setPosts] = useState<Post[]>([]);
+
+  //페이지네이션
   const postsPerPage = 10;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
 
-  const currentPosts = (posts || []).slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil((posts || []).length / postsPerPage);
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -50,7 +51,6 @@ const AdminMain = () => {
   const { openAlert, closeAlert } = useAlertStore();
   const userId = useUserStore((state) => state.user?.user_id);
   const userLevel = useUserStore((state) => state.user?.level._id);
-  const [category, setCategory] = useState('all');
   const [users, setUsers] = useState<User[]>([]); // 유저 상태
   //const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
 
@@ -85,83 +85,21 @@ const AdminMain = () => {
   const piakMembers = users.filter((user) => user.level === '삐약이');
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
 
-  // 모든 게시글 데이터 가져오기 (공지랑 게시글 따로 불러와야함)
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await apiUtils({
-  //         url: ALL_BOARD,
-  //         method: 'GET',
-  //       });
-  //       console.log('게시글 데이터:', response);
-  //       setPosts(response.data);
-  //     } catch (error) {
-  //       console.error('게시글 데이터 가져오기 실패:', error);
-  //     }
-  //   };
-
-  //   fetchPosts();
-  // }, []);
-
-  // 게시글과 공지사항을 가져오는 fetchAll 함수
-  const fetchAll = async () => {
-    const fetchNotices = async () => {
-      try {
-        const response = await apiUtils({
-          url: ALL_NOTICES,
-          method: 'GET',
-        });
-        console.log('공지:', response);
-        return response.Notices;
-      } catch (error) {
-        console.error('공지 가져오기 실패:', error);
-        return [];
-      }
-    };
-
-    const fetchPosts = async () => {
-      try {
-        const response = await apiUtils({
-          url: ALL_BOARD,
-          method: 'GET',
-        });
-        console.log('게시글:', response);
-        return response.boards;
-      } catch (error) {
-        console.error('게시글 가져오기 실패:', error);
-        return [];
-      }
-    };
-
-    try {
-      const [notices, posts] = await Promise.all([fetchNotices(), fetchPosts()]);
-      setPosts([...notices, ...posts]); // 공지사항과 게시글 통합
-    } catch (error) {
-      console.error('데이터 가져오기 실패:', error);
-    }
-  };
-
-  // 초기 데이터 로드
+  // 카테고리 변경 시 데이터 필터링
   useEffect(() => {
-    fetchAll();
+    fetchAllPosts(); // 모든 게시글을 가져오는 요청
+  }, [selectedCategory]); // selectedCategory가 변경될 때마다 실행
+
+  // 컴포넌트 마운트 시 초기 데이터 로드
+  useEffect(() => {
+    fetchAllPosts();
   }, []);
+
+
   // 게시판 카테고리 선택
-  const handleCategoryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategory = event.target.value;
-    setCategory(selectedCategory);
-
-    try {
-      // 서버 요청
-      const response = await apiUtils({
-        url: CATEGORY(selectedCategory),
-        method: 'GET',
-      });
-
-      console.log('서버 응답 데이터:', response);
-      setPosts(response.data);
-    } catch (error) {
-      console.error('카테고리 변경 요청 실패:', error);
-    }
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const category = event.target.value;
+    setCategory(category); // 선택한 카테고리를 Zustand 상태에 설정
   };
 
   // 게시글 삭제 Alert
@@ -200,7 +138,7 @@ const AdminMain = () => {
 
       console.log('게시글 삭제 성공 응답 데이터:', response);
       SuccessToast(`게시글 삭제되었습니다.`);
-      await fetchAll();
+      await fetchAllPosts();
 
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
@@ -236,23 +174,26 @@ const AdminMain = () => {
   };
 
 
-  // 사용자 레벨 변경 처리 함수 수정 필요,,, 어떤 값 넘겨줘야하는지 미정
-  const handleUserLevelChange = async (user: User, newLevel: UserLevel) => {
-    if (user.level === newLevel) return;
+  // 사용자 레벨 변경
+  const handleUserLevelChange = async (userId: string, newLevel: UserLevel) => {
     try {
       await apiUtils({
-        url: UPDATE_INFO,
+        url: USER_LEVEL_CHANGE,
         method: 'PUT',
-        data: { nickname: 'nickname만? level까지? 보류...' },
+        data: {
+          "user_id": userId,
+          "new_level": newLevel
+        },
       });
-
       setUsers((prevUsers) =>
-        prevUsers.map((u) => (u.email === user.email ? { ...u, level: newLevel } : u)),
-      );
+        prevUsers.map((user) =>
+          user.id === userId ? { ...user, level: newLevel } : user
+        ));
       console.log('사용자 레벨 변경 성공');
+      SuccessToast('사용자의 레벨이 변경되었습니다.')
     } catch (error) {
       console.error('사용자 레벨 변경 실패:', error);
-      alert('사용자 레벨 변경에 실패했습니다.');
+      ErrorToast('사용자의 레벨 변경이 실패하였습니다.')
     }
   };
 
@@ -291,10 +232,11 @@ const AdminMain = () => {
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
           <Styled.CategorySelect>
             <label htmlFor="category">카테고리 선택</label>
-            <select id="category" value={category} onChange={handleCategoryChange}>
-              <option value="all">전체</option>
+            <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
+              <option value="자유게시판">전체</option>
+              <option value="공지">공지</option>
               <option value="등업">등업</option>
-              <option value="취업">취업</option>
+              <option value="취업정보">취업정보</option>
               <option value="스터디">스터디</option>
             </select>
           </Styled.CategorySelect>
