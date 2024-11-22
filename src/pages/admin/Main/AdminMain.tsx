@@ -206,6 +206,9 @@ const AdminMain = () => {
     '이거입니다저거입니다대충긴내용입니다',
   ];
   const { setIsOpen, setModalState } = useModal();
+  const handleCategoryDelete = async (id: string) => {
+    openAlert(`${id} 카테고리를 삭제하십니까?`, () => alert('삭제!')); // 모달 열기
+  };
   //테이블 데이터
   const columns = [
     { key: 'category', label: '카테고리', flex: '1' },
@@ -277,6 +280,7 @@ const AdminMain = () => {
                       <Styled.CategoryListContent>{item}</Styled.CategoryListContent>
                       <Styled.CategoryListContent>
                         <Button
+                          onClick={() => handleCategoryDelete(item)}
                           width="50%"
                           border="none"
                           textColor="white"
