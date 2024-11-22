@@ -2,8 +2,8 @@ import React from 'react'
 
 const ErrorPage = () => {
   return (
-    <div>
-      <h1>404 Error</h1>
+    <div style={{ fontSize: '30px', textAlign: 'center', fontWeight: 'bold' }}>
+      404 Error
     </div>
   )
 }

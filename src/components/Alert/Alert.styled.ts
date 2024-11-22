@@ -6,11 +6,12 @@ export const ModalOverlay = styled.div<{ isOpen: boolean }>`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(179, 179, 179, 0.6);
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')}; 
   justify-content: center;
   align-items: center;
   display: flex;
+  z-index:200;
 `;
 
 export const ModalContainer = styled.div`
