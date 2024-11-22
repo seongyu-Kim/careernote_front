@@ -7,7 +7,7 @@ interface DropDownProps {
   noOptionsMessage?: string; // 옵션이 없을 때 표시할 메시지
 }
 
-const DropDown: React.FC<DropDownProps> = ({ options, icon, noOptionsMessage = '권한이 없습니다.' }) => {
+const DropDown = ({ options, icon, noOptionsMessage = '권한이 없습니다.' }: DropDownProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
