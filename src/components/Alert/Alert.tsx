@@ -21,6 +21,10 @@ const Alert = () => {
         <Styled.ModalTitle>{message}</Styled.ModalTitle>
         <Styled.ButtonGroup>
           <Button
+            useHover={true}
+            useTransition={true}
+            transitionDuration={0.3}
+            hoverBackgroundColor="#B1ABAB"
             backgroundColor="#BDBDBD"
             width="70px"
             border="none"
@@ -32,6 +36,10 @@ const Alert = () => {
             아니요
           </Button>
           <Button
+            useHover={true}
+            useTransition={true}
+            transitionDuration={0.3}
+            hoverBackgroundColor="#CD4444"
             backgroundColor="#E25151"
             width="70px"
             border="none"

@@ -71,20 +71,20 @@ const PostList = ({
     setChecked((prev) => !prev);
   };
   //상세보기
-  const handlePostClick = (id: number) => {
+  const handlePostClick = (id: number, category: string) => {
     if (!isLogin) {
       SuccessToast('로그인을 먼저 진행해 주세요');
       return;
     }
-    navigate(`/posts/${id}`);
+    navigate(`/posts/${id}`, { state: { category } });
   };
   //관리자 상세보기
-  const handleAdminPostClick = (id: number) => {
+  const handleAdminPostClick = (id: number, category: string) => {
     if (!isLogin) {
       SuccessToast('로그인을 먼저 진행해 주세요');
       return;
     }
-    navigate(`/admin/posts/${id}`);
+    navigate(`/admin/posts/${id}`, { state: { category } });
   };
   //글쓰기
   const handleWriteClick = () => {
@@ -170,7 +170,7 @@ const PostList = ({
                   $isTitle={column.key === 'title'}
                   onClick={
                     column.key === 'title'
-                      ? () => (isAdmin ? handleAdminPostClick(item._id) : handlePostClick(item._id))
+                      ? () => (isAdmin ? handleAdminPostClick(item._id, item.category) : handlePostClick(item._id, item.category))
                       : undefined
                   }
                   style={{ flex: column.flex }}>

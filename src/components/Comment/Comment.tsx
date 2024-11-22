@@ -6,11 +6,12 @@ interface CommentProps {
   content: string;
   date: string;
   isOwnComment: boolean;
+  levelName: string;
   onEdit: (content: string) => void;
   onDelete: () => void;
 }
 
-const Comment = ({ nickName, content, date, isOwnComment, onEdit, onDelete }: CommentProps) => {
+const Comment = ({ nickName, content, date, isOwnComment, levelName, onEdit, onDelete }: CommentProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
 
@@ -51,12 +52,15 @@ const Comment = ({ nickName, content, date, isOwnComment, onEdit, onDelete }: Co
       ) : (
         <>
           <Styled.Content>{content}</Styled.Content>
-          {isOwnComment && (
+          {(isOwnComment || levelName === '관리자') && (
             <Styled.Actions>
-              <Styled.ActionButton onClick={handleEditClick}>수정</Styled.ActionButton>
+              {isOwnComment && (
+                <Styled.ActionButton onClick={handleEditClick}>수정</Styled.ActionButton>
+              )}
               <Styled.ActionButton onClick={onDelete}>삭제</Styled.ActionButton>
             </Styled.Actions>
           )}
+
         </>
       )}
     </Styled.CommentContainer>

@@ -21,3 +21,13 @@ export const ErrorToast = (message: string) => {
     pauseOnHover: true,
   });
 };
+
+export const WarnToast = (message:string)=>{
+  toast.warn(message, {
+    position: 'top-right',
+    autoClose: 2000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+  });
+}

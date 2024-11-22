@@ -75,12 +75,11 @@ export const PostCount = styled.span`
 `;
 
 export const CategorySelect = styled.div`
-  margin-bottom: 20px;
   select {
     margin-left: 10px;
   }
 `;
 
 export const PostListContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
 `;

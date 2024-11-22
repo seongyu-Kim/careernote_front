@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Styled from './PostCard.styled';
 import { useAlertStore } from '@stores/store';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import DropDown from '@components/DropDown/DropDown';
-import Comment from '@components/Comment/Comment';
 import apiUtils from '@utils/apiUtils';
-import { BOARD_COMMENT_API, NOTICE_COMMENT_API } from '@routes/apiRoutes';
-import { Button, Input } from 'components';
+import { ErrorToast, SuccessToast, WarnToast } from '@utils/ToastUtils';
+import { BOARD_API, BOARD_COMMENT_API, NOTICE_API, NOTICE_COMMENT_API } from '@routes/apiRoutes';
+import { Button, DropDown, Comment } from 'components';
 import { useUserStore } from '@stores/userStore';
-import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
-const { BOARD_COMMENTS, CUD_BOARD_COMMENT } = BOARD_COMMENT_API;
-const { NOTICE_COMMENTS, CUD_NOTICE_COMMENT } = NOTICE_COMMENT_API;
+const { CUD_BOARD_COMMENT } = BOARD_COMMENT_API;
+const { CUD_NOTICE_COMMENT } = NOTICE_COMMENT_API;
+const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;
+const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
 interface PostCardProps {
-  // post 관련
-  post: {
-    id: string;
-    category: string;
-    title: string;
-    writer: string;
-    date: string;
-    content: string;
-  };
-  user?: string; // writer랑 일치하면 수정,삭제 가능
-  level?: string; // 관리자이면 모든 글 수정, 삭제 가능
   onDelete: (postId: string) => void;
+}
+interface PostProps {
+  title: string;
+  content: string;
+  category: string;
+  date: string;
+  writer: string;
+  id: string;
 }
 interface CommentProps {
   id: string;
@@ -34,19 +31,100 @@ interface CommentProps {
   isOwnComment: boolean;
   count: number;
 }
-const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
+const PostCard = ({ onDelete }: PostCardProps) => {
   const { openAlert } = useAlertStore();
   const navigate = useNavigate();
   const { postId } = useParams();
-
-  const userId = useUserStore((state) => state.user?.user_id);
-  const userLevelId = useUserStore((state) => state.user?.level._id);
+  const location = useLocation();
+  const { category } = location.state || {};
+  const user = useUserStore((state) => state.user);
+  const userId = user?.user_id;
+  const userName = user?.nickName;
+  const userLevelId = user?.level._id;
+  const userLevel = user?.level.name || '';
 
   const [comments, setComments] = useState<CommentProps[]>([]);
   const [commentText, setCommentText] = useState('');
   const [commentTrigger, setCommentTrigger] = useState(0);
 
+  const [post, setPost] = useState<PostProps>({
+    title: '',
+    content: '',
+    category: '',
+    date: '',
+    writer: '',
+    id: '',
+  });
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // 공지 상세 조회
+  useEffect(() => {
+    if (!postId) {
+      console.error('해당 postId가 없습니다.');
+      return;
+    }
+
+    const fetchPostDetails = async () => {
+      if (category === '공지') {
+        try {
+          // 공지 API 
+          const noticeResponse = await apiUtils({
+            url: DETAILS_NOTICE(postId),
+            method: 'GET',
+          });
+
+          console.log('공지 상세 데이터:', noticeResponse);
+          const res = noticeResponse.DetailNotice;
+          const updatedPost: PostProps = {
+            ...res,
+            date: new Date(res.updatedAt).toLocaleString(),
+            writer: '관리자',
+            category: '공지'
+          };
+          setPost(updatedPost);
+
+        } catch (noticeError) {
+          console.warn('공지 API 실패, 일반 게시글 API 시도:', noticeError);
+        }
+      }
+      else {
+        try {
+          // 공지 와 카테고리 API 
+          const boardResponse = await apiUtils({
+            url: DETAILS_BOARD(postId),
+            method: 'GET',
+          });
+
+          console.log('게시글 상세 데이터:', boardResponse);
+          const res = boardResponse.DetailBoard;
+          const updatedPost: PostProps = {
+
+            id: res._id,
+            title: res.title,
+            content: res.content,
+            category: res.category?.name || '알 수 없음',
+            writer: res.user?.nickname || '알 수 없는 사용자',
+            date: new Date(res.updatedAt).toLocaleString(),
+          };
+          setPost(updatedPost);
+          const formattedComments = res.boardcomment.map((comment: any) => ({
+            id: comment._id,
+            nickName: comment.user_id.nickname,
+            content: comment.content,
+            date: new Date(comment.createdAt).toLocaleDateString(),
+            isOwnComment: comment.user_id._id === userId,
+          }));
+          setComments(formattedComments);
+        } catch (boardError) {
+          console.error('게시글 상세 조회 실패:', boardError);
+        }
+      }
+    }
+    fetchPostDetails();
+  }, [postId, commentTrigger]);
   // 글 수정 페이지로 이동
   const handleEdit = () => {
     // 수정할 글의 데이터를 state로 전달하여 /write 페이지로 이동
@@ -62,71 +140,72 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
       },
     });
   };
+  // 드롭다운에 보여질 옵션 (수정, 삭제)
   const options = [
     {
       label: '수정',
       action: handleEdit,
-      visible: post.writer === user || (level === '관리자' && post.category === '공지'),
+      visible: post.writer === userName || (userLevel === '관리자' && post.category === '공지'),
     },
     {
       label: '삭제',
       action: () =>
-        openAlert('삭제하시겠습니까?', () => onDelete(post.id)),
-      visible: post.writer === user || level === '관리자', // 관리자 또는 작성자 모두 삭제 가능
+        openAlert('삭제하시겠습니까?', () => onDelete(postId as string)),
+      visible: post.writer === userName || userLevel === '관리자', // 관리자 또는 작성자 모두 삭제 가능
     },
   ].filter((option) => option.visible);
 
   {/*댓글*/ }
 
-  // 댓글 가져오기
-  useEffect(() => {
-    const fetchPostDetails = async () => {
-      if (post.category === '공지') {
-        try {
-          // 공지 댓글 API 
-          const noticeCommentResponse = await apiUtils({
-            url: NOTICE_COMMENTS(postId as string),
-            method: 'GET',
-          });
-          console.log('공지 댓글', noticeCommentResponse);
-          // 서버에서 받은 데이터 가공
-          const formattedComments = noticeCommentResponse.noticecomments.map((comment: any) => ({
-            id: comment._id,
-            nickName: comment.user_id.nickname,
-            content: comment.content,
-            date: new Date(comment.createdAt).toLocaleDateString(),
-            isOwnComment: comment.user_id._id === userId,
-          }));
-          setComments(formattedComments);
-        } catch (error) {
-          console.error('공지 댓글 조회 실패', error);
-        }
-        return;
-      } else {
-        try {
-          // 일반 게시글 댓글 API 
-          const boardCommentResponse = await apiUtils({
-            url: BOARD_COMMENTS(postId as string),
-            method: 'GET',
-          });
-          console.log('게시글 댓글 ', boardCommentResponse);
-          // 서버에서 받은 데이터 가공
-          const formattedComments = boardCommentResponse.boardcomments.map((comment: any) => ({
-            id: comment._id,
-            nickName: comment.user_id.nickname,
-            content: comment.content,
-            date: new Date(comment.createdAt).toLocaleDateString(),
-            isOwnComment: comment.user_id._id === userId,
-          }));
-          setComments(formattedComments);
-        } catch (error) {
-          console.error('게시글 댓글 조회 실패:', error);
-        }
-      }
-    };
+  // // 댓글 가져오기
+  // useEffect(() => {
+  //   const fetchPostDetails = async () => {
+  //     if (post.category === '공지') {
+  //       try {
+  //         // 공지 댓글 API 
+  //         const noticeCommentResponse = await apiUtils({
+  //           url: CUD_NOTICE_COMMENT,
+  //           method: 'GET',
+  //         });
+  //         console.log('공지 댓글', noticeCommentResponse);
+  //         // 서버에서 받은 데이터 가공
+  //         const formattedComments = noticeCommentResponse.noticecomments.map((comment: any) => ({
+  //           id: comment._id,
+  //           nickName: comment.user_id.nickname,
+  //           content: comment.content,
+  //           date: new Date(comment.createdAt).toLocaleDateString(),
+  //           isOwnComment: comment.user_id._id === userId,
+  //         }));
+  //         setComments(formattedComments);
+  //       } catch (error) {
+  //         console.error('공지 댓글 조회 실패', error);
+  //       }
+  //       return;
+  //     } else {
+  //       try {
+  //         // 일반 게시글 댓글 API 
+  //         const boardCommentResponse = await apiUtils({
+  //           url: CUD_BOARD_COMMENT,
+  //           method: 'GET',
+  //         });
+  //         console.log('게시글 댓글 ', boardCommentResponse);
+  //         // 서버에서 받은 데이터 가공
+  //         const formattedComments = boardCommentResponse.boardcomments.map((comment: any) => ({
+  //           id: comment._id,
+  //           nickName: comment.user_id.nickname,
+  //           content: comment.content,
+  //           date: new Date(comment.createdAt).toLocaleDateString(),
+  //           isOwnComment: comment.user_id._id === userId,
+  //         }));
+  //         setComments(formattedComments);
+  //       } catch (error) {
+  //         console.error('게시글 댓글 조회 실패:', error);
+  //       }
+  //     }
+  //   };
 
-    fetchPostDetails();
-  }, [commentTrigger])
+  //   fetchPostDetails();
+  // }, [commentTrigger])
 
   // 댓글 삭제
   const handleCommentDelete = async (id: string) => {
@@ -157,8 +236,8 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
       try {
         data = {
           "user_id": userId,
-          "comment_id": id,
-          "level": userLevelId
+          "boardcomment_id": id,
+          "board_id": postId
         }
         const response = await apiUtils({
           url: CUD_BOARD_COMMENT,
@@ -176,13 +255,18 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
   };
 
   // 댓글 등록
-  const handleCommentSubmit = async () => {
+  const handleCommentSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (commentText === '') {
+      WarnToast('댓글의 내용을 입력하세요');
+      return;
+    }
     let data;
     if (post.category === '공지') {
       data = {
         content: commentText,
         user_id: userId,
-        board_id: postId
+        notice_id: postId
       };
       try {
         const response = await apiUtils({
@@ -248,7 +332,7 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
       data = {
         "content": content,
         "user_id": userId,
-        "comment_id": id
+        "boardcomment_id": id
       }
       try {
         const response = await apiUtils({
@@ -266,6 +350,7 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
       }
     };
   }
+
   return (
     <Styled.Container>
       <Styled.ContainerHeader >
@@ -282,6 +367,7 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
       <Styled.Writer>{post.writer || '알 수 없는 사용자'}</Styled.Writer>
       <Styled.Date>{post.date}</Styled.Date>
       <Styled.Content>{post.content}</Styled.Content>
+
       {/* 댓글 컴포넌트 */}
       <Styled.Title>댓글 ({comments.length || 0})</Styled.Title>
       <>
@@ -292,6 +378,7 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
             content={comment.content}
             date={comment.date}
             isOwnComment={comment.isOwnComment}
+            levelName={userLevel}
             onEdit={(updatedContent) => handleCommentEdit(comment.id, updatedContent)}
             onDelete={() => handleCommentDelete(comment.id)}
           />
@@ -310,6 +397,10 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
           padding="5px 10px"
           textColor="white"
           border="none"
+          useHover={true}
+          useTransition={true}
+          transitionDuration={0.3}
+          hoverBackgroundColor="#3F82AC"
         >
           등록
         </Button>
