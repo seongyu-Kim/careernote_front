@@ -9,11 +9,7 @@ import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
 import { Button, AuthenticationInput } from 'components';
-
-interface LoginFormData {
-  userEmail: string;
-  password: string;
-}
+import { LoginFormData } from '@/type/input';
 
 const LoginPage = () => {
   return (
@@ -93,14 +89,12 @@ const LoginForm = () => {
         <AuthenticationInput
           forValue="email"
           labelPlaceHolder="이메일"
-          // onChange={handleInputChange('id')}
           onChange={handleInputChange('userEmail')}
         />
         <AuthenticationInput
           forValue="password"
           type="password"
           labelPlaceHolder="비밀번호"
-          // onChange={handleInputChange('password')}
           onChange={handleInputChange('password')}
         />
         <Styled.FindPasswordBox>

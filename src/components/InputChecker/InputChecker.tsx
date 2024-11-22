@@ -5,18 +5,19 @@ import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { useValidCheck } from '@stores/useCheckDuplication';
 import { Button, InputErrorMessage, AuthenticationInput } from 'components';
+import axios from 'axios';
+import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 
 interface InputCheckerProps {
   forValue?: string;
   inputTagType: string;
   placeholderText: string;
-  onChange: (value: string) => void;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   valid: boolean;
   checkMessage: string;
   useCheckDuplication?: boolean;
   checkDuplicationType?: string;
   checkDuplicationValue?: string;
-  errorMsg?: (value: string) => void;
 }
 
 interface CheckDuplicationProps {
@@ -25,7 +26,6 @@ interface CheckDuplicationProps {
   value: string | undefined;
   valid: boolean;
   validCheck?: React.Dispatch<React.SetStateAction<boolean>>;
-  errorMsg?: (value: string) => void;
 }
 
 const InputChecker = ({
@@ -38,7 +38,6 @@ const InputChecker = ({
   useCheckDuplication = false, // 중복 검사 사용 여부
   checkDuplicationType = '', //이메일 닉네임 지정
   checkDuplicationValue, // 이거 따라서 중복 확인 요청 api 보내게
-  errorMsg,
 }: InputCheckerProps) => {
   const [duplicationCheck, setDuplicationCheck] = useState(false);
   const { setValidCheck } = useValidCheck();
@@ -62,9 +61,10 @@ const InputChecker = ({
   }, [checkDuplicationValue]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    onChange(value);
+    // const { value } = event.target.value;
+    onChange(event);
   };
+
   if (useCheckDuplication) {
     return (
       <Styled.InputBoxContainer>
@@ -84,7 +84,6 @@ const InputChecker = ({
             value={checkDuplicationValue}
             valid={valid}
             validCheck={setDuplicationCheck}
-            errorMsg={errorMsg}
           />
         </Styled.InputWrapper>
         <InputErrorMessage message={checkMessage} />
@@ -115,7 +114,6 @@ const CheckDuplication = ({
   value,
   valid,
   validCheck,
-  errorMsg,
 }: CheckDuplicationProps) => {
   if (!useCheck) {
     return null;
@@ -138,16 +136,16 @@ const CheckDuplication = ({
         res.message === '사용가능한 닉네임 입니다' ||
         res.message === '사용가능한 이메일 입니다'
       ) {
-        console.log('사용가능');
+        SuccessToast('사용가능');
         return validCheck!(true);
       }
-      // console.log('사용불가');
-      // errorMsg!('사용불가');
-      // return validCheck!(false);
     } catch (error) {
-      errorMsg!('사용불가');
-      validCheck!(false);
-      console.log('중복 검사 오류', error);
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        ErrorToast('중복입니다');
+        validCheck!(false);
+        return;
+      }
+      console.error('중복 검사 기타 오류', error);
     }
   };
 

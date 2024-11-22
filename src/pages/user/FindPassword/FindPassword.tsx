@@ -39,7 +39,7 @@ export const FindPassword = () => {
   const handleSubmitSendEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputFieldChecked) {
-      console.log('실행');
+      ErrorToast('모든 필드를 채워주세요');
       return;
     }
     const resData = { email: inputEmail };
@@ -85,7 +85,7 @@ export const FindPassword = () => {
                 forValue="findEmail"
                 inputTagType="text"
                 placeholderText="이메일을 입력해주세요."
-                onChange={setInputEmail}
+                onChange={(event) => setInputEmail(event.target.value)}
                 valid={emailRegEx.test(inputEmail)}
                 checkMessage={setEmailCheckMessage}
               />

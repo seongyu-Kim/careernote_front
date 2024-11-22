@@ -3,7 +3,7 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Main from '@pages/user/Main/Main';
 import Login from '@pages/user/Login/Login';
-import Register from '@pages/user/Register/Register';
+import RegisterPage from '@pages/user/Register/RegisterPage';
 import ResetPassword from '@pages/user/ResetPassword/ResetPassword';
 import PostView from '@pages/user/PostView/PostView';
 import WritePost from '@pages/user/WritePost/WritePost';
@@ -39,7 +39,7 @@ const routes = [
       },
       {
         path: ROUTE_LINK.REGISTER.path,
-        element: <Register />,
+        element: <RegisterPage />,
       },
       {
         path: ROUTE_LINK.RESET_PASSWORD.path,
