@@ -14,7 +14,7 @@ export const Label = styled.label<{ isActive: boolean }>`
   font-size: ${(props) => (props.isActive ? '15px' : '16px')};
   color: ${(props) => (props.isActive ? '#79b0c8' : '#79b0c8')};
   cursor: text;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   transform: translateY(${(props) => (props.isActive ? '0' : '-50%')});
   z-index: 2;
   background-color: ${(props) => (props.isActive ? 'white' : 'none')};

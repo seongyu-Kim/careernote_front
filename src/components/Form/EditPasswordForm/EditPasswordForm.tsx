@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { ErrorToast } from '@utils/ToastUtils';
 import { REG_EX } from '@utils/RegEx';
 const InputContainer = styled.div`
-  //margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
