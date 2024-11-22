@@ -41,7 +41,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
   const userId = user?.user_id;
   const userName = user?.nickName;
   const userLevelId = user?.level._id;
-  const userLevel = user?.level.name;
+  const userLevel = user?.level.name || '';
 
   const [comments, setComments] = useState<CommentProps[]>([]);
   const [commentText, setCommentText] = useState('');
@@ -350,6 +350,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
       }
     };
   }
+
   return (
     <Styled.Container>
       <Styled.ContainerHeader >
@@ -377,6 +378,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
             content={comment.content}
             date={comment.date}
             isOwnComment={comment.isOwnComment}
+            levelName={userLevel}
             onEdit={(updatedContent) => handleCommentEdit(comment.id, updatedContent)}
             onDelete={() => handleCommentDelete(comment.id)}
           />

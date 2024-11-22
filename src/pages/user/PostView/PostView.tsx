@@ -9,7 +9,7 @@ import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
 
 const { CUD_BOARD } = BOARD_API;
-const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
+
 const PostView = () => {
   const { postId } = useParams();
   const { closeAlert } = useAlertStore();
@@ -17,7 +17,7 @@ const PostView = () => {
   const userId = user?.user_id;
   const userLevelId = user?.level._id;
   const navigate = useNavigate();
-
+  const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   // 게시글 삭제 (본인만 삭제 가능)
   const handleDelete = async (postId: string) => {
     const data = {
