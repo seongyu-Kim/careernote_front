@@ -28,3 +28,24 @@ export interface InputProps {
   focusBorderColor?: string;
   isActive?: boolean;
 }
+
+export interface ResetPasswordFormData {
+  password: string;
+  confirmPassword: string;
+}
+
+export interface LoginFormData {
+  userEmail: string;
+  password: string;
+}
+
+export interface RegisterFormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nickname: string;
+}
+
+export interface ValidMessage extends RegisterFormData {
+  confirmStatus: boolean;
+}

@@ -8,10 +8,15 @@ import apiUtils from '@utils/apiUtils';
 import { REG_EX } from '@utils/RegEx';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { Button, InputChecker, InputErrorMessage } from 'components';
+import { ResetPasswordFormData } from '@/type/input';
+
+interface Props {}
 
 const ResetPassword = () => {
-  const [inputPassword, setInputPassword] = useState<string>('');
-  const [inputConfirmPassword, setInputConfirmPassword] = useState<string>('');
+  const [inputData, setInputData] = useState<ResetPasswordFormData>({
+    password: '',
+    confirmPassword: '',
+  });
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
   const [passwordCheckMessage, setPasswordCheckMessage] = useState<string>(''); // 패스워드 유효성 체크 메시지
   const [confirmPasswordCheckMessage, setConfirmPasswordCheckMessage] = useState<string>(''); // 패스워드 확인 유효성 체크 메시지
@@ -24,10 +29,10 @@ const ResetPassword = () => {
   const LOGIN_PAGE_URL = ROUTE_LINK.LOGIN.link;
 
   useEffect(() => {
-    const passwordMatching = inputPassword === inputConfirmPassword;
-    const passwordValid = inputPassword.length >= 8 && passwordRegEx.test(inputPassword);
+    const passwordMatching = inputData.password === inputData.confirmPassword;
+    const passwordValid = inputData.password.length >= 8 && passwordRegEx.test(inputData.password);
     const confirmPasswordValid =
-      inputConfirmPassword.length >= 8 && passwordRegEx.test(inputConfirmPassword);
+      inputData.confirmPassword.length >= 8 && passwordRegEx.test(inputData.confirmPassword);
 
     if (passwordMatching && passwordValid && confirmPasswordValid) {
       setInputFieldChecked(false);
@@ -35,35 +40,43 @@ const ResetPassword = () => {
       setInputFieldChecked(true);
     }
     //비밀번호 유효성 검사
-    if (inputPassword.length > 0 && !passwordRegEx.test(inputPassword)) {
+    if (inputData.password.length > 0 && !passwordRegEx.test(inputData.password)) {
       setPasswordCheckMessage('비밀번호는 8~20자여야 합니다.');
     } else {
       setPasswordCheckMessage('');
     }
     //비밀번호 확인 유효성 검사
-    if (inputConfirmPassword.length > 0 && !passwordRegEx.test(inputConfirmPassword)) {
+    if (inputData.confirmPassword.length > 0 && !passwordRegEx.test(inputData.confirmPassword)) {
       setConfirmPasswordCheckMessage('비밀번호는 8~20자여야 합니다.');
     } else {
       setConfirmPasswordCheckMessage('');
     }
 
-    if (inputPassword === inputConfirmPassword) {
+    if (passwordMatching) {
       setErrorMsg('');
     } else {
       setErrorMsg('비밀번호가 일치하지 않습니다.');
     }
-  }, [inputPassword, inputConfirmPassword]);
+  }, [inputData]);
+
+  const handleInputChange = (type: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputData((prev) => ({ ...prev, [type]: event.target.value }));
+  };
 
   const handleSubmitResetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const resData = {
-      new_password: inputPassword,
-    };
+    const field = Object.values(inputData).some((value) => value === '');
+    if (field) {
+      ErrorToast('모든 필드를 채워주세요');
+      return;
+    }
     try {
       const res = await apiUtils({
         url: RESET_PASSWORD,
         method: 'PUT',
-        data: resData,
+        data: {
+          new_password: inputData.password,
+        },
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.message === '비밀번호가 정상적으로 변경되었습니다') {
@@ -90,15 +103,15 @@ const ResetPassword = () => {
             <InputChecker
               inputTagType="password"
               placeholderText="새 비밀번호"
-              onChange={setInputPassword}
-              valid={passwordRegEx.test(inputPassword)}
+              onChange={handleInputChange('password')}
+              valid={passwordRegEx.test(inputData.password)}
               checkMessage={passwordCheckMessage}
             />
             <InputChecker
               inputTagType="password"
               placeholderText="새 비밀번호 확인"
-              onChange={setInputConfirmPassword}
-              valid={passwordRegEx.test(inputConfirmPassword)}
+              onChange={handleInputChange('confirmPassword')}
+              valid={passwordRegEx.test(inputData.confirmPassword)}
               checkMessage={confirmPasswordCheckMessage}
             />
             <InputErrorMessage message={errorMsg} confirm={true} />
