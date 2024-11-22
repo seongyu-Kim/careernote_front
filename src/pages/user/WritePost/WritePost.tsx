@@ -88,7 +88,7 @@ const WritePost = () => {
         ErrorToast('게시물 등록 중 오류가 발생했습니다.');
       }
     }
-    navigate(MAIN_PAGE_URL);
+    navigate(`/post/${postId}`);
   };
   return (
     <NavbarContainer>

@@ -89,9 +89,10 @@ export const CommentContainer = styled.div`
 
 export const Textarea = styled.textarea`
   width: 100%;
-  height: 40px;
+  height: 80px;
   border: 1px solid #b3d5eb;
   border-radius: 5px;
-  caret-color: #79b0c8;
-  color: #79b0c8;
+  resize: none;
+  overflow: hidden;
+  word-wrap: break-word;
 `;

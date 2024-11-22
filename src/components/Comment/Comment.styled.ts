@@ -14,12 +14,15 @@ export const CommentHeader = styled.div`
   margin-bottom: 5px;
 `;
 
-export const EditInput = styled.input`
+export const EditTextArea = styled.textarea`
   border: 1px solid #79b0c8;
   padding: 8px;
   width: 100%;
   border-radius: 4px;
   font-size: 16px;
+  resize: none;
+  overflow: hidden;
+  word-wrap: break-word;
 `;
 
 export const NickName = styled.span`

@@ -70,6 +70,9 @@ export const TextareaField = styled.textarea`
   box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.7);
   margin-top: 10px;
+  resize: none;
+  overflow: hidden;
+  word-wrap: break-word;
 `;
 
 export const ButtonGroup = styled.div`

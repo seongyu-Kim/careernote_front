@@ -19,11 +19,11 @@ export const ROUTE_LINK = {
   RESET_PASSWORD: { path: 'reset-pw/:token?', link: '/reset-pw/:token?' },
   MAIN: { path: 'posts', link: '/posts' },
   MYPAGE: { path: 'mypage', link: '/mypage' },
-  POST_VIEW: { path: 'posts/:postId', link: '/posts/:postId' },
+  POST_VIEW: { path: 'post/:postId', link: '/post/:postId' },
   WRITE_POST: { path: 'write', link: '/write' },
   ADMIN_MAIN: { path: 'admin', link: '/admin' },
   ADMIN_WRITE: { path: 'admin-write', link: '/admin-write' },
-  ADMIN_POST_VIEW: { path: 'admin/posts/:postId', link: '/admin/posts/:postId' },
+  ADMIN_POST_VIEW: { path: 'admin/post/:postId', link: '/admin/post/:postId' },
   ERROR: { path: '*', link: '/*' },
 };
 
