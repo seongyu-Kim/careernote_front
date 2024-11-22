@@ -141,7 +141,7 @@ const CheckDuplication = ({
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
-        ErrorToast('중복입니다');
+        ErrorToast('사용불가');
         validCheck!(false);
         return;
       }

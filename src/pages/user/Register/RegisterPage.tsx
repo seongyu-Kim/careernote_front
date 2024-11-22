@@ -135,6 +135,10 @@ const RegisterForm = () => {
       ErrorToast('비밀번호가 일치하지 않습니다');
       return;
     }
+    if (!validCheck.nickName || !validCheck.email) {
+      ErrorToast('중복 확인을 진행해주세요');
+      return;
+    }
     try {
       const res = await apiUtils({
         url: SIGNUP,
