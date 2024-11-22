@@ -36,23 +36,23 @@ interface PostListProps {
   onDelete?: (id: number, category: string) => void;
 }
 
-const PostList: React.FC<PostListProps> = ({
+const PostList = ({
   columns,
   posts,
   width = '75rem',
   isAdmin,
   isMyPost,
   onDelete,
-}) => {
+}: PostListProps) => {
   const navigate = useNavigate();
   const [isChecked, setChecked] = useState<boolean>(false);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
   const { isLogin } = useUserStore();
 
-  // 공지 숨기기 체크박스 처리
+  // 공지 숨기기
   useEffect(() => {
     setFilteredPosts(
-      isChecked ? posts.filter((post) => post.category && post.category.trim() !== '') : posts,
+      isChecked ? posts.filter((post) => post.category && post.category !== '') : posts,
     );
   }, [isChecked, posts]);
 
@@ -144,7 +144,7 @@ const PostList: React.FC<PostListProps> = ({
 
       {filteredPosts.length > 0 ? (
         filteredPosts.map((item) => (
-          <Styled.PostItem key={item._id}>
+          <Styled.PostItem key={item._id} $isNotice={item.category == null}>
             {columns.map((column) => {
               let value = item[column.key];
 
@@ -184,7 +184,9 @@ const PostList: React.FC<PostListProps> = ({
                   flex: columns.find((column) => column.key === 'admin')?.flex,
                   textAlign: 'center',
                 }}>
-                <Styled.DeleteBtn onClick={() => onDelete(item._id, item.category)}>삭제</Styled.DeleteBtn>
+                <Styled.DeleteBtn onClick={() => onDelete(item._id, item.category)}>
+                  삭제
+                </Styled.DeleteBtn>
               </Styled.TableCell>
             )}
           </Styled.PostItem>
