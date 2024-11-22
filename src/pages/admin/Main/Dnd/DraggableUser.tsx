@@ -16,7 +16,16 @@ const DraggableUser = ({ user, onDelete }: DraggableUserProps) => {
     <Styled.UserItem ref={drag} style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}>
       <Styled.UserEmail>{user.email}</Styled.UserEmail>
       <Styled.PostCount>{user.postCount}</Styled.PostCount>
-      <Button textColor="#E25151" border="1px solid #E25151" width="20%" onClick={onDelete}>
+      <Button
+        textColor="white"
+        backgroundColor='#E25151'
+        border="none"
+        width="20%"
+        onClick={onDelete}
+        useTransition={true}
+        transitionDuration={0.3}
+        useHover={true}
+        hoverBackgroundColor="#CD4444">
         탈퇴
       </Button>
     </Styled.UserItem>
