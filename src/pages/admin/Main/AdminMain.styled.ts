@@ -83,3 +83,64 @@ export const CategorySelect = styled.div`
 export const PostListContainer = styled.div`
   margin-top: 10px;
 `;
+
+//카테고리 관리 리스트
+export const CategoryListHeader = styled.header`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+`;
+
+export const CategoryListMenu = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-content: center;
+  //gap: 50%;
+  width: 100%;
+  background: grey;
+  padding: 10px 0 10px 0;
+`;
+
+export const CategoryListContainer = styled(PostListContainer)`
+  margin-bottom: 10px;
+  width: 100%;
+  height: 300px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.49);
+`;
+export const CategoryListFiled = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  overflow-y: scroll;
+  padding-top: 10px; /* 스크롤 문제 방지를 위해 */
+  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+`;
+export const CategoryListBox = styled.ul`
+  width: 100%;
+  border-bottom: 1px solid grey;
+`;
+
+export const CategoryList = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-content: center;
+  //gap: 50%;
+  width: 100%;
+  padding: 10px 10px 20px 10px;
+`;
+export const CategoryListContent = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .menu {
+    padding-right: 5%;
+  }
+`;

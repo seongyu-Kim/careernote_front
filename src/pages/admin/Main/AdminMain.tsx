@@ -1,5 +1,5 @@
-import { NavbarContainer, PostList, Pagination } from 'components';
-import { useAlertStore } from '@stores/store';
+import { NavbarContainer, PostList, Pagination, Button } from 'components';
+import { useAlertStore, useModal } from '@stores/store';
 import React, { useEffect, useState } from 'react';
 import * as Styled from './AdminMain.styled';
 import { DndProvider } from 'react-dnd';
@@ -12,9 +12,10 @@ import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
 import { usePostStore } from '@stores/usePostStore';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CategoryListContent } from './AdminMain.styled';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
-const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API;  //공지 외 카테고리 RUD api 주소
+const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
 interface UserProp {
   _id: number;
   nickname: string;
@@ -55,13 +56,11 @@ const AdminMain = () => {
     await fetchAllPosts(page, postsPerPage);
   };
 
-
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
   const userId = useUserStore((state) => state.user?.user_id);
   const userLevel = useUserStore((state) => state.user?.level._id);
   const [users, setUsers] = useState<User[]>([]); // 유저 상태
-
 
   // 사용자 데이터를 가져오는 함수
   const fetchUsers = async () => {
@@ -138,10 +137,9 @@ const AdminMain = () => {
       console.log('게시글 삭제 성공 응답 데이터:', response);
       SuccessToast(`게시글 삭제되었습니다.`);
       await fetchAllPosts();
-
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
-      ErrorToast('다시 시도해주세요.')
+      ErrorToast('다시 시도해주세요.');
     }
     closeAlert();
   };
@@ -156,7 +154,7 @@ const AdminMain = () => {
       await apiUtils({
         url: USER_DELETE,
         method: 'DELETE',
-        data: { 'user_id': id },
+        data: { user_id: id },
       });
 
       // 상태 업데이트
@@ -172,7 +170,6 @@ const AdminMain = () => {
     }
   };
 
-
   // 사용자 레벨 변경
   const handleUserLevelChange = async (userId: string, newLevel: UserLevel) => {
     try {
@@ -180,22 +177,35 @@ const AdminMain = () => {
         url: USER_LEVEL_CHANGE,
         method: 'PUT',
         data: {
-          "user_id": userId,
-          "new_level": newLevel
+          user_id: userId,
+          new_level: newLevel,
         },
       });
       setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.id === userId ? { ...user, level: newLevel } : user
-        ));
+        prevUsers.map((user) => (user.id === userId ? { ...user, level: newLevel } : user)),
+      );
       console.log('사용자 레벨 변경 성공');
-      SuccessToast('사용자의 레벨이 변경되었습니다.')
+      SuccessToast('사용자의 레벨이 변경되었습니다.');
     } catch (error) {
       console.error('사용자 레벨 변경 실패:', error);
-      ErrorToast('사용자의 레벨 변경이 실패하였습니다.')
+      ErrorToast('사용자의 레벨 변경이 실패하였습니다.');
     }
   };
 
+  //카테고리 더미 데이터 코드가 좀 더럽습니다...ㅠ.ㅠ..급하게 만드느라...
+  const test = [
+    '전체 게시판',
+    '등업',
+    '스터디',
+    '취업 정보',
+    '이거저거',
+    '중고거래',
+    '정보 공유',
+    '엘랠레',
+    '안아줘요',
+    '이거입니다저거입니다대충긴내용입니다',
+  ];
+  const { setIsOpen, setModalState } = useModal();
   //테이블 데이터
   const columns = [
     { key: 'category', label: '카테고리', flex: '1' },
@@ -228,6 +238,63 @@ const AdminMain = () => {
           </Styled.UserManagement>
         </DndProvider>
         <Styled.PostManagement>
+          {/*카테고리 관리 부분*/}
+          <Styled.CategoryListHeader>
+            <Styled.SectionTitle>카테고리 관리</Styled.SectionTitle>
+            <Button
+              onClick={() => {
+                setModalState('addCategory');
+                setIsOpen(true);
+              }}
+              width="auto"
+              padding="2px 15px 2px 15px"
+              position="relative"
+              bottom="7px"
+              border="none"
+              textColor="white"
+              backgroundColor="#79B0CB"
+              useHover={true}
+              useTransition={true}
+              transitionDuration={0.3}
+              hoverBackgroundColor="#3F82AC">
+              카테고리 추가
+            </Button>
+          </Styled.CategoryListHeader>
+          <Styled.CategoryListMenu>
+            <Styled.CategoryListContent>
+              <span>카테고리명</span>
+            </Styled.CategoryListContent>
+            <Styled.CategoryListContent>
+              <span className="menu">관리</span>
+            </Styled.CategoryListContent>
+          </Styled.CategoryListMenu>
+          <Styled.CategoryListContainer>
+            <Styled.CategoryListFiled>
+              {test.map((item, key) => {
+                return (
+                  <Styled.CategoryListBox>
+                    <Styled.CategoryList key={key}>
+                      <Styled.CategoryListContent>{item}</Styled.CategoryListContent>
+                      <Styled.CategoryListContent>
+                        <Button
+                          width="50%"
+                          border="none"
+                          textColor="white"
+                          backgroundColor="#E25151"
+                          useHover={true}
+                          hoverBackgroundColor="#CD4444"
+                          useTransition={true}
+                          transitionDuration={0.2}>
+                          삭제
+                        </Button>
+                      </Styled.CategoryListContent>
+                    </Styled.CategoryList>
+                  </Styled.CategoryListBox>
+                );
+              })}
+            </Styled.CategoryListFiled>
+          </Styled.CategoryListContainer>
+          {/*카테고리 관리 부분*/}
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
           <Styled.CategorySelect>
             <label htmlFor="category">카테고리 선택</label>
@@ -240,7 +307,13 @@ const AdminMain = () => {
             </select>
           </Styled.CategorySelect>
           <Styled.PostListContainer>
-            <PostList posts={filteredPosts} columns={columns} width="100%" onDelete={handleDelete} isAdmin={isAdmin} />
+            <PostList
+              posts={filteredPosts}
+              columns={columns}
+              width="100%"
+              onDelete={handleDelete}
+              isAdmin={isAdmin}
+            />
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

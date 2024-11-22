@@ -11,6 +11,7 @@ import EditPasswordForm from '@components/Form/EditPasswordForm/EditPasswordForm
 import { useValidCheck } from '@stores/useCheckDuplication';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
+import { REG_EX } from '@utils/RegEx';
 
 export const MyInfo = () => {
   const [isEditingNickname, setIsEditingNickname] = useState(false); // 닉네임 수정 ON OFF
@@ -27,6 +28,10 @@ export const MyInfo = () => {
 
   const handleNicknameSave = async (nickname: string) => {
     console.log('닉네임 저장:', nickname);
+    const { nicknameRegEx } = REG_EX;
+    if (nickname.length <= 2 || !nicknameRegEx.test(nickname)) {
+      ErrorToast('닉네임을 입력해주세요');
+    }
     try {
       const res = await apiUtils({
         url: UPDATE_NICKNAME,
@@ -72,6 +77,8 @@ export const MyInfo = () => {
         <MdClose
           className="close"
           onClick={() => {
+            setIsEditingNickname(false);
+            setIsEditingPassword(false);
             setIsOpen(false);
           }}
         />
