@@ -41,10 +41,9 @@ const EditNicknameForm = ({ onSave }: { onSave: (nickname: string) => void }) =>
         forValue="changeNickname"
         inputTagType="text"
         placeholderText="새 닉네임"
-        onChange={setNickname}
+        onChange={(event) => setNickname(event.target.value)}
         valid={nicknameRegEx.test(nickname)}
         checkMessage={nicknameCheckMessage}
-        errorMsg={setNicknameCheckMessage}
         useCheckDuplication={true}
         checkDuplicationValue={nickname}
         checkDuplicationType="nickname"
