@@ -4,8 +4,7 @@ import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { useAlertStore } from '@stores/store';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
 const { DETAILS_BOARD: DETAILS_NOTICE, CUD_NOTICE } = NOTICE_API;
@@ -21,85 +20,24 @@ interface PostProps {
 const AdminPostView = () => {
   const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
   const { postId } = useParams();
-  const { openAlert, closeAlert } = useAlertStore();
+  const location = useLocation();
+  const { category } = location.state || {};
+  const { closeAlert } = useAlertStore();
   const navigate = useNavigate();
-  const [post, setPost] = useState({
-    title: '',
-    content: '',
-    category: '',
-    date: '',
-    writer: '',
-    id: '',
-  });
+
   // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
-  const levelName = user?.level.name;
   const userLevelId = user?.level._id;
   const userId = user?.user_id
-  const username = user?.nickName;
-  // 공지 상세 조회
-  useEffect(() => {
-    if (!postId) {
-      console.error('해당 postId가 없습니다.');
-      return;
-    }
 
-    const fetchPostDetails = async () => {
-      try {
-        // 공지 API 시도
-        const noticeResponse = await apiUtils({
-          url: DETAILS_NOTICE(postId),
-          method: 'GET',
-        });
 
-        console.log('공지 상세 데이터:', noticeResponse);
-
-        const updatedPost: PostProps = {
-          ...noticeResponse,
-          id: noticeResponse._id,
-          date: new Date(noticeResponse.updatedAt).toLocaleString(),
-          writer: '관리자',
-          category: '공지'
-        };
-        setPost(updatedPost);
-      } catch (noticeError) {
-        console.warn('공지 API 실패, 일반 게시글 API 시도:', noticeError);
-
-        try {
-          // 공지 API 실패 시 일반 게시글 API 호출
-          const boardResponse = await apiUtils({
-            url: DETAILS_BOARD(postId),
-            method: 'GET',
-          });
-
-          console.log('게시글 상세 데이터:', boardResponse);
-
-          const updatedPost: PostProps = {
-            id: boardResponse._id,
-            title: boardResponse.title,
-            content: boardResponse.content,
-            category: boardResponse.category?.name || '알 수 없음',
-            writer: boardResponse.user?.nickname || '알 수 없는 사용자',
-            date: new Date(boardResponse.updatedAt).toLocaleString(),
-          };
-          setPost(updatedPost);
-
-        } catch (boardError) {
-          console.error('게시글 상세 조회 실패:', boardError);
-        }
-      }
-    };
-
-    fetchPostDetails();
-  }, [postId]);
-
-  // 게시글 삭제
+  // 게시글 삭제 (모든 회원의 글 삭제 가능)
   const handleDelete = async (postId: string) => {
     try {
       let url;
       let data;
 
-      if (post.category === '공지') {
+      if (category === '공지') {
         // 공지 삭제 요청
         url = CUD_NOTICE;
         data = {
@@ -137,10 +75,7 @@ const AdminPostView = () => {
     <div>
       <NavbarContainer>
         <PostCard
-          post={post}
-          user={username} //user가 writer랑 일치해야만 수정, 삭제 버튼 떠야함
-          level={levelName}
-          onDelete={() => handleDelete(post.id)}
+          onDelete={() => handleDelete(postId as string)}
         />
       </NavbarContainer>
     </div>

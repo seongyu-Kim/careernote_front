@@ -11,6 +11,7 @@ import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
 import { usePostStore } from '@stores/usePostStore';
+import { useLocation, useNavigate } from 'react-router-dom';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API;  //공지 외 카테고리 RUD api 주소
@@ -28,30 +29,39 @@ interface Post {
 }
 
 const AdminMain = () => {
-  const { filteredPosts, setCategory, fetchAllPosts, selectedCategory } = usePostStore();
+  const { filteredPosts, totalPostCount, fetchAllPosts, selectedCategory } = usePostStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  //페이지 번호
+  const queryParams = new URLSearchParams(location.search);
+  const initialPage = parseInt(queryParams.get('page') || '1');
 
-  const savedPage = sessionStorage.getItem('currentPage');
-  const [currentPage, setCurrentPage] = useState<number>(savedPage ? parseInt(savedPage, 10) : 1);
+  const [currentPage, setCurrentPage] = useState<number>(initialPage);
 
-  //페이지네이션
-  const postsPerPage = 10;
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const postsPerPage = 12;
+  const totalPages = Math.ceil(totalPostCount / postsPerPage);
 
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  useEffect(() => {
+    fetchAllPosts(currentPage, postsPerPage);
+  }, [selectedCategory, currentPage, fetchAllPosts]);
 
-  const handlePageChange = (page: number) => {
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-    sessionStorage.setItem('currentPage', page.toString());
+    navigate(`?page=${page}`);
+    await fetchAllPosts(page, postsPerPage);
   };
+
 
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
   const userId = useUserStore((state) => state.user?.user_id);
   const userLevel = useUserStore((state) => state.user?.level._id);
   const [users, setUsers] = useState<User[]>([]); // 유저 상태
-  //const [selectedUser, setSelectedUser] = useState<User | null>(null); // 탈퇴 시 선택 사용자
+
 
   // 사용자 데이터를 가져오는 함수
   const fetchUsers = async () => {
@@ -76,30 +86,20 @@ const AdminMain = () => {
     }
   };
 
-  // 초기 데이터 가져오기
-  useEffect(() => {
-    fetchUsers();
-  }, []);
   // '삐약이 회원'과 '꼬꼬닭 회원'으로 유저를 그룹화
   const piakMembers = users.filter((user) => user.level === '삐약이');
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
 
-  // 카테고리 변경 시 데이터 필터링
-  useEffect(() => {
-    fetchAllPosts(); // 모든 게시글을 가져오는 요청
-  }, [selectedCategory]); // selectedCategory가 변경될 때마다 실행
+  // // 카테고리 변경 시 데이터 필터링
+  // useEffect(() => {
+  //   fetchAllPosts(); // 모든 게시글을 가져오는 요청
+  // }, [selectedCategory]); // selectedCategory가 변경될 때마다 실행
 
-  // 컴포넌트 마운트 시 초기 데이터 로드
-  useEffect(() => {
-    fetchAllPosts();
-  }, []);
-
-
-  // 게시판 카테고리 선택
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const category = event.target.value;
-    setCategory(category); // 선택한 카테고리를 Zustand 상태에 설정
-  };
+  // // 게시판 카테고리 선택
+  // const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const category = event.target.value;
+  //   setCategory(category); // 선택한 카테고리를 Zustand 상태에 설정
+  // };
 
   // 게시글 삭제 Alert
   const handleDelete = async (id: number, category: string) => {
@@ -231,7 +231,7 @@ const AdminMain = () => {
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
           <Styled.CategorySelect>
             <label htmlFor="category">카테고리 선택</label>
-            <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
+            <select id="category" value={selectedCategory} onChange={() => console.log('아직')}>
               <option value="자유게시판">전체</option>
               <option value="공지">공지</option>
               <option value="등업">등업</option>
@@ -240,7 +240,7 @@ const AdminMain = () => {
             </select>
           </Styled.CategorySelect>
           <Styled.PostListContainer>
-            <PostList posts={currentPosts} columns={columns} width="100%" onDelete={handleDelete} isAdmin={isAdmin} />
+            <PostList posts={filteredPosts} columns={columns} width="100%" onDelete={handleDelete} isAdmin={isAdmin} />
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
