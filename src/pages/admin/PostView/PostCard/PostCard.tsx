@@ -9,7 +9,7 @@ import apiUtils from '@utils/apiUtils';
 import { BOARD_COMMENT_API, NOTICE_COMMENT_API } from '@routes/apiRoutes';
 import { Button, Input } from 'components';
 import { useUserStore } from '@stores/userStore';
-import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
+import { ErrorToast, SuccessToast, WarnToast } from '@utils/ToastUtils';
 const { BOARD_COMMENTS, CUD_BOARD_COMMENT } = BOARD_COMMENT_API;
 const { NOTICE_COMMENTS, CUD_NOTICE_COMMENT } = NOTICE_COMMENT_API;
 interface PostCardProps {
@@ -46,6 +46,9 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
   const [commentText, setCommentText] = useState('');
   const [commentTrigger, setCommentTrigger] = useState(0);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // 글 수정 페이지로 이동
   const handleEdit = () => {
@@ -176,13 +179,18 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
   };
 
   // 댓글 등록
-  const handleCommentSubmit = async () => {
+  const handleCommentSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (commentText === '') {
+      WarnToast('댓글의 내용을 입력하세요');
+      return;
+    }
     let data;
     if (post.category === '공지') {
       data = {
         content: commentText,
         user_id: userId,
-        board_id: postId
+        notice_id: postId
       };
       try {
         const response = await apiUtils({
@@ -310,6 +318,10 @@ const PostCard = ({ post, user, level, onDelete }: PostCardProps) => {
           padding="5px 10px"
           textColor="white"
           border="none"
+          useHover={true}
+          useTransition={true}
+          transitionDuration={0.3}
+          hoverBackgroundColor="#3F82AC"
         >
           등록
         </Button>

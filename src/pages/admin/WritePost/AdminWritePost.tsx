@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Styled from '@pages/user/WritePost/WritePost.styled'
 import Button from '@components/Button/Button';
@@ -13,14 +13,22 @@ const AdminWritePost = () => {
   const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
-  const userLevelId = user?.level._id;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
   const postId = state?.postId;
-  // state가 존재하는지 확인
-  const isEdit = !!state;
+  const isEdit = !!state; // state 가 존재하면 수정모드, 빈 값이면 작성모드
+
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (title.length > 0 && content.length > 0) {
+      setInputFieldChecked(false);
+    } else {
+      setInputFieldChecked(true);
+    }
+  }, [title, content]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -28,18 +36,15 @@ const AdminWritePost = () => {
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
-  const handleCancle = () => {
-    navigate('/admin'); // 관리자는 /admin으로 이동
-  };
 
   // 글 수정/생성 공통 작업 
   const handleSubmit = async () => {
     // 공통 데이터
-    let data: any;
+    let data;
     if (isEdit) {
       // 수정 요청 시 데이터 구조
       data = {
-        notice_id: postId, // 수정할 공지 ID
+        notice_id: postId,
         title,
         content,
         user: userId,
@@ -49,7 +54,7 @@ const AdminWritePost = () => {
       data = {
         title,
         content,
-        user: userId, // 사용자 ID
+        user: userId,
       };
     }
 
@@ -65,9 +70,10 @@ const AdminWritePost = () => {
       } else {
         SuccessToast('게시물이 저장되었습니다.');
       }
-      console.log('서버 응답 데이터:', response);
+      console.log('게시물 수정 성공', response);
+
     } catch (error) {
-      console.error('게시글 등록 혹은 수정 요청 실패:', error);
+      console.error('게시글 등록 혹은 수정 실패:', error);
       if (isEdit) {
         ErrorToast('게시물 수정 중 오류가 발생했습니다.');
       } else {
@@ -75,6 +81,7 @@ const AdminWritePost = () => {
       }
     } navigate(ADMIN_MAIN);
   };
+
   return (
     <NavbarContainer>
       <Styled.Container>
@@ -85,6 +92,7 @@ const AdminWritePost = () => {
             type="text"
             placeholder="제목을 입력해 주세요."
             value={title}
+            name={title}
             onChange={handleTitleChange}
           />
         </Styled.FormFieldGroup>
@@ -92,14 +100,28 @@ const AdminWritePost = () => {
         <Styled.TextareaField
           placeholder="내용을 입력하세요."
           value={content}
+          name={content}
           onChange={handleContentChange}
         />
         <Styled.ButtonGroup>
-          <Button border="1px solid #79B0CB" textColor="#79B0CB" width="10%" onClick={handleCancle}>
+          <Button
+            border="1px solid #79B0CB"
+            useHover={true}
+            useTransition={true}
+            transitionDuration={0.3}
+            hoverBackgroundColor="#fdfdfd"
+            textColor="#79B0CB"
+            width="10%"
+            onClick={() => navigate(ADMIN_MAIN)}>
             취소
           </Button>
           <Button
-            backgroundColor="#79B0CB"
+            disabled={inputFieldChecked}
+            useHover={!inputFieldChecked}
+            useTransition={true}
+            transitionDuration={0.3}
+            hoverBackgroundColor="#3F82AC"
+            backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
             border="none"
             textColor="white"
             width="10%"

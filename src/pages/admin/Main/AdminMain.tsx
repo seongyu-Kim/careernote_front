@@ -10,9 +10,8 @@ import apiUtils from '@utils/apiUtils';
 import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
-import { useLocation } from 'react-router-dom';
 import { usePostStore } from '@stores/usePostStore';
-const { UPDATE_INFO, USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
+const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API;  //공지 외 카테고리 RUD api 주소
 interface UserProp {

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as Styled from './WritePost.styled';
 import Button from '@components/Button/Button';
 import { NavbarContainer } from 'components';
-import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
+import { BOARD_API } from '@routes/apiRoutes';
 import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
@@ -16,13 +16,14 @@ const WritePost = () => {
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
   const userLevelName = user?.level.name;
-  const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
-  // state가 존재하는지 확인
-  const isEdit = !!state;
+  const { state } = useLocation();
+  const isEdit = !!state; //state 존재하면 수정모드, 없으면 작성모드
   const [category, setCategory] = useState(state?.category || '선택');
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
-  //김
+
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
+
   const [categoryOptions, setCategoryOptions] = useState<string[]>(['선택']);
   const postId = state?.postId;
   const navigate = useNavigate();
@@ -35,6 +36,14 @@ const WritePost = () => {
     }
   }, [user?.level.name]);
 
+  useEffect(() => {
+    if (title.length > 0 && content.length > 0 && category != '선택') {
+      setInputFieldChecked(false);
+    } else {
+      setInputFieldChecked(true);
+    }
+  }, [title, content, category]);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -46,12 +55,10 @@ const WritePost = () => {
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
-  const handleCancle = () => {
-    navigate('/posts');
-  };
 
   // 글 수정/생성 공통 작업
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     const data = {
       title,
       content,
@@ -116,14 +123,28 @@ const WritePost = () => {
         </div>
 
         <Styled.ButtonGroup>
-          <Button border="1px solid #79B0CB" textColor="#79B0CB" width="10%" onClick={handleCancle}>
+          <Button
+            border="1px solid #79B0CB"
+            useHover={true}
+            useTransition={true}
+            transitionDuration={0.3}
+            hoverBackgroundColor="#fdfdfd"
+            textColor="#79B0CB"
+            width="10%"
+            onClick={() => navigate(MAIN_PAGE_URL)}>
             취소
           </Button>
           <Button
-            backgroundColor="#79B0CB"
+            disabled={inputFieldChecked}
+            useHover={!inputFieldChecked}
+            useTransition={true}
+            transitionDuration={0.3}
+            hoverBackgroundColor="#3F82AC"
+            backgroundColor={inputFieldChecked ? 'gray' : '#79B0CB'}
             border="none"
             textColor="white"
             width="10%"
+            type='button'
             onClick={handleSubmit}>
             완료
           </Button>
