@@ -60,7 +60,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     window.scrollTo(0, 0);
   }, []);
 
-  // 공지 상세 조회
+  // 상세 조회
   useEffect(() => {
     if (!postId) {
       console.error('해당 postId가 없습니다.');
@@ -85,6 +85,14 @@ const PostCard = ({ onDelete }: PostCardProps) => {
             category: '공지'
           };
           setPost(updatedPost);
+          const formattedComments = res.boardcomment.map((comment: any) => ({
+            id: comment._id,
+            nickName: comment.user_id.nickname,
+            content: comment.content,
+            date: new Date(comment.createdAt).toLocaleDateString(),
+            isOwnComment: comment.user_id._id === userId,
+          }));
+          setComments(formattedComments);
 
         } catch (noticeError) {
           console.warn('공지 API 실패, 일반 게시글 API 시도:', noticeError);
@@ -114,7 +122,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
             id: comment._id,
             nickName: comment.user_id.nickname,
             content: comment.content,
-            date: new Date(comment.createdAt).toLocaleDateString(),
+            date: new Date(comment.updatedAt).toLocaleDateString(),
             isOwnComment: comment.user_id._id === userId,
           }));
           setComments(formattedComments);
@@ -125,6 +133,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     }
     fetchPostDetails();
   }, [postId, commentTrigger]);
+
   // 글 수정 페이지로 이동
   const handleEdit = () => {
     // 수정할 글의 데이터를 state로 전달하여 /write 페이지로 이동
@@ -357,11 +366,11 @@ const PostCard = ({ onDelete }: PostCardProps) => {
         <Styled.Category category={post.category ?? '공지'}>
           {post.category ?? '공지'}
         </Styled.Category>
-        <DropDown
+        {post.writer === userName && <DropDown
           options={options}
           icon={<BiDotsVerticalRounded size={24} />}
           noOptionsMessage="권한 없음"
-        />
+        />}
       </Styled.ContainerHeader>
       <Styled.Title>{post.title || '알 수 없는 글'}</Styled.Title>
       <Styled.Writer>{post.writer || '알 수 없는 사용자'}</Styled.Writer>
