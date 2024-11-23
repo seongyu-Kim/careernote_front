@@ -6,6 +6,7 @@ import React, { ChangeEvent, useState } from 'react';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import apiUtils from '@utils/apiUtils';
 import { ADMIN_API } from '@routes/apiRoutes';
+import { MyInfoDivider } from '@styles/Authentication/Authentication.styled';
 
 const AddCategory = () => {
   const [inputCategory, setInputCategory] = useState('');
@@ -66,10 +67,11 @@ const AddCategory = () => {
                 labelPlaceHolder="카테고리명"
                 onChange={handleInputChange}
               />
-              <Styled.Divider />
-              <Styled.Divider />
-              <Styled.Divider />
+              <Styled.MyInfoDivider />
+              <Styled.MyInfoDivider />
               <Styled.PasswordButtonContainer>
+                <Styled.MyInfoDivider />
+                <Styled.MyInfoDivider />
                 <Button
                   type="submit"
                   border="none"
@@ -81,6 +83,7 @@ const AddCategory = () => {
                   transitionDuration={0.2}>
                   추가하기
                 </Button>
+                <Styled.MyInfoDivider />
                 <Button
                   onClick={() => {}}
                   border="none"
