@@ -191,24 +191,6 @@ const AdminMain = () => {
       ErrorToast('사용자의 레벨 변경이 실패하였습니다.');
     }
   };
-
-  //카테고리 더미 데이터 코드가 좀 더럽습니다...ㅠ.ㅠ..급하게 만드느라...
-  const test = [
-    '전체 게시판',
-    '등업',
-    '스터디',
-    '취업 정보',
-    '이거저거',
-    '중고거래',
-    '정보 공유',
-    '엘랠레',
-    '안아줘요',
-    '이거입니다저거입니다대충긴내용입니다',
-  ];
-  const { setIsOpen, setModalState } = useModal();
-  const handleCategoryDelete = async (id: string) => {
-    openAlert(`${id} 카테고리를 삭제하십니까?`, () => alert('삭제!')); // 모달 열기
-  };
   //테이블 데이터
   const columns = [
     { key: 'category', label: '카테고리', flex: '1' },
@@ -242,62 +224,7 @@ const AdminMain = () => {
         </DndProvider>
         <Styled.PostManagement>
           {/*카테고리 관리 부분*/}
-          <Styled.CategoryListHeader>
-            <Styled.SectionTitle>카테고리 관리</Styled.SectionTitle>
-            <Button
-              onClick={() => {
-                setModalState('addCategory');
-                setIsOpen(true);
-              }}
-              width="auto"
-              padding="2px 15px 2px 15px"
-              position="relative"
-              bottom="7px"
-              border="none"
-              textColor="white"
-              backgroundColor="#79B0CB"
-              useHover={true}
-              useTransition={true}
-              transitionDuration={0.3}
-              hoverBackgroundColor="#3F82AC">
-              카테고리 추가
-            </Button>
-          </Styled.CategoryListHeader>
-          <Styled.CategoryListMenu>
-            <Styled.CategoryListContent>
-              <span>카테고리명</span>
-            </Styled.CategoryListContent>
-            <Styled.CategoryListContent>
-              <span className="menu">관리</span>
-            </Styled.CategoryListContent>
-          </Styled.CategoryListMenu>
-          <Styled.CategoryListContainer>
-            <Styled.CategoryListFiled>
-              {test.map((item, key) => {
-                return (
-                  <Styled.CategoryListBox>
-                    <Styled.CategoryList key={key}>
-                      <Styled.CategoryListContent>{item}</Styled.CategoryListContent>
-                      <Styled.CategoryListContent>
-                        <Button
-                          onClick={() => handleCategoryDelete(item)}
-                          width="50%"
-                          border="none"
-                          textColor="white"
-                          backgroundColor="#E25151"
-                          useHover={true}
-                          hoverBackgroundColor="#CD4444"
-                          useTransition={true}
-                          transitionDuration={0.2}>
-                          삭제
-                        </Button>
-                      </Styled.CategoryListContent>
-                    </Styled.CategoryList>
-                  </Styled.CategoryListBox>
-                );
-              })}
-            </Styled.CategoryListFiled>
-          </Styled.CategoryListContainer>
+          <CategoryList />
           {/*카테고리 관리 부분*/}
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
           <Styled.CategorySelect>
@@ -327,6 +254,87 @@ const AdminMain = () => {
         </Styled.PostManagement>
       </Styled.Container>
     </NavbarContainer>
+  );
+};
+
+const CategoryList = () => {
+  //추후 카테고리 배열 API 연결해서 받을 수 있게
+  const test = [
+    '전체 게시판',
+    '등업',
+    '스터디',
+    '취업 정보',
+    '이거저거',
+    '중고거래',
+    '정보 공유',
+    '엘랠레',
+    '안아줘요',
+    '이거입니다저거입니다대충긴내용입니다',
+  ];
+  const { setIsOpen, setModalState } = useModal();
+  const { openAlert, closeAlert } = useAlertStore();
+  const handleCategoryDelete = async (id: string) => {
+    openAlert(`${id} 카테고리를 삭제하십니까?`, () => alert('삭제!')); // 모달 열기
+  };
+  return (
+    <>
+      <Styled.CategoryListHeader>
+        <Styled.SectionTitle>카테고리 관리</Styled.SectionTitle>
+        <Button
+          onClick={() => {
+            setModalState('addCategory');
+            setIsOpen(true);
+          }}
+          width="auto"
+          padding="2px 15px 2px 15px"
+          position="relative"
+          bottom="7px"
+          border="none"
+          textColor="white"
+          backgroundColor="#79B0CB"
+          useHover={true}
+          useTransition={true}
+          transitionDuration={0.3}
+          hoverBackgroundColor="#3F82AC">
+          카테고리 추가
+        </Button>
+      </Styled.CategoryListHeader>
+      <Styled.CategoryListMenu>
+        <Styled.CategoryListContent>
+          <span>카테고리명</span>
+        </Styled.CategoryListContent>
+        <Styled.CategoryListContent>
+          <span className="menu">관리</span>
+        </Styled.CategoryListContent>
+      </Styled.CategoryListMenu>
+      <Styled.CategoryListContainer>
+        <Styled.CategoryListFiled>
+          {test.map((item, key) => {
+            return (
+              <Styled.CategoryListBox>
+                <Styled.CategoryList key={key}>
+                  <Styled.CategoryListContent>{item}</Styled.CategoryListContent>
+                  <Styled.CategoryListContent>
+                    <Button
+                      onClick={() => handleCategoryDelete(item)}
+                      width="50%"
+                      border="none"
+                      textColor="white"
+                      backgroundColor="#E25151"
+                      useHover={true}
+                      hoverBackgroundColor="#CD4444"
+                      useTransition={true}
+                      transitionDuration={0.2}>
+                      삭제
+                    </Button>
+                  </Styled.CategoryListContent>
+                </Styled.CategoryList>
+              </Styled.CategoryListBox>
+            );
+          })}
+        </Styled.CategoryListFiled>
+      </Styled.CategoryListContainer>
+    </>
   );
 };
 

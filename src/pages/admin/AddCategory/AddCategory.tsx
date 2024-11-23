@@ -6,7 +6,6 @@ import React, { ChangeEvent, useState } from 'react';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import apiUtils from '@utils/apiUtils';
 import { ADMIN_API } from '@routes/apiRoutes';
-import { MyInfoDivider } from '@styles/Authentication/Authentication.styled';
 
 const AddCategory = () => {
   const [inputCategory, setInputCategory] = useState('');
@@ -32,7 +31,7 @@ const AddCategory = () => {
         },
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      if (res.message === '카테고리가 생성되었습니다') {
+      if (res.message === '카테고리 생성 완료') {
         SuccessToast('카테고리 생성 성공');
       }
     } catch (error) {

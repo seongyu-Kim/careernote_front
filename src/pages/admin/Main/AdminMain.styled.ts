@@ -99,7 +99,8 @@ export const CategoryListMenu = styled.div`
   align-content: center;
   //gap: 50%;
   width: 100%;
-  background: grey;
+  background: #dee2e6;
+  border-radius: 10px 10px 0 0;
   padding: 10px 0 10px 0;
 `;
 
@@ -123,7 +124,7 @@ export const CategoryListFiled = styled.div`
 `;
 export const CategoryListBox = styled.ul`
   width: 100%;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid #c9c9c9;
 `;
 
 export const CategoryList = styled.li`
