@@ -141,6 +141,7 @@ export const CategoryListContent = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
   .menu {
     padding-right: 5%;
   }

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import apiUtils from '@utils/apiUtils';
 import { ADMIN_API } from '@routes/apiRoutes';
+import { ErrorToast } from '@utils/ToastUtils';
 
 interface CategortStore {
   categoryList: Category[];
@@ -22,9 +23,13 @@ export const useCategory = create<CategortStore>((set) => ({
         url: CRUD_CATEGORY,
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
+      if (!res) {
+        ErrorToast('카테고리 목록 불러오기 실패');
+        return;
+      }
       const category = res.data
-        .map((category: Category) => ({
-          id: category.id,
+        .map((category: any) => ({
+          id: category._id,
           name: category.name,
           createdAt: category.createdAt,
         }))
@@ -32,8 +37,9 @@ export const useCategory = create<CategortStore>((set) => ({
           (a: Category, b: Category) =>
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         );
-      console.log(category);
-      set({ categoryList: category });
+      set(() => {
+        return { categoryList: category };
+      });
     } catch (error) {
       console.error('카테고리 목록 요청 실패', error);
     }

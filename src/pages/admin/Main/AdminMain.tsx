@@ -7,12 +7,13 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@pages/admin/Main/Dnd/UserSection';
 import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
-import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
+import { USER_API, BOARD_API, NOTICE_API, ADMIN_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
 import { usePostStore } from '@stores/usePostStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CategoryListContent } from './AdminMain.styled';
+import { useCategory } from '@stores/useCategory';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
@@ -31,6 +32,7 @@ interface Post {
 
 const AdminMain = () => {
   const { filteredPosts, totalPostCount, fetchAllPosts, selectedCategory } = usePostStore();
+  const { getCategory } = useCategory();
   const navigate = useNavigate();
   const location = useLocation();
   //페이지 번호
@@ -48,6 +50,10 @@ const AdminMain = () => {
 
   useEffect(() => {
     fetchUsers();
+  }, []);
+  //카테고리 불러오기
+  useEffect(() => {
+    getCategory();
   }, []);
 
   const handlePageChange = async (page: number) => {
@@ -271,10 +277,37 @@ const CategoryList = () => {
     '안아줘요',
     '이거입니다저거입니다대충긴내용입니다',
   ];
+  const [categoryName, setCategoryName] = useState<string[]>([]);
   const { setIsOpen, setModalState } = useModal();
   const { openAlert, closeAlert } = useAlertStore();
+  const { categoryList } = useCategory();
+  const { CRUD_CATEGORY } = ADMIN_API;
+
+  const handleCategortEdit = async (id: string, type: string) => {
+    if (!id || !type) {
+      return;
+    }
+    try {
+      const res = await apiUtils({
+        url: CRUD_CATEGORY,
+        method: type === 'delete' ? 'DELETE' : 'PUT',
+        data: type === 'delete' ? { name: id } : { name: id, newName: categoryName },
+      });
+      if (res) {
+        SuccessToast('요청 성공');
+        return;
+      }
+    } catch (error) {
+      ErrorToast('요청 실패');
+      console.error('요청 실패', error);
+    }
+  };
+
   const handleCategoryDelete = async (id: string) => {
-    openAlert(`${id} 카테고리를 삭제하십니까?`, () => alert('삭제!')); // 모달 열기
+    openAlert(`${id} 카테고리를 삭제하십니까?`, () => handleCategortEdit(id, 'delete')); // 모달 열기
+  };
+  const handleCategoryUpdate = async (id: string) => {
+    openAlert(`${id} 카테고리를 수정하십니까?`, () => handleCategortEdit(id, 'update'));
   };
   return (
     <>
@@ -309,15 +342,27 @@ const CategoryList = () => {
       </Styled.CategoryListMenu>
       <Styled.CategoryListContainer>
         <Styled.CategoryListFiled>
-          {test.map((item, key) => {
+          {categoryList.map((item, key) => {
             return (
               <Styled.CategoryListBox>
                 <Styled.CategoryList key={key}>
-                  <Styled.CategoryListContent>{item}</Styled.CategoryListContent>
+                  <Styled.CategoryListContent>{item.name}</Styled.CategoryListContent>
                   <Styled.CategoryListContent>
                     <Button
-                      onClick={() => handleCategoryDelete(item)}
-                      width="50%"
+                      onClick={() => handleCategoryUpdate(item.name)}
+                      width="30%"
+                      border="none"
+                      textColor="white"
+                      backgroundColor="#79B0CB"
+                      useHover={true}
+                      hoverBackgroundColor="#3F82AC"
+                      useTransition={true}
+                      transitionDuration={0.2}>
+                      수정
+                    </Button>
+                    <Button
+                      onClick={() => handleCategoryDelete(item.name)}
+                      width="30%"
                       border="none"
                       textColor="white"
                       backgroundColor="#E25151"
