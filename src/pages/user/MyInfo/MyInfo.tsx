@@ -127,7 +127,7 @@ export const MyInfo = () => {
         />
         <Styled.ModalField>
           <Styled.MyInfoDivider />
-          <Styled.Text fontSize="2.5rem">내 정보</Styled.Text>
+          <Styled.Text fontSize="2.5rem">내 정보 수정</Styled.Text>
           <Styled.TextContainer>
             <Styled.Text fontSize="1.2rem">{user?.nickName} 님</Styled.Text>
             {!currentPassword.userCheck ||
