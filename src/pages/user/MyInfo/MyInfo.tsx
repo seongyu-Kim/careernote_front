@@ -2,7 +2,7 @@ import { useModal } from '@stores/store';
 import * as Styled from '@styles/Authentication/Authentication.styled';
 import { MdClose } from 'react-icons/md';
 import { FaPenToSquare } from 'react-icons/fa6';
-import { Button } from 'components';
+import { AuthenticationInput, Button } from 'components';
 import React, { useEffect, useState } from 'react';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
@@ -16,15 +16,58 @@ import { REG_EX } from '@utils/RegEx';
 export const MyInfo = () => {
   const [isEditingNickname, setIsEditingNickname] = useState(false); // 닉네임 수정 ON OFF
   const [isEditingPassword, setIsEditingPassword] = useState(false); // 비밀번호 수정 ON OFF
+  const [currentPassword, setCurrentPassword] = useState({
+    currentPassword: '',
+    userCheck: false,
+  });
   const { resetValidCheck } = useValidCheck();
   const { isOpen, setIsOpen } = useModal();
   const { user } = useUserStore();
 
-  const { UPDATE_NICKNAME, UPDATE_PASSWORD } = USER_API;
+  const { UPDATE_NICKNAME, UPDATE_PASSWORD, CONFIRM_USER } = USER_API;
+  const { passwordRegEx } = REG_EX;
 
   useEffect(() => {
     resetValidCheck();
-  }, []);
+    if (!isOpen) {
+      handleInputChange(false)();
+      handleInputChange('reset')();
+    }
+  }, [isOpen]);
+
+  const handleInputChange =
+    (type: string | boolean) => (event?: React.ChangeEvent<HTMLInputElement>) => {
+      if (type === 'reset') {
+        setCurrentPassword({ currentPassword: '', userCheck: false });
+        return;
+      }
+      if (typeof type === 'boolean') {
+        setCurrentPassword((prev) => ({ ...prev, userCheck: type }));
+        return;
+      }
+      setCurrentPassword((prev) => ({ ...prev, [type]: event?.target.value }));
+      return;
+    };
+
+  const handleSubmitCurrentPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const res = await apiUtils({
+        url: CONFIRM_USER,
+        method: 'POST',
+        data: { password: currentPassword.currentPassword },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      if (res.message === 'OK') {
+        handleInputChange(true)();
+        SuccessToast('확인 성공');
+      }
+    } catch (error) {
+      handleInputChange(false)();
+      ErrorToast('현재 비밀번호를 확인해주세요');
+      console.log(error);
+    }
+  };
 
   const handleNicknameSave = async (nickname: string) => {
     console.log('닉네임 저장:', nickname);
@@ -87,7 +130,8 @@ export const MyInfo = () => {
           <Styled.Text fontSize="2.5rem">내 정보</Styled.Text>
           <Styled.TextContainer>
             <Styled.Text fontSize="1.2rem">{user?.nickName} 님</Styled.Text>
-            {isEditingNickname ||
+            {!currentPassword.userCheck ||
+              isEditingNickname ||
               (!isEditingPassword && (
                 <FaPenToSquare
                   className="myInfoIcon"
@@ -95,7 +139,35 @@ export const MyInfo = () => {
                 />
               ))}
           </Styled.TextContainer>
-          {isEditingPassword ||
+          {!currentPassword.userCheck && (
+            <Styled.MyInfoForm onSubmit={handleSubmitCurrentPassword}>
+              <Styled.CurrentPasswordMyInfoContainer>
+                <AuthenticationInput
+                  forValue="userCurrentPassword"
+                  type="password"
+                  labelPlaceHolder="비밀번호"
+                  onChange={handleInputChange('currentPassword')}
+                />
+                <Button
+                  type="submit"
+                  width="80%"
+                  disabled={!passwordRegEx.test(currentPassword.currentPassword)}
+                  border="none"
+                  textColor="white"
+                  backgroundColor={
+                    !passwordRegEx.test(currentPassword.currentPassword) ? 'gray' : '#79B0CB'
+                  }
+                  useHover={passwordRegEx.test(currentPassword.currentPassword)}
+                  useTransition={true}
+                  transitionDuration={0.3}
+                  hoverBackgroundColor="#3F82AC">
+                  확인
+                </Button>
+              </Styled.CurrentPasswordMyInfoContainer>
+            </Styled.MyInfoForm>
+          )}
+          {!currentPassword.userCheck ||
+            isEditingPassword ||
             (!isEditingNickname && (
               <Button
                 border="none"
