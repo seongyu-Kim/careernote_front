@@ -10,7 +10,7 @@ import { ADMIN_API } from '@routes/apiRoutes';
 const AddCategory = () => {
   const [inputCategory, setInputCategory] = useState('');
   const { isOpen, setIsOpen, setModalState } = useModal();
-  const { CREATE_CATEGORY } = ADMIN_API;
+  const { CRUD_CATEGORY } = ADMIN_API;
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputCategory(event.target.value);
@@ -24,7 +24,7 @@ const AddCategory = () => {
     }
     try {
       const res = await apiUtils({
-        url: CREATE_CATEGORY,
+        url: CRUD_CATEGORY,
         method: 'POST',
         data: {
           name: inputCategory,
