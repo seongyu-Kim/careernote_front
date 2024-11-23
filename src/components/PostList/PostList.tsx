@@ -76,7 +76,7 @@ const PostList = ({
       SuccessToast('로그인을 먼저 진행해 주세요');
       return;
     }
-    navigate(`/posts/${id}`, { state: { category } });
+    navigate(`/post/${id}`, { state: { category } });
   };
   //관리자 상세보기
   const handleAdminPostClick = (id: number, category: string) => {
@@ -84,7 +84,7 @@ const PostList = ({
       SuccessToast('로그인을 먼저 진행해 주세요');
       return;
     }
-    navigate(`/admin/posts/${id}`, { state: { category } });
+    navigate(`/admin/post/${id}`, { state: { category } });
   };
   //글쓰기
   const handleWriteClick = () => {
