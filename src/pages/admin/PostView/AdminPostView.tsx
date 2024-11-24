@@ -32,33 +32,21 @@ const AdminPostView = () => {
 
 
   // 게시글 삭제 (모든 회원의 글 삭제 가능)
-  const handleDelete = async (postId: string) => {
+  const handleAnotherUserDelete = async (postId: string) => {
+
     try {
       let url;
-      let data;
-
       if (category === '공지') {
         // 공지 삭제 요청
-        url = CUD_NOTICE;
-        data = {
-          notice_id: postId,
-          user: userId,
-        };
+        url = DETAILS_NOTICE(postId);
       } else {
         // 일반 게시글 삭제 요청
-        url = CUD_BOARD;
-        data = {
-          board_id: postId,
-          user: userId,
-          level: userLevelId,
-        };
+        url = DETAILS_BOARD(postId);
       }
-
       // 서버 요청
       const response = await apiUtils({
         url,
         method: 'DELETE',
-        data,
       });
 
       console.log('게시글 삭제 성공 응답 데이터:', response);
@@ -67,15 +55,16 @@ const AdminPostView = () => {
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
       ErrorToast('다시 시도해주세요.')
-    }
+    } console.log('어드민 메인ㄹ으로 가야지')
     closeAlert();
     navigate(ADMIN_MAIN);
+
   };
   return (
     <div>
       <NavbarContainer>
         <PostCard
-          onDelete={() => handleDelete(postId as string)}
+          onDelete={() => handleAnotherUserDelete(postId as string)}
         />
       </NavbarContainer>
     </div>

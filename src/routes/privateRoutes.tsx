@@ -11,9 +11,6 @@ const PrivateRoutes = ({ authentication, adminOnly }: PrivateRouteProps): React.
   const isAuthenticated = !!localStorage.getItem('token'); // 로그인 여부 확인
   const userRole = localStorage.getItem('role'); // 사용자 권한 확인
 
-  console.log('isAuthenticated:', isAuthenticated);
-  console.log('userRole:', userRole);
-
   if (authentication) {
     if (!isAuthenticated) {
       return <Navigate to="/login" />;

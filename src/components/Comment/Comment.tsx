@@ -22,7 +22,6 @@ const Comment = ({ nickName, content, date, isOwnComment, levelName, onEdit, onD
   const handleEditConfirm = () => {
     onEdit(editedContent);
     setIsEditing(false);
-    setEditedContent('');
   };
 
   const handleCancelEdit = () => {
