@@ -49,7 +49,7 @@ const Main = () => {
         }))
     : selectedCategory === '공지'
       ? posts
-      : selectedCategory && selectedCategory !== '자유게시판'
+      : selectedCategory && selectedCategory !== '전체게시판'
         ? postsByCategory
         : posts;
 
@@ -61,7 +61,7 @@ const Main = () => {
     if (!isMyPost) {
       if (selectedCategory === '공지') {
         fetchNoticePosts(currentPage, postsPerPage);
-      } else if (selectedCategory && selectedCategory !== '자유게시판') {
+      } else if (selectedCategory && selectedCategory !== '전체게시판') {
         fetchPostsByCategory(currentPage, postsPerPage);
       } else {
         fetchAllPosts(currentPage, postsPerPage);
@@ -75,7 +75,7 @@ const Main = () => {
       navigate(`?page=${page}`);
       if (selectedCategory === '공지') {
         await fetchNoticePosts(page, postsPerPage);
-      } else if (selectedCategory && selectedCategory !== '자유게시판') {
+      } else if (selectedCategory && selectedCategory !== '전체게시판') {
         await fetchPostsByCategory(page, postsPerPage);
       } else {
         await fetchAllPosts(page, postsPerPage);

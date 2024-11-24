@@ -79,6 +79,23 @@ export const Menu = styled.div<MenuProps>`
 
   transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(-100%)')};
   animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.3s forwards;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  //스크롤바
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #c0c0c0;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+  }
 `;
 
 export const UserInfo = styled.div`
@@ -110,7 +127,7 @@ export const Hr = styled.hr`
 `;
 export const UserLevel = styled.div`
   margin: 5px 0;
-  background-color: #86B886;
+  background-color: #86b886;
   padding: 5px;
   border-radius: 5px;
   color: white;
