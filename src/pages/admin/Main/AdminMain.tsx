@@ -269,7 +269,7 @@ const AdminMain = () => {
 };
 
 const CategoryList = () => {
-  const [categoryName, setCategoryName] = useState<string[]>([]);
+  // const [categoryName, setCategoryName] = useState<string[]>([]);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const { setIsOpen, setModalState } = useModal();
   const { openAlert, closeAlert } = useAlertStore();
@@ -286,7 +286,7 @@ const CategoryList = () => {
       const res = await apiUtils({
         url: CRUD_CATEGORY,
         method: type === 'delete' ? 'DELETE' : 'PUT',
-        data: type === 'delete' ? { name: id } : { name: id, newName: categoryName },
+        data: type === 'delete' ? { name: id } : { name: id, newName: 'test' }, // categoryName },
       });
       if (res) {
         SuccessToast('요청 성공');
@@ -302,7 +302,7 @@ const CategoryList = () => {
     openAlert(`${id} 카테고리를 삭제하십니까?`, () => handleCategortEdit(id, 'delete')); // 모달 열기
   };
   const handleCategoryUpdate = async (id: string) => {
-    openAlert(`${id} 카테고리를 수정하십니까?`, () => setIsEditMode(true));
+    openAlert(`${id} 카테고리를 수정하십니까?`, () => console.log('삭제')); // setIsEditMode(true));
   };
   return (
     <>
@@ -342,9 +342,14 @@ const CategoryList = () => {
               <Styled.CategoryListBox>
                 <Styled.CategoryList key={key}>
                   <Styled.CategoryListContent>
+                    {/*수정 부분 입니다!*/}
                     {isEditMode ? <AuthenticationInput /> : item.name}
+                    {/*아래는 원래코드*/}
+                    {/*{item.name}*/}
+                    {/*여기까지 수정 부분입니다*/}
                   </Styled.CategoryListContent>
                   <Styled.CategoryListContent>
+                    {/*수정 부분입니다!2*/}
                     {isEditMode ? (
                       <button onClick={() => setIsEditMode(false)}>안녕</button>
                     ) : (
@@ -361,6 +366,20 @@ const CategoryList = () => {
                         수정
                       </Button>
                     )}
+                    {/*아래는 원래코드*/}
+                    {/*<Button*/}
+                    {/*  onClick={() => handleCategoryUpdate(item.name)}*/}
+                    {/*  width="30%"*/}
+                    {/*  border="none"*/}
+                    {/*  textColor="white"*/}
+                    {/*  backgroundColor="#79B0CB"*/}
+                    {/*  useHover={true}*/}
+                    {/*  hoverBackgroundColor="#3F82AC"*/}
+                    {/*  useTransition={true}*/}
+                    {/*  transitionDuration={0.2}>*/}
+                    {/*  수정*/}
+                    {/*</Button>*/}
+                    {/*여기까지 수정 부분입니다!2*/}
                     <Button
                       onClick={() => handleCategoryDelete(item.name)}
                       width="30%"
