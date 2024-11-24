@@ -32,7 +32,17 @@ interface Post {
 }
 
 const AdminMain = () => {
-  const { posts, totalPostCount, fetchAllPosts, selectedCategory } = usePostStore();
+  const {
+    posts,
+    totalPostCount,
+    fetchAllPosts,
+    selectedCategory,
+    setCategory,
+    fetchNoticePosts,
+    fetchPostsByCategory,
+    postsByCategory,
+  } = usePostStore();
+  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
   const navigate = useNavigate();
   const location = useLocation();
   //페이지 번호
@@ -44,13 +54,18 @@ const AdminMain = () => {
   const postsPerPage = 12;
   const totalPages = Math.ceil(totalPostCount / postsPerPage);
 
-  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
+  useEffect(() => {
+    if (selectedCategory === '공지') {
+      fetchNoticePosts(currentPage, postsPerPage);
+    } else if (selectedCategory && selectedCategory !== '전체게시판') {
+      fetchPostsByCategory(currentPage, postsPerPage);
+    } else {
+      fetchAllPosts(currentPage, postsPerPage);
+    }
+  }, [selectedCategory, currentPage]);
 
   useEffect(() => {
-    fetchAllPosts(currentPage, postsPerPage);
-  }, [selectedCategory, currentPage, fetchAllPosts]);
-
-  useEffect(() => {
+    console.log(categories);
     fetchUsers();
   }, []);
 
@@ -93,17 +108,6 @@ const AdminMain = () => {
   // '삐약이 회원'과 '꼬꼬닭 회원'으로 유저를 그룹화
   const piakMembers = users.filter((user) => user.level === '삐약이');
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
-
-  // // 카테고리 변경 시 데이터 필터링
-  // useEffect(() => {
-  //   fetchAllPosts(); // 모든 게시글을 가져오는 요청
-  // }, [selectedCategory]); // selectedCategory가 변경될 때마다 실행
-
-  // // 게시판 카테고리 선택
-  // const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const category = event.target.value;
-  //   setCategory(category); // 선택한 카테고리를 Zustand 상태에 설정
-  // };
 
   // 게시글 삭제 Alert
   const handleDelete = async (id: string, category: string) => {
@@ -296,19 +300,31 @@ const AdminMain = () => {
           </Styled.CategoryListContainer>
           {/*카테고리 관리 부분*/}
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
+
           <Styled.CategorySelect>
             <label htmlFor="category">카테고리 선택</label>
-            <select id="category" value={selectedCategory} onChange={() => console.log('아직')}>
-              <option value="자유게시판">전체</option>
-              <option value="공지">공지</option>
-              <option value="등업">등업</option>
-              <option value="취업정보">취업정보</option>
-              <option value="스터디">스터디</option>
+            <select
+              id="category"
+              value={selectedCategory}
+              onChange={(e) => setCategory(e.target.value)}>
+              <option key="all" value="전체게시판">
+                전체게시판
+              </option>
+              {categories.map((category) => (
+                <option key={category._id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
             </select>
           </Styled.CategorySelect>
+
           <Styled.PostListContainer>
             <PostList
-              posts={posts}
+              posts={
+                selectedCategory === '전체게시판' || selectedCategory === '공지'
+                  ? posts
+                  : postsByCategory
+              }
               columns={columns}
               width="100%"
               onDelete={handleDelete}
