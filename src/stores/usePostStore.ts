@@ -25,7 +25,6 @@ interface PostStore {
   selectedCategory: string;
   posts: Post[];
   postsByCategory: Post[];
-  filteredPosts: Post[];
   totalPostCount: number;
   fetchAllPosts: (page?: number, size?: number) => Promise<void>;
   fetchPostsByCategory: (page?: number, size?: number) => Promise<void>;
@@ -36,10 +35,9 @@ interface PostStore {
 }
 
 export const usePostStore = create<PostStore>((set, get) => ({
-  selectedCategory: '자유게시판',
+  selectedCategory: '전체게시판',
   posts: [],
   postsByCategory: [],
-  filteredPosts: [],
   totalPostCount: 0,
   currentPage: 1,
 
@@ -63,7 +61,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
 
       const { boards, count } = posts;
 
-      if (selectedCategory === '자유게시판') {
+      if (selectedCategory === '전체게시판') {
         set({ posts: [...notices, ...boards] });
       }
 
@@ -77,7 +75,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
   fetchPostsByCategory: async (page = 1, size = 20) => {
     try {
       const { selectedCategory } = get();
-      if (selectedCategory !== '자유게시판' && selectedCategory !== '공지') {
+      if (selectedCategory !== '전체게시판' && selectedCategory !== '공지') {
         const postsByCategory = await apiUtils({
           url: `${CATEGORY(selectedCategory)}?page=${page}&size=${size}`,
           method: 'GET',
@@ -113,7 +111,7 @@ export const usePostStore = create<PostStore>((set, get) => ({
 
     if (category === '공지') {
       await get().fetchNoticePosts(1, 20);
-    } else if (category === '자유게시판') {
+    } else if (category === '전체게시판') {
       await get().fetchAllPosts(1, 20);
     } else {
       await get().fetchPostsByCategory(1, 20);

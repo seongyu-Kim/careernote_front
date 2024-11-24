@@ -67,6 +67,7 @@ const routes = [
         ],
       },
       { path: ROUTE_LINK.MAIN.path, element: <Main /> },
+      { path: ROUTE_LINK.MYPAGE.path, element: <Main /> },
       {
         path: ROUTE_LINK.POST_VIEW.path,
         element: <PostView />
@@ -114,7 +115,7 @@ const routes = [
     ],
   },
   { path: ROUTE_LINK.ERROR.path, element: <ErrorPage /> },
-  { path: ROUTE_LINK.NOAUTH.path, element: <NoAuthPage /> }
+  { path: ROUTE_LINK.NOAUTH.path, element: <NoAuthPage /> },
 ];
 
 const router = createBrowserRouter(routes);

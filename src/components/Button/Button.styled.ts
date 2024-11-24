@@ -22,6 +22,9 @@ export const DefaultButton = styled.button<ButtonProps>`
   &:focus {
     outline: none;
   }
+  &:disabled {
+    cursor: default;
+  }
 
   ${(props) =>
     props.useTransition &&

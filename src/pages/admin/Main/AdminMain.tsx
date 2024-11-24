@@ -7,15 +7,17 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@pages/admin/Main/Dnd/UserSection';
 import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
-import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
+import { USER_API, BOARD_API, NOTICE_API, ADMIN_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { useUserStore } from '@stores/userStore';
 import { usePostStore } from '@stores/usePostStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CategoryListContent } from './AdminMain.styled';
+import { useCategoryStore } from '@stores/useCategoryStore';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
+
 interface UserProp {
   _id: number;
   nickname: string;
@@ -79,6 +81,8 @@ const AdminMain = () => {
   const postsToDisplay = rawPosts.filter((post) =>
     isChecked ? post.category && post.category !== '' : true,
   );
+
+  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
 
   useEffect(() => {
     if (!isMyPost) {
@@ -235,19 +239,11 @@ const AdminMain = () => {
     }
   };
 
-  //카테고리 더미 데이터 코드가 좀 더럽습니다...ㅠ.ㅠ..급하게 만드느라...
-  const test = [
-    '전체 게시판',
-    '등업',
-    '스터디',
-    '취업 정보',
-    '이거저거',
-    '중고거래',
-    '정보 공유',
-    '엘랠레',
-    '안아줘요',
-    '이거입니다저거입니다대충긴내용입니다',
-  ];
+  useEffect(() => {
+    fetchCategories();
+    console.log('categories', categories);
+  }, []);
+
   const { setIsOpen, setModalState } = useModal();
   //테이블 데이터
   const columns = [
@@ -311,13 +307,14 @@ const AdminMain = () => {
               <span className="menu">관리</span>
             </Styled.CategoryListContent>
           </Styled.CategoryListMenu>
+          {/* 카테고리 */}
           <Styled.CategoryListContainer>
             <Styled.CategoryListFiled>
-              {test.map((item, key) => {
+              {categories.map((item, key) => {
                 return (
                   <Styled.CategoryListBox>
                     <Styled.CategoryList key={key}>
-                      <Styled.CategoryListContent>{item}</Styled.CategoryListContent>
+                      <Styled.CategoryListContent>{item.name}</Styled.CategoryListContent>
                       <Styled.CategoryListContent>
                         <Button
                           width="50%"
@@ -327,7 +324,8 @@ const AdminMain = () => {
                           useHover={true}
                           hoverBackgroundColor="#CD4444"
                           useTransition={true}
-                          transitionDuration={0.2}>
+                          transitionDuration={0.2}
+                          onClick={() => deleteCategory(item.name)}>
                           삭제
                         </Button>
                       </Styled.CategoryListContent>
@@ -357,7 +355,7 @@ const AdminMain = () => {
               width="100%"
               onDelete={handleDelete}
               isAdmin={isAdmin}
-              isChecked={isChecked} // 전달
+              isChecked={isChecked}
               setChecked={setChecked}
             />
             <Pagination
