@@ -8,48 +8,57 @@ import { useUserStore } from '@stores/userStore';
 import apiUtils from '@utils/apiUtils';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
+import { useCategoryStore } from '@stores/useCategoryStore';
+
 const { CUD_BOARD, DETAILS_BOARD } = BOARD_API;
 
 const WritePost = () => {
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
-  // userStore에서 로그인 사용자 정보 가져오기
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
   const userLevelName = user?.level.name;
   const { state } = useLocation();
-  const isEdit = !!state; //state 존재하면 수정모드, 없으면 작성모드
-  const [category, setCategory] = useState(state?.category || '선택');
-  const [title, setTitle] = useState(state?.title || '');
-  const [content, setContent] = useState(state?.content || '');
-
-  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
-
-  const [categoryOptions, setCategoryOptions] = useState<string[]>(['선택']);
+  const isEdit = !!state;
   const postId = state?.postId;
   const navigate = useNavigate();
+
+  const { fetchCategories, categories, selectedWriteCategory, setSelectedWriteCategory } =
+    useCategoryStore();
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  const [categoryOptions, setCategoryOptions] = useState<string[]>(['선택']);
 
   useEffect(() => {
     if (user?.level.name === '삐약이') {
       setCategoryOptions(['선택', '등업']);
+      setSelectedWriteCategory('선택');
     } else if (user?.level.name === '꼬꼬닭') {
-      setCategoryOptions(['선택', '등업', '취업정보', '스터디']);
+      setCategoryOptions(['선택', ...categories.map((category) => category.name)]);
+      setSelectedWriteCategory(selectedWriteCategory || '선택');
     }
-  }, [user?.level.name]);
+  }, [user?.level.name, categories, selectedWriteCategory, setSelectedWriteCategory]);
+
+  const [title, setTitle] = useState(state?.title || '');
+  const [content, setContent] = useState(state?.content || '');
+  const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
 
   useEffect(() => {
-    if (title.length > 0 && content.length > 0 && category != '선택') {
+    if (title.length > 0 && content.length > 0 && selectedWriteCategory !== '선택') {
       setInputFieldChecked(false);
     } else {
       setInputFieldChecked(true);
     }
-  }, [title, content, category]);
+  }, [title, content, selectedWriteCategory]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategory(e.target.value);
+    setSelectedWriteCategory(e.target.value);
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -62,7 +71,7 @@ const WritePost = () => {
     const data = {
       title,
       content,
-      category: category,
+      category: selectedWriteCategory,
       user: userId,
       board_id: postId,
     };
@@ -90,6 +99,7 @@ const WritePost = () => {
     }
     navigate(`/post/${postId}`);
   };
+
   return (
     <NavbarContainer>
       <Styled.Container>
@@ -101,7 +111,7 @@ const WritePost = () => {
           onChange={handleTitleChange}
         />
         <Styled.Label>카테고리</Styled.Label>
-        <Styled.SelectCategory value={category} onChange={handleCategoryChange}>
+        <Styled.SelectCategory value={selectedWriteCategory} onChange={handleCategoryChange}>
           {categoryOptions.map((option, index) => (
             <option key={index} value={option}>
               {option}
@@ -144,7 +154,7 @@ const WritePost = () => {
             border="none"
             textColor="white"
             width="10%"
-            type='button'
+            type="button"
             onClick={handleSubmit}>
             완료
           </Button>
