@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { CategoryListContent } from './AdminMain.styled';
 import { useCategoryStore } from '@stores/useCategoryStore';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
-const { CUD_NOTICE } = NOTICE_API;
+const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
 
 interface UserProp {
@@ -74,6 +74,11 @@ const AdminMain = () => {
     navigate(`?page=${page}`);
     await fetchAllPosts(page, postsPerPage);
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   //체크박스
   const [isChecked, setChecked] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
@@ -111,37 +116,25 @@ const AdminMain = () => {
 
   // 게시글 삭제 Alert
   const handleDelete = async (id: string, category: string) => {
-    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(Number(id), category));
+    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(id, category));
   };
 
   // 게시글 삭제 함수
-  const handleDeleteConfirm = async (id: number, category: string) => {
+  const handleDeleteConfirm = async (id: string, category: string) => {
     try {
       let url;
-      let data;
-
       if (!category) {
         // 공지 삭제 요청
-        url = CUD_NOTICE;
-        data = {
-          notice_id: id,
-          user: userId,
-        };
+        url = DETAILS_NOTICE(id);
       } else {
         // 일반 게시글 삭제 요청
-        url = CUD_BOARD;
-        data = {
-          board_id: id,
-          user: userId,
-          level: userLevel,
-        };
+        url = DETAILS_BOARD(id);
       }
 
       // 서버 요청
       const response = await apiUtils({
         url,
-        method: 'DELETE',
-        data,
+        method: 'DELETE'
       });
 
       console.log('게시글 삭제 성공 응답 데이터:', response);
