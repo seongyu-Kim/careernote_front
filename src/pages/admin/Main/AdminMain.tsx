@@ -55,7 +55,8 @@ const AdminMain = () => {
     navigate(`?page=${page}`);
     await fetchAllPosts(page, postsPerPage);
   };
-
+  //체크박스
+  const [isChecked, setChecked] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
   const userId = useUserStore((state) => state.user?.user_id);
@@ -101,9 +102,10 @@ const AdminMain = () => {
   // };
 
   // 게시글 삭제 Alert
-  const handleDelete = async (id: number, category: string) => {
-    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(id, category));
+  const handleDelete = async (id: string, category: string) => {
+    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(Number(id), category));
   };
+
   // 게시글 삭제 함수
   const handleDeleteConfirm = async (id: number, category: string) => {
     try {
@@ -301,6 +303,8 @@ const AdminMain = () => {
               width="100%"
               onDelete={handleDelete}
               isAdmin={isAdmin}
+              isChecked={isChecked} // 전달
+              setChecked={setChecked}
             />
             <Pagination
               currentPage={currentPage}

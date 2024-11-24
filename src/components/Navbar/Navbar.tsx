@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAlertStore, useModal } from '@stores/store';
 import { useUserStore } from '@stores/userStore';
+import { usePostStore } from '@stores/usePostStore';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { SuccessToast, ErrorToast } from '@utils/ToastUtils';
@@ -12,20 +13,18 @@ const { USER_DELETE } = USER_API;
 
 interface NavbarProps {
   categories: string[];
-  onCategoryChange: (category: string) => void;
 }
 
-const Navbar = ({ categories, onCategoryChange }: NavbarProps) => {
+const Navbar = ({ categories }: NavbarProps) => {
   const navigate = useNavigate();
 
   const { user, isLogin, logout } = useUserStore();
   const { openAlert, closeAlert } = useAlertStore();
+  const { setIsOpen, setModalState } = useModal();
+  const { setCategory } = usePostStore();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<string | null>('자유게시판');
-
-  //모달 상태
-  const { setIsOpen, setModalState } = useModal();
 
   //햄버거 메뉴
   const toggleMenu = () => {
@@ -38,8 +37,9 @@ const Navbar = ({ categories, onCategoryChange }: NavbarProps) => {
 
   // 카테고리 변경
   const handleCategoryChange = (category: string) => {
+    //선택메뉴
     setSelectedMenu(category);
-    onCategoryChange(category);
+    setCategory(category);
     setTimeout(() => {
       setIsMenuOpen(false);
     }, 100);
@@ -84,7 +84,7 @@ const Navbar = ({ categories, onCategoryChange }: NavbarProps) => {
       <Styled.Nav>
         <Styled.MenuButton onClick={toggleMenu}>☰</Styled.MenuButton>
 
-        <Styled.Logo onClick={() => navigate('/posts')}>
+        <Styled.Logo onClick={() => (window.location.href = '/posts?page=1')}>
           <Styled.LogoImg src={logo_w} alt="logo" />
         </Styled.Logo>
 
@@ -123,7 +123,7 @@ const Navbar = ({ categories, onCategoryChange }: NavbarProps) => {
             </Styled.EditBtnContainer>
             <Styled.Hr />
             <Styled.UserInfoDetails>
-              <Styled.UserInfoItem onClick={() => navigate('/mypage')}>
+              <Styled.UserInfoItem onClick={() => (window.location.href = '/mypage?page=1')}>
                 내가 쓴 글
               </Styled.UserInfoItem>
               <div>{user?.boards.length}</div>
