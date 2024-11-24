@@ -32,7 +32,7 @@ interface Post {
 }
 
 const AdminMain = () => {
-  const { filteredPosts, totalPostCount, fetchAllPosts, selectedCategory } = usePostStore();
+  const { posts, totalPostCount, fetchAllPosts, selectedCategory } = usePostStore();
   const navigate = useNavigate();
   const location = useLocation();
   //페이지 번호
@@ -308,12 +308,12 @@ const AdminMain = () => {
           </Styled.CategorySelect>
           <Styled.PostListContainer>
             <PostList
-              posts={filteredPosts}
+              posts={posts}
               columns={columns}
               width="100%"
               onDelete={handleDelete}
               isAdmin={isAdmin}
-              isChecked={isChecked} // 전달
+              isChecked={isChecked}
               setChecked={setChecked}
             />
             <Pagination
