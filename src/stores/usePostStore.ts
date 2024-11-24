@@ -25,7 +25,6 @@ interface PostStore {
   selectedCategory: string;
   posts: Post[];
   postsByCategory: Post[];
-  filteredPosts: Post[];
   totalPostCount: number;
   fetchAllPosts: (page?: number, size?: number) => Promise<void>;
   fetchPostsByCategory: (page?: number, size?: number) => Promise<void>;
@@ -39,7 +38,6 @@ export const usePostStore = create<PostStore>((set, get) => ({
   selectedCategory: '전체게시판',
   posts: [],
   postsByCategory: [],
-  filteredPosts: [],
   totalPostCount: 0,
   currentPage: 1,
 
