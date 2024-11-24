@@ -24,7 +24,7 @@ const Navbar = ({ categories }: NavbarProps) => {
   const { setCategory } = usePostStore();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState<string | null>('자유게시판');
+  const [selectedMenu, setSelectedMenu] = useState<string | null>('전체게시판');
 
   //햄버거 메뉴
   const toggleMenu = () => {
@@ -40,16 +40,23 @@ const Navbar = ({ categories }: NavbarProps) => {
     //선택메뉴
     setSelectedMenu(category);
     setCategory(category);
+    navigate('/posts');
     setTimeout(() => {
       setIsMenuOpen(false);
     }, 100);
   };
 
-  // 로그아웃
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-    SuccessToast('로그아웃 되었습니다.');
+  //로그아웃
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsMenuOpen(false);
+      navigate('/login');
+      SuccessToast('로그아웃 되었습니다.');
+    } catch (error) {
+      ErrorToast('로그아웃에 실패했습니다.');
+      console.error(error);
+    }
   };
 
   // 회원 탈퇴

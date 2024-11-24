@@ -17,10 +17,11 @@ interface Category {
 export const useCategory = create<CategortStore>((set) => ({
   categoryList: [],
   getCategory: async () => {
-    const { CRUD_CATEGORY } = ADMIN_API;
+    // const { CRUD_CATEGORY } = ADMIN_API;
     try {
       const res = await apiUtils({
-        url: CRUD_CATEGORY,
+        // url: CRUD_CATEGORY,
+        url: 'dd',
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       if (!res) {

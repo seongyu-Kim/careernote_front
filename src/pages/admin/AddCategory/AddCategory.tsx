@@ -4,13 +4,12 @@ import { MdClose } from 'react-icons/md';
 import { AuthenticationInput, Button } from '@components/index';
 import React, { ChangeEvent, useState } from 'react';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
-import apiUtils from '@utils/apiUtils';
-import { ADMIN_API } from '@routes/apiRoutes';
+import { useCategoryStore } from '@stores/useCategoryStore';
 
 const AddCategory = () => {
   const [inputCategory, setInputCategory] = useState('');
   const { isOpen, setIsOpen, setModalState } = useModal();
-  const { CRUD_CATEGORY } = ADMIN_API;
+  const { addCategory } = useCategoryStore();
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputCategory(event.target.value);
@@ -22,29 +21,13 @@ const AddCategory = () => {
       ErrorToast('입력 필드가 비어있습니다');
       return;
     }
-    try {
-      const res = await apiUtils({
-        url: CRUD_CATEGORY,
-        method: 'POST',
-        data: {
-          name: inputCategory,
-        },
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      if (res.message === '카테고리 생성 완료') {
-        SuccessToast('카테고리 생성 성공');
-        setIsOpen(false);
-        setModalState('');
-      }
-    } catch (error) {
-      ErrorToast('카테고리 생성 실패');
-      console.error(error);
-    }
+    await addCategory(inputCategory);
   };
 
   if (!isOpen) {
     return null;
   }
+
   return (
     <Styled.ModalBackground>
       <Styled.ModalContainer>
@@ -68,11 +51,10 @@ const AddCategory = () => {
                 labelPlaceHolder="카테고리명"
                 onChange={handleInputChange}
               />
-              <Styled.MyInfoDivider />
-              <Styled.MyInfoDivider />
+              <Styled.Divider />
+              <Styled.Divider />
+              <Styled.Divider />
               <Styled.PasswordButtonContainer>
-                <Styled.MyInfoDivider />
-                <Styled.MyInfoDivider />
                 <Button
                   type="submit"
                   border="none"
@@ -84,9 +66,10 @@ const AddCategory = () => {
                   transitionDuration={0.2}>
                   추가하기
                 </Button>
-                <Styled.MyInfoDivider />
                 <Button
-                  onClick={() => {}}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                   border="none"
                   textColor="white"
                   backgroundColor="#AB5A5A"

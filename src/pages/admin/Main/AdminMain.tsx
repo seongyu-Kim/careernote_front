@@ -13,11 +13,11 @@ import { useUserStore } from '@stores/userStore';
 import { usePostStore } from '@stores/usePostStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CategoryListContent } from './AdminMain.styled';
-import { useCategory } from '@stores/useCategory';
-import AuthenticationInput from '@components/AuthenticationInput/AuthenticationInput';
+import { useCategoryStore } from '@stores/useCategoryStore';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
+
 interface UserProp {
   _id: number;
   nickname: string;
@@ -33,7 +33,6 @@ interface Post {
 
 const AdminMain = () => {
   const { filteredPosts, totalPostCount, fetchAllPosts, selectedCategory } = usePostStore();
-  const { getCategory } = useCategory();
   const navigate = useNavigate();
   const location = useLocation();
   //페이지 번호
@@ -45,16 +44,14 @@ const AdminMain = () => {
   const postsPerPage = 12;
   const totalPages = Math.ceil(totalPostCount / postsPerPage);
 
+  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
+
   useEffect(() => {
     fetchAllPosts(currentPage, postsPerPage);
   }, [selectedCategory, currentPage, fetchAllPosts]);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
-  //카테고리 불러오기
-  useEffect(() => {
-    getCategory();
   }, []);
 
   const handlePageChange = async (page: number) => {
@@ -200,6 +197,13 @@ const AdminMain = () => {
       ErrorToast('사용자의 레벨 변경이 실패하였습니다.');
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+    console.log('categories', categories);
+  }, []);
+
+  const { setIsOpen, setModalState } = useModal();
   //테이블 데이터
   const columns = [
     { key: 'category', label: '카테고리', flex: '1' },
@@ -233,7 +237,63 @@ const AdminMain = () => {
         </DndProvider>
         <Styled.PostManagement>
           {/*카테고리 관리 부분*/}
-          <CategoryList />
+          <Styled.CategoryListHeader>
+            <Styled.SectionTitle>카테고리 관리</Styled.SectionTitle>
+            <Button
+              onClick={() => {
+                setModalState('addCategory');
+                setIsOpen(true);
+              }}
+              width="auto"
+              padding="2px 15px 2px 15px"
+              position="relative"
+              bottom="7px"
+              border="none"
+              textColor="white"
+              backgroundColor="#79B0CB"
+              useHover={true}
+              useTransition={true}
+              transitionDuration={0.3}
+              hoverBackgroundColor="#3F82AC">
+              카테고리 추가
+            </Button>
+          </Styled.CategoryListHeader>
+          <Styled.CategoryListMenu>
+            <Styled.CategoryListContent>
+              <span>카테고리명</span>
+            </Styled.CategoryListContent>
+            <Styled.CategoryListContent>
+              <span className="menu">관리</span>
+            </Styled.CategoryListContent>
+          </Styled.CategoryListMenu>
+          {/* 카테고리 */}
+          <Styled.CategoryListContainer>
+            <Styled.CategoryListFiled>
+              {categories.map((item, key) => {
+                return (
+                  <Styled.CategoryListBox>
+                    <Styled.CategoryList key={key}>
+                      <Styled.CategoryListContent>{item.name}</Styled.CategoryListContent>
+                      <Styled.CategoryListContent>
+                        <Button
+                          width="50%"
+                          border="none"
+                          textColor="white"
+                          backgroundColor="#E25151"
+                          useHover={true}
+                          hoverBackgroundColor="#CD4444"
+                          useTransition={true}
+                          transitionDuration={0.2}
+                          onClick={() => deleteCategory(item.name)}>
+                          삭제
+                        </Button>
+                      </Styled.CategoryListContent>
+                    </Styled.CategoryList>
+                  </Styled.CategoryListBox>
+                );
+              })}
+            </Styled.CategoryListFiled>
+          </Styled.CategoryListContainer>
           {/*카테고리 관리 부분*/}
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
           <Styled.CategorySelect>
@@ -265,141 +325,6 @@ const AdminMain = () => {
         </Styled.PostManagement>
       </Styled.Container>
     </NavbarContainer>
-  );
-};
-
-const CategoryList = () => {
-  // const [categoryName, setCategoryName] = useState<string[]>([]);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const { setIsOpen, setModalState } = useModal();
-  const { openAlert, closeAlert } = useAlertStore();
-  const { categoryList } = useCategory();
-  const { CRUD_CATEGORY } = ADMIN_API;
-
-  useEffect(() => {}, [categoryList]);
-
-  const handleCategortEdit = async (id: string, type: string) => {
-    if (!id || !type) {
-      return;
-    }
-    try {
-      const res = await apiUtils({
-        url: CRUD_CATEGORY,
-        method: type === 'delete' ? 'DELETE' : 'PUT',
-        data: type === 'delete' ? { name: id } : { name: id, newName: 'test' }, // categoryName },
-      });
-      if (res) {
-        SuccessToast('요청 성공');
-        return;
-      }
-    } catch (error) {
-      ErrorToast('요청 실패');
-      console.error('요청 실패', error);
-    }
-  };
-
-  const handleCategoryDelete = async (id: string) => {
-    openAlert(`${id} 카테고리를 삭제하십니까?`, () => handleCategortEdit(id, 'delete')); // 모달 열기
-  };
-  const handleCategoryUpdate = async (id: string) => {
-    openAlert(`${id} 카테고리를 수정하십니까?`, () => console.log('삭제')); // setIsEditMode(true));
-  };
-  return (
-    <>
-      <Styled.CategoryListHeader>
-        <Styled.SectionTitle>카테고리 관리</Styled.SectionTitle>
-        <Button
-          onClick={() => {
-            setModalState('addCategory');
-            setIsOpen(true);
-          }}
-          width="auto"
-          padding="2px 15px 2px 15px"
-          position="relative"
-          bottom="7px"
-          border="none"
-          textColor="white"
-          backgroundColor="#79B0CB"
-          useHover={true}
-          useTransition={true}
-          transitionDuration={0.3}
-          hoverBackgroundColor="#3F82AC">
-          카테고리 추가
-        </Button>
-      </Styled.CategoryListHeader>
-      <Styled.CategoryListMenu>
-        <Styled.CategoryListContent>
-          <span>카테고리명</span>
-        </Styled.CategoryListContent>
-        <Styled.CategoryListContent>
-          <span className="menu">관리</span>
-        </Styled.CategoryListContent>
-      </Styled.CategoryListMenu>
-      <Styled.CategoryListContainer>
-        <Styled.CategoryListFiled>
-          {categoryList.map((item, key) => {
-            return (
-              <Styled.CategoryListBox>
-                <Styled.CategoryList key={key}>
-                  <Styled.CategoryListContent>
-                    {/*수정 부분 입니다!*/}
-                    {isEditMode ? <AuthenticationInput /> : item.name}
-                    {/*아래는 원래코드*/}
-                    {/*{item.name}*/}
-                    {/*여기까지 수정 부분입니다*/}
-                  </Styled.CategoryListContent>
-                  <Styled.CategoryListContent>
-                    {/*수정 부분입니다!2*/}
-                    {isEditMode ? (
-                      <button onClick={() => setIsEditMode(false)}>안녕</button>
-                    ) : (
-                      <Button
-                        onClick={() => handleCategoryUpdate(item.name)}
-                        width="30%"
-                        border="none"
-                        textColor="white"
-                        backgroundColor="#79B0CB"
-                        useHover={true}
-                        hoverBackgroundColor="#3F82AC"
-                        useTransition={true}
-                        transitionDuration={0.2}>
-                        수정
-                      </Button>
-                    )}
-                    {/*아래는 원래코드*/}
-                    {/*<Button*/}
-                    {/*  onClick={() => handleCategoryUpdate(item.name)}*/}
-                    {/*  width="30%"*/}
-                    {/*  border="none"*/}
-                    {/*  textColor="white"*/}
-                    {/*  backgroundColor="#79B0CB"*/}
-                    {/*  useHover={true}*/}
-                    {/*  hoverBackgroundColor="#3F82AC"*/}
-                    {/*  useTransition={true}*/}
-                    {/*  transitionDuration={0.2}>*/}
-                    {/*  수정*/}
-                    {/*</Button>*/}
-                    {/*여기까지 수정 부분입니다!2*/}
-                    <Button
-                      onClick={() => handleCategoryDelete(item.name)}
-                      width="30%"
-                      border="none"
-                      textColor="white"
-                      backgroundColor="#E25151"
-                      useHover={true}
-                      hoverBackgroundColor="#CD4444"
-                      useTransition={true}
-                      transitionDuration={0.2}>
-                      삭제
-                    </Button>
-                  </Styled.CategoryListContent>
-                </Styled.CategoryList>
-              </Styled.CategoryListBox>
-            );
-          })}
-        </Styled.CategoryListFiled>
-      </Styled.CategoryListContainer>
-    </>
   );
 };
 

@@ -18,7 +18,7 @@ export const USER_API = {
 };
 
 export const ADMIN_API = {
-  CRUD_CATEGORY: `${BASE_URL}/api/category`,
+  CRD_CATEGORY: `${BASE_URL}/api/category`,
 };
 
 export const BOARD_API = {
