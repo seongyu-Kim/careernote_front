@@ -33,8 +33,8 @@ const WritePost = () => {
 
   useEffect(() => {
     if (user?.level.name === '삐약이') {
-      setCategoryOptions(['선택', '등업']);
-      setSelectedWriteCategory('선택');
+      setCategoryOptions(['선택', categories[0]?.name || '기본값']);
+      setSelectedWriteCategory(selectedWriteCategory || '선택');
     } else if (user?.level.name === '꼬꼬닭') {
       setCategoryOptions(['선택', ...categories.map((category) => category.name)]);
       setSelectedWriteCategory(selectedWriteCategory || '선택');
