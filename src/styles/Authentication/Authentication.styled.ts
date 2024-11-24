@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FaR } from 'react-icons/fa6';
 
 interface Props {
   height?: string;
@@ -91,9 +92,10 @@ export const Text = styled.p<Props>`
 
 export const TextContainer = styled.div`
   display: flex;
-  width: 100%;
+  width: 75%;
   justify-content: center;
-  gap: 5px;
+  align-items: center;
+  gap: 10px;
   .myInfoIcon {
     color: #3a5265;
     cursor: pointer;
@@ -107,6 +109,13 @@ export const Form = styled.form`
   flex-direction: column;
   align-content: center;
 `;
+export const MyInfoForm = styled(Form)`
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 //기본
 export const InputBoxContainer = styled.div`
@@ -118,6 +127,11 @@ export const InputBoxContainer = styled.div`
 `;
 export const LoginInputBoxContainer = styled(InputBoxContainer)`
   gap: 20px;
+`;
+export const CurrentPasswordMyInfoContainer = styled(InputBoxContainer)`
+  width: 80%;
+  align-items: center;
+  gap: 50px;
 `;
 
 export const FindPasswordBox = styled.div`
