@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as Styled from './PostList.styled';
 import { useNavigate } from 'react-router-dom';
 import { LuPencilLine } from 'react-icons/lu';
@@ -13,7 +13,7 @@ interface Column {
 }
 
 interface Post {
-  _id: number;
+  _id: string;
   title: string;
   category: string;
   user: User;
@@ -22,7 +22,7 @@ interface Post {
 }
 
 interface User {
-  _id: number;
+  _id: string;
   nickname: string;
   level: string;
 }
@@ -33,7 +33,9 @@ interface PostListProps {
   width?: string;
   isAdmin?: boolean;
   isMyPost?: boolean;
-  onDelete?: (id: number, category: string) => void;
+  onDelete?: (id: string, category: string) => void;
+  isChecked: boolean;
+  setChecked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PostList = ({
@@ -43,18 +45,11 @@ const PostList = ({
   isAdmin,
   isMyPost,
   onDelete,
+  isChecked,
+  setChecked,
 }: PostListProps) => {
   const navigate = useNavigate();
-  const [isChecked, setChecked] = useState<boolean>(false);
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts);
   const { isLogin } = useUserStore();
-
-  // 공지 숨기기
-  useEffect(() => {
-    setFilteredPosts(
-      isChecked ? posts.filter((post) => post.category && post.category !== '') : posts,
-    );
-  }, [isChecked, posts]);
 
   //날짜 포멧팅
   const formatDate = (dateString: string) => {
@@ -71,7 +66,7 @@ const PostList = ({
     setChecked((prev) => !prev);
   };
   //상세보기
-  const handlePostClick = (id: number, category: string) => {
+  const handlePostClick = (id: string, category: string) => {
     if (!isLogin) {
       SuccessToast('로그인을 먼저 진행해 주세요');
       return;
@@ -79,7 +74,7 @@ const PostList = ({
     navigate(`/post/${id}`, { state: { category } });
   };
   //관리자 상세보기
-  const handleAdminPostClick = (id: number, category: string) => {
+  const handleAdminPostClick = (id: string, category: string) => {
     if (!isLogin) {
       SuccessToast('로그인을 먼저 진행해 주세요');
       return;
@@ -142,23 +137,31 @@ const PostList = ({
         )}
       </Styled.PostHeader>
 
-      {filteredPosts.length > 0 ? (
-        filteredPosts.map((item) => (
+      {posts.length > 0 ? (
+        posts.map((item) => (
           <Styled.PostItem key={item._id} $isNotice={item.category == null}>
             {columns.map((column) => {
               let value = item[column.key];
+
+              if (column.key === 'category') {
+                if (!item.category) {
+                  // 카테고리 필드가 없으면 공지
+                  value = '공지';
+                } else if (typeof item.category === 'object') {
+                  // 카테고리가 객체(카테고리 별 게시글)
+                  value = (item.category as { name: string }).name;
+                } else {
+                  // 카테고리 존재
+                  value = item.category;
+                }
+              }
 
               // 탈퇴, user가 없는 사용자
               if (column.key === 'user') {
                 value = value ? value.nickname : '알 수 없는 사용자';
               }
 
-              // category 필드가 없는
-              if (column.key === 'category') {
-                value = value || '공지';
-              }
-
-              // 'createdAt' 날짜 포맷팅
+              // 날짜 포맷팅
               if (column.key === 'createdAt' && value) {
                 value = formatDate(value);
               }
@@ -170,7 +173,10 @@ const PostList = ({
                   $isTitle={column.key === 'title'}
                   onClick={
                     column.key === 'title'
-                      ? () => (isAdmin ? handleAdminPostClick(item._id, item.category) : handlePostClick(item._id, item.category))
+                      ? () =>
+                          isAdmin
+                            ? handleAdminPostClick(item._id, item.category)
+                            : handlePostClick(item._id, item.category)
                       : undefined
                   }
                   style={{ flex: column.flex }}>
