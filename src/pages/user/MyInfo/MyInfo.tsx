@@ -58,7 +58,7 @@ export const MyInfo = () => {
         data: { password: currentPassword.currentPassword },
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      if (res.message === 'OK') {
+      if (res.message === '유저확인 완료') {
         handleInputChange(true)();
         SuccessToast('확인 성공');
       }
