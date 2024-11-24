@@ -63,21 +63,22 @@ const WritePost = () => {
       title,
       content,
       category: category,
-      user: userId,
-      board_id: postId,
     };
 
     try {
       const response = await apiUtils({
-        url: CUD_BOARD,
+        url: isEdit ? DETAILS_BOARD(postId) : CUD_BOARD,
         method: isEdit ? 'PUT' : 'POST',
         data: data,
       });
 
       if (isEdit) {
         SuccessToast('게시물이 수정되었습니다.');
+        navigate(`/post/${postId}`, { state });
+
       } else {
         SuccessToast('게시물이 저장되었습니다.');
+        navigate(MAIN_PAGE_URL);
       }
       console.log('서버 응답 데이터:', response);
     } catch (error) {
@@ -88,7 +89,6 @@ const WritePost = () => {
         ErrorToast('게시물 등록 중 오류가 발생했습니다.');
       }
     }
-    navigate(`/post/${postId}`);
   };
   return (
     <NavbarContainer>

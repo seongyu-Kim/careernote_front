@@ -108,30 +108,18 @@ const AdminMain = () => {
   const handleDeleteConfirm = async (id: number, category: string) => {
     try {
       let url;
-      let data;
-
       if (!category) {
         // 공지 삭제 요청
         url = CUD_NOTICE;
-        data = {
-          notice_id: id,
-          user: userId,
-        };
       } else {
         // 일반 게시글 삭제 요청
-        url = CUD_BOARD;
-        data = {
-          board_id: id,
-          user: userId,
-          level: userLevel,
-        };
+        url = DETAILS_BOARD(id);
       }
 
       // 서버 요청
       const response = await apiUtils({
         url,
-        method: 'DELETE',
-        data,
+        method: 'DELETE'
       });
 
       console.log('게시글 삭제 성공 응답 데이터:', response);

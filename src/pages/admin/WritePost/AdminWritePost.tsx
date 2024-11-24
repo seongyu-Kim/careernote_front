@@ -67,8 +67,10 @@ const AdminWritePost = () => {
 
       if (isEdit) {
         SuccessToast('게시물이 수정되었습니다.');
+        navigate(`admin/post/${postId}`, { state });
       } else {
         SuccessToast('게시물이 저장되었습니다.');
+        navigate(ADMIN_MAIN);
       }
       console.log('게시물 수정 성공', response);
 
@@ -79,7 +81,7 @@ const AdminWritePost = () => {
       } else {
         ErrorToast('게시물 등록 중 오류가 발생했습니다.');
       }
-    } navigate(`/admin/post/${postId}`);
+    }
   };
 
   return (

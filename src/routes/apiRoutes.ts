@@ -40,6 +40,6 @@ export const BOARD_COMMENT_API = {
 };
 
 export const NOTICE_COMMENT_API = {
-  NOTICE_COMMENTS: (id: string | number) => `${BASE_URL}/api/noticecomment/${id}`,
-  CUD_NOTICE_COMMENT: `${BASE_URL}/api/noticecomment`,
+  NOTICE_COMMENTS: (id: string | number) => `${BASE_URL}/api/noticeComment/${id}`,
+  CUD_NOTICE_COMMENT: `${BASE_URL}/api/noticeComment`,
 };
