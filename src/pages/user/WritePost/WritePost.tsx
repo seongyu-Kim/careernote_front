@@ -71,7 +71,7 @@ const WritePost = () => {
     const data = {
       title,
       content,
-      category: category,
+      category: selectedWriteCategory,
     };
 
     try {

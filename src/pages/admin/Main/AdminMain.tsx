@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { CategoryListContent } from './AdminMain.styled';
 import { useCategoryStore } from '@stores/useCategoryStore';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
-const { CUD_NOTICE } = NOTICE_API;
+const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
 
 interface UserProp {
@@ -34,86 +34,53 @@ interface Post {
 const AdminMain = () => {
   const {
     posts,
-    postsByCategory,
+    totalPostCount,
     fetchAllPosts,
+    selectedCategory,
+    setCategory,
     fetchNoticePosts,
     fetchPostsByCategory,
-    selectedCategory,
-    totalPostCount,
-    currentPage,
-    setCurrentPage,
+    postsByCategory,
   } = usePostStore();
-
+  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const isMyPost = location.pathname === '/mypage';
-  const { user } = useUserStore();
-  const [isChecked, setChecked] = useState<boolean>(false);
+  //페이지 번호
+  const queryParams = new URLSearchParams(location.search);
+  const initialPage = parseInt(queryParams.get('page') || '1');
+
+  const [currentPage, setCurrentPage] = useState<number>(initialPage);
+
   const postsPerPage = 12;
-
-  const totalPages = isMyPost
-    ? Math.ceil((user?.boards?.length || 0) / postsPerPage)
-    : Math.ceil(totalPostCount / postsPerPage);
-
-  const rawPosts = isMyPost
-    ? (user?.boards || [])
-      .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
-      .map((board) => ({
-        ...board,
-        user: user
-          ? {
-            _id: user.user_id,
-            nickname: user.nickName,
-            level: String(user.level),
-          }
-          : {
-            _id: '',
-            nickname: 'Unknown',
-            level: '',
-          },
-      }))
-    : selectedCategory === '공지'
-      ? posts
-      : selectedCategory && selectedCategory !== '자유게시판'
-        ? postsByCategory
-        : posts;
-
-  const postsToDisplay = rawPosts.filter((post) =>
-    isChecked ? post.category && post.category !== '' : true,
-  );
-
-  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
+  const totalPages = Math.ceil(totalPostCount / postsPerPage);
 
   useEffect(() => {
-    if (!isMyPost) {
-      if (selectedCategory === '공지') {
-        fetchNoticePosts(currentPage, postsPerPage);
-      } else if (selectedCategory && selectedCategory !== '자유게시판') {
-        fetchPostsByCategory(currentPage, postsPerPage);
-      } else {
-        fetchAllPosts(currentPage, postsPerPage);
-      }
+    if (selectedCategory === '공지') {
+      fetchNoticePosts(currentPage, postsPerPage);
+    } else if (selectedCategory && selectedCategory !== '전체게시판') {
+      fetchPostsByCategory(currentPage, postsPerPage);
+    } else {
+      fetchAllPosts(currentPage, postsPerPage);
     }
-  }, [isMyPost, selectedCategory, currentPage]);
+  }, [selectedCategory, currentPage]);
+
+  useEffect(() => {
+    console.log(categories);
+    fetchUsers();
+  }, []);
 
   const handlePageChange = async (page: number) => {
-    if (page !== currentPage) {
-      setCurrentPage(page);
-      navigate(`?page=${page}`);
-      if (selectedCategory === '공지') {
-        await fetchNoticePosts(page, postsPerPage);
-      } else if (selectedCategory && selectedCategory !== '자유게시판') {
-        await fetchPostsByCategory(page, postsPerPage);
-      } else {
-        await fetchAllPosts(page, postsPerPage);
-      }
-    }
+    setCurrentPage(page);
+    navigate(`?page=${page}`);
+    await fetchAllPosts(page, postsPerPage);
   };
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
+  //체크박스
+  const [isChecked, setChecked] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
   const userId = useUserStore((state) => state.user?.user_id);
@@ -147,29 +114,18 @@ const AdminMain = () => {
   const piakMembers = users.filter((user) => user.level === '삐약이');
   const kkokkodakMembers = users.filter((user) => user.level === '꼬꼬닭');
 
-  // 카테고리 변경 시 데이터 필터링
-  useEffect(() => {
-    fetchAllPosts(); // 모든 게시글을 가져오는 요청
-  }, [selectedCategory]); // selectedCategory가 변경될 때마다 실행
-
-  // 게시판 카테고리 선택
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // const category = event.target.value;
-    // 선택한 카테고리를 Zustand 상태에 설정
-  };
-
   // 게시글 삭제 Alert
   const handleDelete = async (id: string, category: string) => {
-    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(Number(id), category));
+    openAlert('삭제하시겠습니까?', () => handleDeleteConfirm(id, category));
   };
 
   // 게시글 삭제 함수
-  const handleDeleteConfirm = async (id: number, category: string) => {
+  const handleDeleteConfirm = async (id: string, category: string) => {
     try {
       let url;
       if (!category) {
         // 공지 삭제 요청
-        url = CUD_NOTICE;
+        url = DETAILS_NOTICE(id);
       } else {
         // 일반 게시글 삭제 요청
         url = DETAILS_BOARD(id);
@@ -337,20 +293,31 @@ const AdminMain = () => {
           </Styled.CategoryListContainer>
           {/*카테고리 관리 부분*/}
           <Styled.SectionTitle>게시판 관리</Styled.SectionTitle>
+
           <Styled.CategorySelect>
             <label htmlFor="category">카테고리 선택</label>
-            <select id="category" value={selectedCategory} onChange={handleCategoryChange}>
-              <option value="자유게시판">전체</option>
-              <option value="공지">공지</option>
-              <option value="등업">등업</option>
-              <option value="취업정보">취업정보</option>
-              <option value="스터디">스터디</option>
+            <select
+              id="category"
+              value={selectedCategory}
+              onChange={(e) => setCategory(e.target.value)}>
+              <option key="all" value="전체게시판">
+                전체게시판
+              </option>
+              {categories.map((category) => (
+                <option key={category._id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
             </select>
           </Styled.CategorySelect>
+
           <Styled.PostListContainer>
             <PostList
-              isMyPost={isMyPost}
-              posts={postsToDisplay}
+              posts={
+                selectedCategory === '전체게시판' || selectedCategory === '공지'
+                  ? posts
+                  : postsByCategory
+              }
               columns={columns}
               width="100%"
               onDelete={handleDelete}

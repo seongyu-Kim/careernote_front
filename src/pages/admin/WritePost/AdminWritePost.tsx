@@ -15,7 +15,7 @@ const AdminWritePost = () => {
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
-  const postId = state.postId;
+  const postId = state?.postId;
   const isEdit = !!state; // state 가 존재하면 수정모드, 빈 값이면 작성모드
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
