@@ -7,6 +7,7 @@ const { CRD_CATEGORY } = ADMIN_API;
 
 interface Category {
   name: string;
+  _id: string;
 }
 
 interface CategoryState {
@@ -50,8 +51,11 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
 
       if (response.message === '카테고리 생성 완료') {
         SuccessToast('카테고리 생성 성공');
+        // set((state) => ({
+        //   categories: [...state.categories, { name: categoryName }],
+        // }));
         set((state) => ({
-          categories: [...state.categories, { name: categoryName }],
+          categories: [...state.categories, { _id: response.data._id, name: categoryName }],
         }));
       }
     } catch (error) {
