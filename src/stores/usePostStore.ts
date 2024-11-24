@@ -2,11 +2,12 @@ import { create } from 'zustand';
 import apiUtils from '@utils/apiUtils';
 import { BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 
-const { ALL_BOARD, CATEGORY } = BOARD_API;
+const { ALL_BOARD } = BOARD_API;
+const { CATEGORY } = BOARD_API;
 const { ALL_NOTICES } = NOTICE_API;
 
 interface Post {
-  _id: number;
+  _id: string;
   title: string;
   category: string;
   user: User;
@@ -15,7 +16,7 @@ interface Post {
 }
 
 interface User {
-  _id: number;
+  _id: string;
   nickname: string;
   level: string;
 }
@@ -23,66 +24,101 @@ interface User {
 interface PostStore {
   selectedCategory: string;
   posts: Post[];
+  postsByCategory: Post[];
   filteredPosts: Post[];
   totalPostCount: number;
   fetchAllPosts: (page?: number, size?: number) => Promise<void>;
+  fetchPostsByCategory: (page?: number, size?: number) => Promise<void>;
+  fetchNoticePosts: (page?: number, size?: number) => Promise<void>;
   setCategory: (category: string) => void;
+  currentPage: number;
+  setCurrentPage: (page?: number) => void;
 }
 
 export const usePostStore = create<PostStore>((set, get) => ({
-  selectedCategory: '자유게시판', // 기본 카테고리
+  selectedCategory: '자유게시판',
   posts: [],
+  postsByCategory: [],
   filteredPosts: [],
   totalPostCount: 0,
+  currentPage: 1,
 
-  // 모든 게시글 API 호출
+  // 모든 게시글
   fetchAllPosts: async (page = 1, size = 20) => {
     try {
       const { selectedCategory } = get();
 
-      // 공지사항(첫 페이지에서만 요청)
       const notices =
         page === 1
           ? await apiUtils({
               url: `${ALL_NOTICES}?page=${page}&size=${size}`,
               method: 'GET',
-            }).then((res) => res.Notices)
+            }).then((res) => res.notice || [])
           : [];
 
-      // 게시글
       const posts = await apiUtils({
-        url:
-          selectedCategory === '자유게시판'
-            ? `${ALL_BOARD}?page=${page}&size=${size}`
-            : `${CATEGORY(selectedCategory)}?page=${page}&size=${size}`,
+        url: `${ALL_BOARD}?page=${page}&size=${size}`,
         method: 'GET',
       });
 
       const { boards, count } = posts;
-      console.log('카테고리별 일반 게시글:', boards);
 
-      console.log('공지 + 게시글:', notices, posts);
-      console.log('전체 게시글 수:', count);
-      console.log(page, size);
-
-      // 공지 + 게시글
-      set({ posts: [...notices, ...boards] });
-
-      // 필터링
-      let filtered: Post[] = [];
       if (selectedCategory === '자유게시판') {
-        filtered = [...notices, ...boards];
-      } else if (selectedCategory === '공지') {
-        filtered = [...notices];
-      } else {
-        filtered = [...boards];
+        set({ posts: [...notices, ...boards] });
       }
 
-      set({ filteredPosts: filtered, totalPostCount: count });
+      set({ totalPostCount: count });
     } catch (error) {
       console.error('게시글 가져오기 실패:', error);
     }
   },
 
-  setCategory: (category) => set({ selectedCategory: category }),
+  // 카테고리별 게시글
+  fetchPostsByCategory: async (page = 1, size = 20) => {
+    try {
+      const { selectedCategory } = get();
+      if (selectedCategory !== '자유게시판' && selectedCategory !== '공지') {
+        const postsByCategory = await apiUtils({
+          url: `${CATEGORY(selectedCategory)}?page=${page}&size=${size}`,
+          method: 'GET',
+        });
+
+        set({ postsByCategory: postsByCategory?.posts || [] });
+        set({ totalPostCount: postsByCategory.count });
+      }
+    } catch (error) {
+      console.error('카테고리별 게시글 가져오기 실패:', error);
+    }
+  },
+
+  // 공지
+  fetchNoticePosts: async (page = 1, size = 20) => {
+    try {
+      const notices = await apiUtils({
+        url: `${ALL_NOTICES}?page=${page}&size=${size}`,
+        method: 'GET',
+      }).then((res) => res.notice || []);
+
+      set({ posts: notices });
+      set({ totalPostCount: notices.length });
+    } catch (error) {
+      console.error('공지사항 가져오기 실패:', error);
+    }
+  },
+
+  // 카테고리
+  setCategory: async (category: string) => {
+    set({ selectedCategory: category });
+    set({ currentPage: 1 });
+
+    if (category === '공지') {
+      await get().fetchNoticePosts(1, 20);
+    } else if (category === '자유게시판') {
+      await get().fetchAllPosts(1, 20);
+    } else {
+      await get().fetchPostsByCategory(1, 20);
+    }
+  },
+
+  setCurrentPage: (page: number = 1) => set({ currentPage: page }),
 }));
