@@ -33,6 +33,8 @@ const AddCategory = () => {
       });
       if (res.message === '카테고리 생성 완료') {
         SuccessToast('카테고리 생성 성공');
+        setIsOpen(false);
+        setModalState('');
       }
     } catch (error) {
       ErrorToast('카테고리 생성 실패');

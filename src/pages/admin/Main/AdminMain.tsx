@@ -14,6 +14,7 @@ import { usePostStore } from '@stores/usePostStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CategoryListContent } from './AdminMain.styled';
 import { useCategory } from '@stores/useCategory';
+import AuthenticationInput from '@components/AuthenticationInput/AuthenticationInput';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { CUD_NOTICE } = NOTICE_API;
 const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
@@ -268,24 +269,14 @@ const AdminMain = () => {
 };
 
 const CategoryList = () => {
-  //추후 카테고리 배열 API 연결해서 받을 수 있게
-  const test = [
-    '전체 게시판',
-    '등업',
-    '스터디',
-    '취업 정보',
-    '이거저거',
-    '중고거래',
-    '정보 공유',
-    '엘랠레',
-    '안아줘요',
-    '이거입니다저거입니다대충긴내용입니다',
-  ];
   const [categoryName, setCategoryName] = useState<string[]>([]);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const { setIsOpen, setModalState } = useModal();
   const { openAlert, closeAlert } = useAlertStore();
   const { categoryList } = useCategory();
   const { CRUD_CATEGORY } = ADMIN_API;
+
+  useEffect(() => {}, [categoryList]);
 
   const handleCategortEdit = async (id: string, type: string) => {
     if (!id || !type) {
@@ -311,7 +302,7 @@ const CategoryList = () => {
     openAlert(`${id} 카테고리를 삭제하십니까?`, () => handleCategortEdit(id, 'delete')); // 모달 열기
   };
   const handleCategoryUpdate = async (id: string) => {
-    openAlert(`${id} 카테고리를 수정하십니까?`, () => handleCategortEdit(id, 'update'));
+    openAlert(`${id} 카테고리를 수정하십니까?`, () => setIsEditMode(true));
   };
   return (
     <>
@@ -350,20 +341,26 @@ const CategoryList = () => {
             return (
               <Styled.CategoryListBox>
                 <Styled.CategoryList key={key}>
-                  <Styled.CategoryListContent>{item.name}</Styled.CategoryListContent>
                   <Styled.CategoryListContent>
-                    <Button
-                      onClick={() => handleCategoryUpdate(item.name)}
-                      width="30%"
-                      border="none"
-                      textColor="white"
-                      backgroundColor="#79B0CB"
-                      useHover={true}
-                      hoverBackgroundColor="#3F82AC"
-                      useTransition={true}
-                      transitionDuration={0.2}>
-                      수정
-                    </Button>
+                    {isEditMode ? <AuthenticationInput /> : item.name}
+                  </Styled.CategoryListContent>
+                  <Styled.CategoryListContent>
+                    {isEditMode ? (
+                      <button onClick={() => setIsEditMode(false)}>안녕</button>
+                    ) : (
+                      <Button
+                        onClick={() => handleCategoryUpdate(item.name)}
+                        width="30%"
+                        border="none"
+                        textColor="white"
+                        backgroundColor="#79B0CB"
+                        useHover={true}
+                        hoverBackgroundColor="#3F82AC"
+                        useTransition={true}
+                        transitionDuration={0.2}>
+                        수정
+                      </Button>
+                    )}
                     <Button
                       onClick={() => handleCategoryDelete(item.name)}
                       width="30%"
