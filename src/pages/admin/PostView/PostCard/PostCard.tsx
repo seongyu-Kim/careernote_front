@@ -8,7 +8,7 @@ import { ErrorToast, SuccessToast, WarnToast } from '@utils/ToastUtils';
 import { BOARD_API, BOARD_COMMENT_API, NOTICE_API, NOTICE_COMMENT_API } from '@routes/apiRoutes';
 import { Button, DropDown, Comment } from 'components';
 import { useUserStore } from '@stores/userStore';
-const { CUD_BOARD_COMMENT } = BOARD_COMMENT_API;
+const { CUD_BOARD_COMMENT, BOARD_COMMENTS } = BOARD_COMMENT_API;
 const { CUD_NOTICE_COMMENT, NOTICE_COMMENTS } = NOTICE_COMMENT_API;
 const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;
 const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
@@ -77,16 +77,17 @@ const PostCard = ({ onDelete }: PostCardProps) => {
           });
 
           console.log('공지 상세 데이터:', noticeResponse);
-          const res = noticeResponse.notice;
+          const res = noticeResponse.noticeDoc;;
           const updatedPost: PostProps = {
             ...res,
+            id: res._id,
             date: new Date(res.updatedAt).toLocaleString(),
-            writer: '관리자',
+            writer: res.user.nickname,
             category: '공지'
           };
 
           setPost(updatedPost);
-          const formattedComments = res.comments.map((comment: any) => ({
+          const formattedComments = res.NoticeComment.map((comment: any) => ({
             id: comment._id,
             nickName: comment.user.nickname,
             content: comment.content,
@@ -119,12 +120,12 @@ const PostCard = ({ onDelete }: PostCardProps) => {
             date: new Date(res.updatedAt).toLocaleString(),
           };
           setPost(updatedPost);
-          const formattedComments = res.boardcomment.map((comment: any) => ({
+          const formattedComments = res.BoardComment.map((comment: any) => ({
             id: comment._id,
-            nickName: comment.user_id.nickname,
+            nickName: comment.user.nickname,
             content: comment.content,
             date: new Date(comment.updatedAt).toLocaleDateString(),
-            isOwnComment: comment.user_id._id === userId,
+            isOwnComment: comment.user._id === userId,
           }));
           setComments(formattedComments);
         } catch (boardError) {
@@ -188,13 +189,8 @@ const PostCard = ({ onDelete }: PostCardProps) => {
       }
     } else {
       try {
-        data = {
-          "user_id": userId,
-          "boardcomment_id": id,
-          "board_id": postId
-        }
         const response = await apiUtils({
-          url: CUD_BOARD_COMMENT,
+          url: BOARD_COMMENTS(id),
           method: 'DELETE',
           data: data
         });
@@ -219,12 +215,10 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     if (post.category === '공지') {
       data = {
         content: commentText,
-        user_id: userId,
-        notice_id: postId
       };
       try {
         const response = await apiUtils({
-          url: CUD_NOTICE_COMMENT,
+          url: NOTICE_COMMENTS(postId as string),
           method: 'POST',
           data: data,
         });
@@ -240,12 +234,10 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     } else {
       data = {
         content: commentText,
-        user_id: userId,
-        board_id: postId
       }
       try {
         const response = await apiUtils({
-          url: CUD_BOARD_COMMENT,
+          url: BOARD_COMMENTS(postId as string),
           method: 'POST',
           data: data,
         });
@@ -266,7 +258,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     let data;
     if (post.category === '공지') {
       data = {
-        "content": content
+        "newContent": content
       }
       try {
         const response = await apiUtils({
@@ -283,13 +275,11 @@ const PostCard = ({ onDelete }: PostCardProps) => {
       }
     } else {
       data = {
-        "content": content,
-        "user_id": userId,
-        "boardcomment_id": id
+        "newContent": content,
       }
       try {
         const response = await apiUtils({
-          url: CUD_BOARD_COMMENT,
+          url: BOARD_COMMENTS(id),
           method: 'PUT',
           data: data
         })

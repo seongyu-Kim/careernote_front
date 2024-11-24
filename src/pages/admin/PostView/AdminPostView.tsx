@@ -33,18 +33,12 @@ const AdminPostView = () => {
 
   // 게시글 삭제 (모든 회원의 글 삭제 가능)
   const handleAnotherUserDelete = async (postId: string) => {
-    console.log('삭제함수');
+
     try {
       let url;
-      let data;
-
       if (category === '공지') {
         // 공지 삭제 요청
-        url = CUD_NOTICE;
-        data = {
-          notice_id: postId,
-          user: userId,
-        };
+        url = DETAILS_NOTICE(postId);
       } else {
         // 일반 게시글 삭제 요청
         url = DETAILS_BOARD(postId);
@@ -53,7 +47,6 @@ const AdminPostView = () => {
       const response = await apiUtils({
         url,
         method: 'DELETE',
-        // data,
       });
 
       console.log('게시글 삭제 성공 응답 데이터:', response);

@@ -8,15 +8,15 @@ import apiUtils from '@utils/apiUtils';
 import { NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
-const { CUD_NOTICE } = NOTICE_API;
+const { CUD_NOTICE, DETAILS_BOARD } = NOTICE_API;
 const AdminWritePost = () => {
+
   const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
   const { state } = useLocation(); // PostCard로 부터 state 값 전달 받기
-  const postId = state?.postId;
+  const postId = state.postId;
   const isEdit = !!state; // state 가 존재하면 수정모드, 빈 값이면 작성모드
-
   const [title, setTitle] = useState(state?.title || '');
   const [content, setContent] = useState(state?.content || '');
   const [inputFieldChecked, setInputFieldChecked] = useState<boolean>(true);
@@ -44,10 +44,8 @@ const AdminWritePost = () => {
     if (isEdit) {
       // 수정 요청 시 데이터 구조
       data = {
-        notice_id: postId,
         title,
         content,
-        user: userId,
       };
     } else {
       // 생성 요청 시 데이터 구조
@@ -60,14 +58,14 @@ const AdminWritePost = () => {
 
     try {
       const response = await apiUtils({
-        url: CUD_NOTICE,
+        url: isEdit ? DETAILS_BOARD(postId) : CUD_NOTICE,
         method: isEdit ? 'PUT' : 'POST',
         data: data,
       });
 
       if (isEdit) {
         SuccessToast('게시물이 수정되었습니다.');
-        navigate(`admin/post/${postId}`, { state });
+        navigate(`/admin/post/${postId}`, { state });
       } else {
         SuccessToast('게시물이 저장되었습니다.');
         navigate(ADMIN_MAIN);
