@@ -34,6 +34,11 @@ export const PostItem = styled.div<{ $isNotice?: boolean }>`
   text-align: center;
   padding: 9px;
   background-color: ${(props) => (props.$isNotice ? '#FFFBFB' : '#ececec')};
+  border-bottom: 1px solid #dcdcdc;
+
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 export const ButtonBox = styled.div`
