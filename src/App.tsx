@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
-import GlobalStyles from '@styles/Globalstyles';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { ModalPortal } from '@components/Modal/ModalPortal/ModalPortal';
 import ModalView from '@components/Modal/ModalView/ModalView';
 import Alert from '@components/Alert/Alert';
