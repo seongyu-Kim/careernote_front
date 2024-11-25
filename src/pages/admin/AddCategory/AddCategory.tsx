@@ -17,11 +17,18 @@ const AddCategory = () => {
 
   const handleAddCategory = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (!inputCategory) {
       ErrorToast('입력 필드가 비어있습니다');
       return;
     }
-    await addCategory(inputCategory);
+
+    try {
+      await addCategory(inputCategory);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('카테고리 추가 실패:', error);
+    }
   };
 
   if (!isOpen) {
