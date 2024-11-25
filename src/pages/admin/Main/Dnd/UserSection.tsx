@@ -24,6 +24,12 @@ const UserSection = ({ title, level, users, onUserDrop, onDelete }: UserSectionP
   return (
     <>
       <Styled.SectionSubtitle>{title}</Styled.SectionSubtitle>
+      <Styled.SectionSubList>
+        <span>아이디</span>
+        <span>게시물 수</span>
+        <span>관리</span>
+
+      </Styled.SectionSubList>
       <Styled.UserSection
         ref={drop}
         style={{

@@ -28,11 +28,23 @@ export const PostManagement = styled.div`
 export const SectionTitle = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 20px;
+  font-weight: bold;
 `;
 
 export const SectionSubtitle = styled.h3`
   font-size: 1.2rem;
   margin-bottom: 5px;
+`;
+export const SectionSubList = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 10px 20px;
+  font-weight: bold;
+  background-color:#dee2e6;
+  border-radius: 10px 10px 0 0;
 `;
 
 export const UserSectionGroup = styled.div`
@@ -102,6 +114,7 @@ export const CategoryListMenu = styled.div`
   background: #dee2e6;
   border-radius: 10px 10px 0 0;
   padding: 10px 0 10px 0;
+  font-weight: bold;
 `;
 
 export const CategoryListContainer = styled(PostListContainer)`

@@ -18,15 +18,18 @@ export const PostHeader = styled.div`
   align-items: center;
   padding: 9px;
   background-color: #dee2e6;
+  border-radius: 10px 10px 0 0;
 `;
 
 export const DeleteBtn = styled.div`
   flex: 0.5;
   margin-top: 3px;
-  color: #e25151;
-  border: 1px solid #e25151;
-  border-radius: 5px;
-  padding: 5px 0;
+  color: #e25151;;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  &:hover {
+    color : #dee2e6  ;
+  }
 `;
 
 export const PostItem = styled.div<{ $isNotice?: boolean }>`

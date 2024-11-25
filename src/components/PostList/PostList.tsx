@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LuPencilLine } from 'react-icons/lu';
 import { useUserStore } from '@stores/userStore';
 import { SuccessToast } from '@utils/ToastUtils';
+import { MdDelete } from "react-icons/md";
 
 interface Column {
   key: string;
@@ -174,9 +175,9 @@ const PostList = ({
                   onClick={
                     column.key === 'title'
                       ? () =>
-                          isAdmin
-                            ? handleAdminPostClick(item._id, item.category)
-                            : handlePostClick(item._id, item.category)
+                        isAdmin
+                          ? handleAdminPostClick(item._id, item.category)
+                          : handlePostClick(item._id, item.category)
                       : undefined
                   }
                   style={{ flex: column.flex }}>
@@ -191,7 +192,7 @@ const PostList = ({
                   textAlign: 'center',
                 }}>
                 <Styled.DeleteBtn onClick={() => onDelete(item._id, item.category)}>
-                  삭제
+                  <MdDelete size='25px' />
                 </Styled.DeleteBtn>
               </Styled.TableCell>
             )}
