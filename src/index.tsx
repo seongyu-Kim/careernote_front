@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import GlobalStyles from '@styles/Globalstyles';
 import { RouterProvider } from 'react-router-dom';
 import router from 'routes/routes';

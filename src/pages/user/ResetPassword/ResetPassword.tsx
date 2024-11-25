@@ -10,8 +10,6 @@ import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { Button, InputChecker, InputErrorMessage } from 'components';
 import { ResetPasswordFormData } from '@/type/input';
 
-interface Props {}
-
 const ResetPassword = () => {
   const [inputData, setInputData] = useState<ResetPasswordFormData>({
     password: '',
