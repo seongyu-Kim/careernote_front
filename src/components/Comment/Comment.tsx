@@ -17,6 +17,7 @@ const Comment = ({ nickName, content, date, isOwnComment, levelName, onEdit, onD
 
   const handleEditClick = () => {
     setIsEditing(true);
+    setEditedContent(content);
   };
 
   const handleEditConfirm = () => {

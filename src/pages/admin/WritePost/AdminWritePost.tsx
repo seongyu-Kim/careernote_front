@@ -8,7 +8,7 @@ import apiUtils from '@utils/apiUtils';
 import { NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
-const { CUD_NOTICE, DETAILS_BOARD } = NOTICE_API;
+const { ALL_NOTICES, DETAILS_BOARD } = NOTICE_API;
 const AdminWritePost = () => {
 
   const ADMIN_MAIN = ROUTE_LINK.ADMIN_MAIN.link;
@@ -46,14 +46,13 @@ const AdminWritePost = () => {
     try {
       // 서버 요청
       const response = await apiUtils({
-        url: isEdit ? DETAILS_BOARD(postId) : CUD_NOTICE,
+        url: isEdit ? DETAILS_BOARD(postId) : ALL_NOTICES,
         method: isEdit ? 'PUT' : 'POST',
         data,
       });
 
       console.log('서버 응답:', response);
 
-      // 서버 응답 상태 확인
 
       // 성공 처리
       if (isEdit) {

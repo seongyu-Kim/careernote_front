@@ -50,8 +50,14 @@ const routes = [
         element: <ResetPassword />,
 
       },
-      { path: ROUTE_LINK.MAIN.path, element: <Main /> },
-      { path: ROUTE_LINK.MYPAGE.path, element: <Main /> },
+      {
+        path: ROUTE_LINK.MAIN.path,
+        element: <Main />
+      },
+      {
+        path: ROUTE_LINK.MYPAGE.path,
+        element: <Main />
+      },
       {
         path: ROUTE_LINK.POST_VIEW.path,
         element: <PostView />

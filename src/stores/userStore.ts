@@ -107,7 +107,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     set(newState);
     localStorage.setItem('token', newState.token);
     localStorage.setItem('isLogin', JSON.stringify(newState.isLogin));
-    localStorage.setItem('role', newState.user.level.name); // url로 페이지 접근 제어 때 필요해서 이주영이 추가함
+    localStorage.setItem('role', newState.user.level.name); 
   },
   logout: async () => {
     const { LOGOUT } = USER_API;
@@ -124,7 +124,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     set({ user: null, isLogin: false, token: null });
     localStorage.removeItem('token');
     localStorage.removeItem('isLogin');
-    localStorage.removeItem('role'); // 추가 부분
+    localStorage.removeItem('role'); 
   },
   //새로 고침 시 로그인 상태에 따라 유저 정보 재요청
   loginRestore: async () => {
