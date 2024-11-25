@@ -18,6 +18,7 @@ export const PostHeader = styled.div`
   align-items: center;
   padding: 9px;
   background-color: #dee2e6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px 10px 0 0;
 `;
 
@@ -38,6 +39,7 @@ export const PostItem = styled.div<{ $isNotice?: boolean }>`
   padding: 9px;
   background-color: ${(props) => (props.$isNotice ? '#FFFBFB' : '#ececec')};
   border-bottom: 1px solid #dcdcdc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   &:last-child {
     border-bottom: none;

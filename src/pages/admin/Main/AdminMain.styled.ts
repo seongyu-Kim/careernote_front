@@ -121,7 +121,6 @@ export const CategoryListContainer = styled(PostListContainer)`
   margin-bottom: 10px;
   width: 100%;
   height: 300px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.49);
 `;
 export const CategoryListFiled = styled.div`
   width: 100%;
@@ -134,6 +133,7 @@ export const CategoryListFiled = styled.div`
   overflow-y: scroll;
   padding-top: 10px; /* 스크롤 문제 방지를 위해 */
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 export const CategoryListBox = styled.ul`
   width: 100%;
