@@ -12,8 +12,9 @@ function App() {
   const { setNavigate, loginRestore } = useUserStore();
   useEffect(() => {
     setNavigate(navigate);
+    navigate('/posts');
     loginRestore();
-  }, []);
+  }, [navigate]);
 
   return (
     <>
