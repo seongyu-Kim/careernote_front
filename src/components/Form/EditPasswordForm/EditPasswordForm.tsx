@@ -29,11 +29,15 @@ const EditPasswordForm = ({
     const newPasswordRegEx = newPassword.length >= 8 && passwordRegEx.test(newPassword);
     const confirmPasswordRegEx = confirmPassword.length >= 8 && passwordRegEx.test(confirmPassword);
     if (newPassword !== confirmPassword) {
-      ErrorToast('새 비밀번호가 일치하지 않습니다.');
+      ErrorToast('새 비밀번호가 일치하지 않습니다');
       return;
     }
     if (!currentPasswordRegEx || !newPasswordRegEx || !confirmPasswordRegEx) {
-      ErrorToast('비밀번호는 8~20자여야 합니다.');
+      ErrorToast('비밀번호는 8~20자여야 합니다');
+      return;
+    }
+    if (currentPassword === newPassword) {
+      ErrorToast('현재 비밀번호와 새 비밀번호가 같습니다');
       return;
     }
     onSave(currentPassword, newPassword);

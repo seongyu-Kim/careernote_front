@@ -12,6 +12,7 @@ import { useValidCheck } from '@stores/useCheckDuplication';
 import apiUtils from '@utils/apiUtils';
 import { USER_API } from '@routes/apiRoutes';
 import { REG_EX } from '@utils/RegEx';
+import axios from 'axios';
 
 export const MyInfo = () => {
   const [isEditingNickname, setIsEditingNickname] = useState(false); // 닉네임 수정 ON OFF
@@ -70,7 +71,6 @@ export const MyInfo = () => {
   };
 
   const handleNicknameSave = async (nickname: string) => {
-    console.log('닉네임 저장:', nickname);
     const { nicknameRegEx } = REG_EX;
     if (nickname.length <= 2 || !nicknameRegEx.test(nickname)) {
       ErrorToast('닉네임을 입력해주세요');
@@ -106,6 +106,10 @@ export const MyInfo = () => {
         setIsEditingPassword(false);
       }
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        ErrorToast('현재 비밀번호가 일치하지 않습니다.');
+        return;
+      }
       ErrorToast('비밀번호 변경 실패');
       console.error(error);
     }
