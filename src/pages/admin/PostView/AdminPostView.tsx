@@ -22,7 +22,7 @@ const AdminPostView = () => {
 
     try {
       let url;
-      if (category === '공지') {
+      if (!category) {
         // 공지 삭제 요청
         url = DETAILS_NOTICE(postId);
       } else {
@@ -41,7 +41,7 @@ const AdminPostView = () => {
     } catch (error) {
       console.error('게시글 삭제 요청 실패:', error);
       ErrorToast('다시 시도해주세요.')
-    } console.log('어드민 메인ㄹ으로 가야지')
+    }
     closeAlert();
     navigate(ADMIN_MAIN);
 
