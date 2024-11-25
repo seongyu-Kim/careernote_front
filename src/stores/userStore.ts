@@ -107,7 +107,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     set(newState);
     localStorage.setItem('token', newState.token);
     localStorage.setItem('isLogin', JSON.stringify(newState.isLogin));
-    localStorage.setItem('role',newState.user.level.name) // url로 페이지 접근 제어 때 필요해서 이주영이 추가함
+    localStorage.setItem('role', newState.user.level.name); // url로 페이지 접근 제어 때 필요해서 이주영이 추가함
   },
   logout: async () => {
     const { LOGOUT } = USER_API;
@@ -119,7 +119,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         withAuth: false,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     set({ user: null, isLogin: false, token: null });
     localStorage.removeItem('token');
@@ -163,7 +163,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         }
       } catch (error) {
         set({ user: null, isLogin: false, token: null });
-        console.log('유저 정보 재요청 실패', error);
+        console.error('유저 정보 재요청 실패', error);
         return;
       }
     }

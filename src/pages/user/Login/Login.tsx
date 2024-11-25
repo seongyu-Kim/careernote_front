@@ -63,7 +63,6 @@ const LoginForm = () => {
         withAuth: false,
       });
       if (res.message === '로그인 성공') {
-        console.log(res.data.user);
         login(res.data.user);
         if (res.data.user.level.name === '관리자') {
           SuccessToast('로그인 성공');

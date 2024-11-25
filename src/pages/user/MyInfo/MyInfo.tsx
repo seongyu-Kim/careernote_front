@@ -66,7 +66,7 @@ export const MyInfo = () => {
     } catch (error) {
       handleInputChange(false)();
       ErrorToast('현재 비밀번호를 확인해주세요');
-      console.log(error);
+      console.error(error);
     }
   };
 
