@@ -39,6 +39,7 @@ export const Content = styled.p`
   font-size: 1rem;
   color: #444;
   margin-bottom: 10px;
+  white-space: pre-wrap;
 `;
 
 export const Actions = styled.div`

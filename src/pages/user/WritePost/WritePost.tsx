@@ -10,12 +10,11 @@ import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
 import { ROUTE_LINK } from '@routes/routes';
 import { useCategoryStore } from '@stores/useCategoryStore';
 
-const { CUD_BOARD, DETAILS_BOARD } = BOARD_API;
+const { ALL_BOARD, DETAILS_BOARD } = BOARD_API;
 
 const WritePost = () => {
   const MAIN_PAGE_URL = ROUTE_LINK.MAIN.link;
   const user = useUserStore((state) => state.user);
-  const userId = user?.user_id;
   const userLevelName = user?.level.name;
   const { state } = useLocation();
   const isEdit = !!state;
@@ -76,7 +75,7 @@ const WritePost = () => {
 
     try {
       const response = await apiUtils({
-        url: isEdit ? DETAILS_BOARD(postId) : CUD_BOARD,
+        url: isEdit ? DETAILS_BOARD(postId) : ALL_BOARD,
         method: isEdit ? 'PUT' : 'POST',
         data: data,
       });

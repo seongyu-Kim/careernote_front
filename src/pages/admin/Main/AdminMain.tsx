@@ -7,29 +7,14 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import UserSection from '@pages/admin/Main/Dnd/UserSection';
 import { User, UserLevel } from '@/type/user';
 import apiUtils from '@utils/apiUtils';
-import { USER_API, BOARD_API, NOTICE_API, ADMIN_API } from '@routes/apiRoutes';
+import { USER_API, BOARD_API, NOTICE_API } from '@routes/apiRoutes';
 import { ErrorToast, SuccessToast } from '@utils/ToastUtils';
-import { useUserStore } from '@stores/userStore';
 import { usePostStore } from '@stores/usePostStore';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CategoryListContent } from './AdminMain.styled';
 import { useCategoryStore } from '@stores/useCategoryStore';
 const { USER_LEVEL_CHANGE, ALL_USER, USER_DELETE } = USER_API;
 const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
-const { DETAILS_BOARD, CUD_BOARD, ALL_BOARD, CATEGORY } = BOARD_API; //공지 외 카테고리 RUD api 주소
-
-interface UserProp {
-  _id: number;
-  nickname: string;
-  level: string;
-}
-interface Post {
-  _id: number;
-  title: string;
-  category: string;
-  user: UserProp;
-  createdAt: string;
-}
+const { DETAILS_BOARD, } = BOARD_API;
 
 const AdminMain = () => {
   const {
@@ -78,8 +63,6 @@ const AdminMain = () => {
   const [isChecked, setChecked] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(true); // 관리자 여부 설정
   const { openAlert, closeAlert } = useAlertStore();
-  const userId = useUserStore((state) => state.user?.user_id);
-  const userLevel = useUserStore((state) => state.user?.level._id);
   const [users, setUsers] = useState<User[]>([]); // 유저 상태
 
   // 사용자 데이터를 가져오는 함수
@@ -89,7 +72,6 @@ const AdminMain = () => {
         url: ALL_USER,
         method: 'GET',
       });
-      console.log('사용자 데이터:', response);
       // postCount 계산 후 상태 업데이트
       const updatedUsers = response.data.map((user: any) => ({
         id: user._id,
@@ -116,31 +98,24 @@ const AdminMain = () => {
 
   // 게시글 삭제 함수
   const handleDeleteConfirm = async (id: string, category: string) => {
-    try {
-      let url;
-      if (!category) {
-        // 공지 삭제 요청
-        url = DETAILS_NOTICE(id);
-      } else {
-        // 일반 게시글 삭제 요청
-        url = DETAILS_BOARD(id);
-      }
+    const url = !category ? DETAILS_NOTICE(id) : DETAILS_BOARD(id);
 
-      // 서버 요청
+    try {
       const response = await apiUtils({
         url,
-        method: 'DELETE'
+        method: 'DELETE',
       });
-
-      console.log('게시글 삭제 성공 응답 데이터:', response);
-      SuccessToast(`게시글 삭제되었습니다.`);
+      console.log(`${!category ? '공지' : '게시글'} 삭제 성공 응답 데이터:`, response);
+      SuccessToast(`${!category ? '공지' : '게시글'}이 삭제되었습니다.`);
       await fetchAllPosts();
     } catch (error) {
-      console.error('게시글 삭제 요청 실패:', error);
-      ErrorToast('다시 시도해주세요.');
+      console.error(`${!category ? '공지' : '게시글'} 삭제 요청 실패:`, error);
+      ErrorToast('삭제 요청에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      closeAlert();
     }
-    closeAlert();
   };
+
 
   // 사용자 탈퇴 Alert
   const handleUserDelete = async (id: string, userEmail: string) => {
