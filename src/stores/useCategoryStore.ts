@@ -38,9 +38,9 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     }
   },
 
-  // 카테고리 추가
   addCategory: async (categoryName: string) => {
     if (!categoryName) return;
+
     try {
       const response = await apiUtils({
         url: CRD_CATEGORY,
@@ -49,18 +49,18 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
 
+      console.log('response:', response);
+
       if (response.message === '카테고리 생성 완료') {
         SuccessToast('카테고리 생성 성공');
-        // set((state) => ({
-        //   categories: [...state.categories, { name: categoryName }],
-        // }));
-        set((state) => ({
-          categories: [...state.categories, { _id: response.data._id, name: categoryName }],
-        }));
+
+        await get().fetchCategories();
+      } else {
+        throw new Error('응답 데이터');
       }
     } catch (error) {
       ErrorToast('카테고리 생성 실패');
-      console.error(error);
+      throw error;
     }
   },
 
