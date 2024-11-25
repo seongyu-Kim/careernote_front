@@ -91,13 +91,15 @@ const Navbar = ({ categories }: NavbarProps) => {
       <Styled.Nav>
         <Styled.MenuButton onClick={toggleMenu}>☰</Styled.MenuButton>
 
-        <Styled.Logo onClick={() => (window.location.href = '/posts?page=1')}>
+        <Styled.Logo
+          onClick={() => navigate(user?.level.name === '관리자' ? '/admin' : '/posts?page=1')}
+        >
           <Styled.LogoImg src={logo_w} alt="logo" />
         </Styled.Logo>
 
         {isLogin && user ? (
           <Styled.LogoutBox>
-            <Styled.UserNameText>{user?.nickName}</Styled.UserNameText> 님
+            <Styled.UserNameText>{user?.level?.name === "꼬꼬닭" ? "🐔" : user?.level?.name === "삐약이" ? "🐣" : "⭐"}{user?.nickName}</Styled.UserNameText> 님
             <Styled.Logout onClick={handleLogout}>Logout</Styled.Logout>
           </Styled.LogoutBox>
         ) : (
@@ -113,7 +115,8 @@ const Navbar = ({ categories }: NavbarProps) => {
             <Styled.MyInfoTitle>내 정보</Styled.MyInfoTitle>
             <Styled.NickNameContainer>
               <Styled.UserName>{user?.nickName} 님</Styled.UserName>
-              <Styled.UserLevel>{user?.level?.name} 등급</Styled.UserLevel>
+              <Styled.UserLevel>
+                {user?.level?.name} {user?.level?.name === "꼬꼬닭" ? "🐔" : user?.level?.name === "삐약이" ? "🐣" : "⭐"}</Styled.UserLevel>
             </Styled.NickNameContainer>
             <Styled.EditBtnContainer>
               <Button
@@ -138,15 +141,18 @@ const Navbar = ({ categories }: NavbarProps) => {
             <Styled.QuitBtn onClick={confirmQuit}>회원탈퇴</Styled.QuitBtn>
           </Styled.UserInfo>
 
-          {categories.map((category) => (
-            <Styled.MenuItem key={category}>
-              <Styled.MenuItemBtn
-                $isSelected={selectedMenu === category}
-                onClick={() => handleCategoryChange(category)}>
-                {category}
-              </Styled.MenuItemBtn>
-            </Styled.MenuItem>
-          ))}
+          {user?.level?.name !== '관리자' &&
+            categories.map((category) => (
+              <Styled.MenuItem key={category}>
+                <Styled.MenuItemBtn
+                  $isSelected={selectedMenu === category}
+                  onClick={() => handleCategoryChange(category)}
+                >
+                  {category}
+                </Styled.MenuItemBtn>
+              </Styled.MenuItem>
+            ))}
+
         </Styled.Menu>
       )}
     </>
