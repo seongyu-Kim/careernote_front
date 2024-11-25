@@ -10,9 +10,12 @@ import { useUserStore } from '@stores/userStore';
 function App() {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const { setNavigate, loginRestore } = useUserStore();
+
   useEffect(() => {
-    setNavigate(navigate);
-    navigate('/posts');
+    if (window.location.pathname === '/') {
+      navigate('/posts');
+    }
+
     loginRestore();
   }, [navigate]);
 
