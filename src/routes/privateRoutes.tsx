@@ -7,7 +7,7 @@ interface PrivateRouteProps {
   adminOnly?: boolean; // true: 관리자만 접근 가능
 }
 
-const PrivateRoutes = ({ authentication, adminOnly }: PrivateRouteProps): React.ReactElement | null => {
+const PrivateRoutes = ({ authentication, adminOnly }: PrivateRouteProps): React.ReactElement => {
   const isAuthenticated = !!localStorage.getItem('token'); // 로그인 여부 확인
   const userRole = localStorage.getItem('role'); // 사용자 권한 확인
 
@@ -22,9 +22,7 @@ const PrivateRoutes = ({ authentication, adminOnly }: PrivateRouteProps): React.
 
     return <Outlet />;
   } else {
-    if (isAuthenticated) {
-      return <Navigate to="/posts" />;
-    }
+
     return <Outlet />;
   }
 };

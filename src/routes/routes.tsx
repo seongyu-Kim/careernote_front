@@ -38,33 +38,17 @@ const routes = [
       // 사용자 기능
       {
         path: ROUTE_LINK.LOGIN.path,
-        element: <PrivateRoutes authentication={false} />,
-        children: [
-          {
-            path: '',
-            element: <Login />,
-          },
-        ],
+        element: <Login />
       },
       {
         path: ROUTE_LINK.REGISTER.path,
-        element: <PrivateRoutes authentication={false} />,
-        children: [
-          {
-            path: '',
-            element: <RegisterPage />,
-          },
-        ],
+        element: <RegisterPage />,
+
       },
       {
         path: ROUTE_LINK.RESET_PASSWORD.path,
-        element: <PrivateRoutes authentication={false} />,
-        children: [
-          {
-            path: '',
-            element: <ResetPassword />,
-          },
-        ],
+        element: <ResetPassword />,
+
       },
       { path: ROUTE_LINK.MAIN.path, element: <Main /> },
       { path: ROUTE_LINK.MYPAGE.path, element: <Main /> },
