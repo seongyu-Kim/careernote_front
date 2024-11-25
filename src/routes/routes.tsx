@@ -70,13 +70,7 @@ const routes = [
       { path: ROUTE_LINK.MYPAGE.path, element: <Main /> },
       {
         path: ROUTE_LINK.POST_VIEW.path,
-        element: <PrivateRoutes authentication={true} />,
-        children: [
-          {
-            path: '',
-            element: <PostView />,
-          },
-        ],
+        element: <PostView />
       },
       {
         path: ROUTE_LINK.WRITE_POST.path,
@@ -114,7 +108,7 @@ const routes = [
         children: [
           {
             path: '',
-            element: <PostView />,
+            element: <AdminPostView />,
           },
         ],
       },

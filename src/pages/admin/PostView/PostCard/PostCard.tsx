@@ -8,8 +8,8 @@ import { ErrorToast, SuccessToast, WarnToast } from '@utils/ToastUtils';
 import { BOARD_API, BOARD_COMMENT_API, NOTICE_API, NOTICE_COMMENT_API } from '@routes/apiRoutes';
 import { Button, DropDown, Comment } from 'components';
 import { useUserStore } from '@stores/userStore';
-const { CUD_BOARD_COMMENT } = BOARD_COMMENT_API;
-const { CUD_NOTICE_COMMENT } = NOTICE_COMMENT_API;
+const { CUD_BOARD_COMMENT, BOARD_COMMENTS } = BOARD_COMMENT_API;
+const { CUD_NOTICE_COMMENT, NOTICE_COMMENTS } = NOTICE_COMMENT_API;
 const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;
 const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
 interface PostCardProps {
@@ -68,7 +68,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     }
 
     const fetchPostDetails = async () => {
-      if (category === '공지') {
+      if (!category || category === '공지') { //공지는 카테고리 필드가 없음 나중에 수정 요망
         try {
           // 공지 API 
           const noticeResponse = await apiUtils({
@@ -77,20 +77,22 @@ const PostCard = ({ onDelete }: PostCardProps) => {
           });
 
           console.log('공지 상세 데이터:', noticeResponse);
-          const res = noticeResponse.DetailNotice;
+          const res = noticeResponse.noticeDoc;;
           const updatedPost: PostProps = {
             ...res,
+            id: res._id,
             date: new Date(res.updatedAt).toLocaleString(),
-            writer: '관리자',
+            writer: res.user.nickname,
             category: '공지'
           };
+
           setPost(updatedPost);
-          const formattedComments = res.boardcomment.map((comment: any) => ({
+          const formattedComments = res.NoticeComment.map((comment: any) => ({
             id: comment._id,
-            nickName: comment.user_id.nickname,
+            nickName: comment.user.nickname,
             content: comment.content,
-            date: new Date(comment.createdAt).toLocaleDateString(),
-            isOwnComment: comment.user_id._id === userId,
+            date: new Date(comment.updatedAt).toLocaleDateString(),
+            isOwnComment: comment.user._id === userId,
           }));
           setComments(formattedComments);
 
@@ -100,7 +102,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
       }
       else {
         try {
-          // 공지 와 카테고리 API 
+          // 공지 외 카테고리 API 
           const boardResponse = await apiUtils({
             url: DETAILS_BOARD(postId),
             method: 'GET',
@@ -118,12 +120,12 @@ const PostCard = ({ onDelete }: PostCardProps) => {
             date: new Date(res.updatedAt).toLocaleString(),
           };
           setPost(updatedPost);
-          const formattedComments = res.boardcomment.map((comment: any) => ({
+          const formattedComments = res.BoardComment.map((comment: any) => ({
             id: comment._id,
-            nickName: comment.user_id.nickname,
+            nickName: comment.user.nickname,
             content: comment.content,
             date: new Date(comment.updatedAt).toLocaleDateString(),
-            isOwnComment: comment.user_id._id === userId,
+            isOwnComment: comment.user._id === userId,
           }));
           setComments(formattedComments);
         } catch (boardError) {
@@ -166,56 +168,6 @@ const PostCard = ({ onDelete }: PostCardProps) => {
 
   {/*댓글*/ }
 
-  // // 댓글 가져오기
-  // useEffect(() => {
-  //   const fetchPostDetails = async () => {
-  //     if (post.category === '공지') {
-  //       try {
-  //         // 공지 댓글 API 
-  //         const noticeCommentResponse = await apiUtils({
-  //           url: CUD_NOTICE_COMMENT,
-  //           method: 'GET',
-  //         });
-  //         console.log('공지 댓글', noticeCommentResponse);
-  //         // 서버에서 받은 데이터 가공
-  //         const formattedComments = noticeCommentResponse.noticecomments.map((comment: any) => ({
-  //           id: comment._id,
-  //           nickName: comment.user_id.nickname,
-  //           content: comment.content,
-  //           date: new Date(comment.createdAt).toLocaleDateString(),
-  //           isOwnComment: comment.user_id._id === userId,
-  //         }));
-  //         setComments(formattedComments);
-  //       } catch (error) {
-  //         console.error('공지 댓글 조회 실패', error);
-  //       }
-  //       return;
-  //     } else {
-  //       try {
-  //         // 일반 게시글 댓글 API 
-  //         const boardCommentResponse = await apiUtils({
-  //           url: CUD_BOARD_COMMENT,
-  //           method: 'GET',
-  //         });
-  //         console.log('게시글 댓글 ', boardCommentResponse);
-  //         // 서버에서 받은 데이터 가공
-  //         const formattedComments = boardCommentResponse.boardcomments.map((comment: any) => ({
-  //           id: comment._id,
-  //           nickName: comment.user_id.nickname,
-  //           content: comment.content,
-  //           date: new Date(comment.createdAt).toLocaleDateString(),
-  //           isOwnComment: comment.user_id._id === userId,
-  //         }));
-  //         setComments(formattedComments);
-  //       } catch (error) {
-  //         console.error('게시글 댓글 조회 실패:', error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchPostDetails();
-  // }, [commentTrigger])
-
   // 댓글 삭제
   const handleCommentDelete = async (id: string) => {
     openAlert('댓글을 삭제하시겠습니까?', () => handleCommentDeleteConfirm(id));
@@ -224,18 +176,12 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     let data;
     if (post.category === '공지') {
       try {
-        data = {
-          "user_id": userId,
-          "comment_id": id,
-          "level": userLevelId
-        }
         const response = await apiUtils({
-          url: CUD_NOTICE_COMMENT,
+          url: NOTICE_COMMENTS(id),
           method: 'DELETE',
-          data: data
         });
         console.log('공지 댓글 삭제 성공', response);
-        SuccessToast('댓글이 삭제되었습니다.')
+        SuccessToast('댓글이 삭제되었습니다.');
         setCommentTrigger((prev) => prev + 1);
       } catch (error) {
         console.log('공지 댓글 삭제 성공', error);
@@ -243,13 +189,8 @@ const PostCard = ({ onDelete }: PostCardProps) => {
       }
     } else {
       try {
-        data = {
-          "user_id": userId,
-          "boardcomment_id": id,
-          "board_id": postId
-        }
         const response = await apiUtils({
-          url: CUD_BOARD_COMMENT,
+          url: BOARD_COMMENTS(id),
           method: 'DELETE',
           data: data
         });
@@ -274,17 +215,16 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     if (post.category === '공지') {
       data = {
         content: commentText,
-        user_id: userId,
-        notice_id: postId
       };
       try {
         const response = await apiUtils({
-          url: CUD_NOTICE_COMMENT,
+          url: NOTICE_COMMENTS(postId as string),
           method: 'POST',
           data: data,
         });
         console.log('공지 댓글 생성 완료', response);
         SuccessToast('댓글이 등록되었습니다.')
+        setCommentTrigger((prev) => prev + 1);
       } catch (error) {
         console.log('공지 댓글 생성 실패', error);
         ErrorToast('댓글 등록이 실패했습니다.');
@@ -294,12 +234,10 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     } else {
       data = {
         content: commentText,
-        user_id: userId,
-        board_id: postId
       }
       try {
         const response = await apiUtils({
-          url: CUD_BOARD_COMMENT,
+          url: BOARD_COMMENTS(postId as string),
           method: 'POST',
           data: data,
         });
@@ -311,7 +249,6 @@ const PostCard = ({ onDelete }: PostCardProps) => {
         ErrorToast('댓글 등록이 실패했습니다.')
       } finally {
         setCommentText('');
-        setCommentTrigger((prev) => prev + 1);
       }
     }
   };
@@ -321,41 +258,37 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     let data;
     if (post.category === '공지') {
       data = {
-        "content": content,
-        "user_id": userId,
-        "comment_id": id
+        "newContent": content
       }
       try {
         const response = await apiUtils({
-          url: CUD_NOTICE_COMMENT,
+          url: NOTICE_COMMENTS(id),
           method: 'PUT',
           data: data
         })
         console.log('공지 댓글 수정 성공', response);
         SuccessToast('댓글이 수정되었습니다.');
+        setCommentTrigger((prev) => prev + 1);
       } catch (error) {
         console.log('공지 댓글 수정 실패', error);
         ErrorToast('댓글 수정에 살패했습니다.')
       }
     } else {
       data = {
-        "content": content,
-        "user_id": userId,
-        "boardcomment_id": id
+        "newContent": content,
       }
       try {
         const response = await apiUtils({
-          url: CUD_BOARD_COMMENT,
+          url: BOARD_COMMENTS(id),
           method: 'PUT',
           data: data
         })
         console.log('게시글 댓글 수정 성공', response);
         SuccessToast('댓글이 수정되었습니다.');
+        setCommentTrigger((prev) => prev + 1);
       } catch (error) {
         console.log('게시글 댓글 수정 실패', error);
         ErrorToast('댓글 수정에 살패했습니다.')
-      } finally {
-        setCommentTrigger((prev) => prev + 1);
       }
     };
   }
@@ -366,11 +299,12 @@ const PostCard = ({ onDelete }: PostCardProps) => {
         <Styled.Category category={post.category ?? '공지'}>
           {post.category ?? '공지'}
         </Styled.Category>
-        {post.writer === userName && <DropDown
-          options={options}
-          icon={<BiDotsVerticalRounded size={24} />}
-          noOptionsMessage="권한 없음"
-        />}
+        {(post.writer === userName || userLevel === '관리자') &&
+          <DropDown
+            options={options}
+            icon={<BiDotsVerticalRounded size={24} />}
+            noOptionsMessage="권한 없음"
+          />}
       </Styled.ContainerHeader>
       <Styled.Title>{post.title || '알 수 없는 글'}</Styled.Title>
       <Styled.Writer>{post.writer || '알 수 없는 사용자'}</Styled.Writer>

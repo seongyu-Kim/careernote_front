@@ -44,9 +44,9 @@ export const UserSectionGroup = styled.div`
 export const UserSection = styled.div`
   margin-bottom: 20px;
   height: 300px;
-  background-color: #f2f2f2;
   max-height: 300px;
   overflow-y: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 `;
 
 export const UserList = styled.ul`
