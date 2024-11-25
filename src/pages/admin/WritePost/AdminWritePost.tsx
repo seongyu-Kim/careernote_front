@@ -37,50 +37,44 @@ const AdminWritePost = () => {
     setContent(e.target.value);
   };
 
-  // 글 수정/생성 공통 작업 
   const handleSubmit = async () => {
-    // 공통 데이터
-    let data;
-    if (isEdit) {
-      // 수정 요청 시 데이터 구조
-      data = {
-        title,
-        content,
-      };
-    } else {
-      // 생성 요청 시 데이터 구조
-      data = {
-        title,
-        content,
-        user: userId,
-      };
-    }
+    // 공통 데이터 준비
+    const data = isEdit
+      ? { title, content } // 수정 요청
+      : { title, content, user: userId }; // 생성 요청
 
     try {
+      // 서버 요청
       const response = await apiUtils({
         url: isEdit ? DETAILS_BOARD(postId) : CUD_NOTICE,
         method: isEdit ? 'PUT' : 'POST',
-        data: data,
+        data,
       });
 
+      console.log('서버 응답:', response);
+
+      // 서버 응답 상태 확인
+
+      // 성공 처리
       if (isEdit) {
         SuccessToast('게시물이 수정되었습니다.');
-        navigate(`/admin/post/${postId}`, { state });
+        navigate(`/admin/post/${postId}`, { state: { updated: true } }); // 수정된 상태 전달
       } else {
         SuccessToast('게시물이 저장되었습니다.');
         navigate(ADMIN_MAIN);
       }
-      console.log('게시물 수정 성공', response);
 
     } catch (error) {
+      // 에러 처리
       console.error('게시글 등록 혹은 수정 실패:', error);
-      if (isEdit) {
-        ErrorToast('게시물 수정 중 오류가 발생했습니다.');
-      } else {
-        ErrorToast('게시물 등록 중 오류가 발생했습니다.');
-      }
+      ErrorToast(
+        isEdit
+          ? '게시물 수정 중 오류가 발생했습니다.'
+          : '게시물 등록 중 오류가 발생했습니다.'
+      );
     }
   };
+
 
   return (
     <NavbarContainer>
