@@ -8,21 +8,16 @@ import { ErrorToast, SuccessToast, WarnToast } from '@utils/ToastUtils';
 import { BOARD_API, BOARD_COMMENT_API, NOTICE_API, NOTICE_COMMENT_API } from '@routes/apiRoutes';
 import { Button, DropDown, Comment } from 'components';
 import { useUserStore } from '@stores/userStore';
-const { CUD_BOARD_COMMENT, BOARD_COMMENTS } = BOARD_COMMENT_API;
-const { CUD_NOTICE_COMMENT, NOTICE_COMMENTS } = NOTICE_COMMENT_API;
-const { DETAILS_BOARD, CUD_BOARD } = BOARD_API;
+import { PostProps } from '@/type/post';
+import { commentApiUtils } from '@utils/editDeleteUtils';
+const { BOARD_COMMENTS } = BOARD_COMMENT_API;
+const { NOTICE_COMMENTS } = NOTICE_COMMENT_API;
+const { DETAILS_BOARD } = BOARD_API;
 const { DETAILS_BOARD: DETAILS_NOTICE } = NOTICE_API;
 interface PostCardProps {
   onDelete: (postId: string) => void;
 }
-interface PostProps {
-  title: string;
-  content: string;
-  category: string;
-  date: string;
-  writer: string;
-  id: string;
-}
+
 interface CommentProps {
   id: string;
   nickName: string;
@@ -40,7 +35,6 @@ const PostCard = ({ onDelete }: PostCardProps) => {
   const user = useUserStore((state) => state.user);
   const userId = user?.user_id;
   const userName = user?.nickName;
-  const userLevelId = user?.level._id;
   const userLevel = user?.level.name || '';
 
   const [comments, setComments] = useState<CommentProps[]>([]);
@@ -68,73 +62,45 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     }
 
     const fetchPostDetails = async () => {
-      if (!category || category === '공지') { //공지는 카테고리 필드가 없음 나중에 수정 요망
-        try {
-          // 공지 API 
-          const noticeResponse = await apiUtils({
-            url: DETAILS_NOTICE(postId),
-            method: 'GET',
-          });
+      try {
+        const isNotice = !category || category === '공지';
+        const response = await apiUtils({
+          url: isNotice ? DETAILS_NOTICE(postId) : DETAILS_BOARD(postId),
+          method: 'GET',
+        });
 
-          console.log('공지 상세 데이터:', noticeResponse);
-          const res = noticeResponse.noticeDoc;;
-          const updatedPost: PostProps = {
-            ...res,
-            id: res._id,
-            date: new Date(res.updatedAt).toLocaleString(),
-            writer: res.user.nickname,
-            category: '공지'
-          };
+        console.log(`${isNotice ? '공지' : '게시글'} 상세 데이터:`, response);
 
-          setPost(updatedPost);
-          const formattedComments = res.NoticeComment.map((comment: any) => ({
-            id: comment._id,
-            nickName: comment.user.nickname,
-            content: comment.content,
-            date: new Date(comment.updatedAt).toLocaleDateString(),
-            isOwnComment: comment.user._id === userId,
-          }));
-          setComments(formattedComments);
+        // 상세 데이터 처리
+        const res = isNotice ? response.noticeDoc : response.DetailBoard;
+        const updatedPost: PostProps = {
+          id: res._id,
+          title: res.title,
+          content: res.content,
+          category: isNotice ? '공지' : res.category?.name || '알 수 없음',
+          writer: res.user?.nickname || '알 수 없는 사용자',
+          date: new Date(res.updatedAt).toLocaleString(),
+        };
+        setPost(updatedPost);
 
-        } catch (noticeError) {
-          console.warn('공지 API 실패, 일반 게시글 API 시도:', noticeError);
-        }
+        // 댓글 데이터 처리
+        const commentsKey = isNotice ? 'NoticeComment' : 'BoardComment';
+        const formattedComments = res[commentsKey].map((comment: any) => ({
+          id: comment._id,
+          nickName: comment.user.nickname,
+          content: comment.content,
+          date: new Date(comment.updatedAt).toLocaleDateString(),
+          isOwnComment: comment.user._id === userId,
+        }));
+        setComments(formattedComments);
+      } catch (error) {
+        console.error(`${!category || category === '공지' ? '공지' : '게시글'} API 요청 실패:`, error);
       }
-      else {
-        try {
-          // 공지 외 카테고리 API 
-          const boardResponse = await apiUtils({
-            url: DETAILS_BOARD(postId),
-            method: 'GET',
-          });
+    };
 
-          console.log('게시글 상세 데이터:', boardResponse);
-          const res = boardResponse.DetailBoard;
-          const updatedPost: PostProps = {
-
-            id: res._id,
-            title: res.title,
-            content: res.content,
-            category: res.category?.name || '알 수 없음',
-            writer: res.user?.nickname || '알 수 없는 사용자',
-            date: new Date(res.updatedAt).toLocaleString(),
-          };
-          setPost(updatedPost);
-          const formattedComments = res.BoardComment.map((comment: any) => ({
-            id: comment._id,
-            nickName: comment.user.nickname,
-            content: comment.content,
-            date: new Date(comment.updatedAt).toLocaleDateString(),
-            isOwnComment: comment.user._id === userId,
-          }));
-          setComments(formattedComments);
-        } catch (boardError) {
-          console.error('게시글 상세 조회 실패:', boardError);
-        }
-      }
-    }
     fetchPostDetails();
   }, [postId, commentTrigger]);
+
 
   // 글 수정 페이지로 이동
   const handleEdit = () => {
@@ -166,6 +132,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     },
   ].filter((option) => option.visible);
 
+
   {/*댓글*/ }
 
   // 댓글 삭제
@@ -173,125 +140,32 @@ const PostCard = ({ onDelete }: PostCardProps) => {
     openAlert('댓글을 삭제하시겠습니까?', () => handleCommentDeleteConfirm(id));
   };
   const handleCommentDeleteConfirm = async (id: string) => {
-    let data;
-    if (post.category === '공지') {
-      try {
-        const response = await apiUtils({
-          url: NOTICE_COMMENTS(id),
-          method: 'DELETE',
-        });
-        console.log('공지 댓글 삭제 성공', response);
-        SuccessToast('댓글이 삭제되었습니다.');
-        setCommentTrigger((prev) => prev + 1);
-      } catch (error) {
-        console.log('공지 댓글 삭제 성공', error);
-        ErrorToast('다시 시도해주세요.')
-      }
-    } else {
-      try {
-        const response = await apiUtils({
-          url: BOARD_COMMENTS(id),
-          method: 'DELETE',
-          data: data
-        });
-        console.log('게시글 댓글 삭제 성공', response);
-        SuccessToast('댓글이 삭제되었습니다.');
-        setCommentTrigger((prev) => prev + 1);
-      } catch (error) {
-        console.log('게시글 댓글 삭제 성공', error);
-        ErrorToast('다시 시도해주세요.');
-      };
-    };
+    await commentApiUtils(id, 'DELETE', post.category);
+    setCommentTrigger((prev) => prev + 1);
   };
 
   // 댓글 등록
   const handleCommentSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (commentText === '') {
+
+    if (commentText.trim() === '') {
       WarnToast('댓글의 내용을 입력하세요');
       return;
     }
-    let data;
-    if (post.category === '공지') {
-      data = {
-        content: commentText,
-      };
-      try {
-        const response = await apiUtils({
-          url: NOTICE_COMMENTS(postId as string),
-          method: 'POST',
-          data: data,
-        });
-        console.log('공지 댓글 생성 완료', response);
-        SuccessToast('댓글이 등록되었습니다.')
-        setCommentTrigger((prev) => prev + 1);
-      } catch (error) {
-        console.log('공지 댓글 생성 실패', error);
-        ErrorToast('댓글 등록이 실패했습니다.');
-      } finally {
-        setCommentText('');
-      }
-    } else {
-      data = {
-        content: commentText,
-      }
-      try {
-        const response = await apiUtils({
-          url: BOARD_COMMENTS(postId as string),
-          method: 'POST',
-          data: data,
-        });
-        console.log('게시글 댓글 생성 완료', response);
-        SuccessToast('댓글이 등록되었습니다.');
-        setCommentTrigger((prev) => prev + 1);
-      } catch (error) {
-        console.log('게시글 댓글 생성 실패', error);
-        ErrorToast('댓글 등록이 실패했습니다.')
-      } finally {
-        setCommentText('');
-      }
-    }
+    const data = { content: commentText };
+    await commentApiUtils(postId as string, 'POST', post.category, data)
+    setCommentTrigger((prev) => prev + 1);
+    setCommentText('');
+
   };
 
   // 댓글 수정
   const handleCommentEdit = async (id: string, content: string) => {
-    let data;
-    if (post.category === '공지') {
-      data = {
-        "newContent": content
-      }
-      try {
-        const response = await apiUtils({
-          url: NOTICE_COMMENTS(id),
-          method: 'PUT',
-          data: data
-        })
-        console.log('공지 댓글 수정 성공', response);
-        SuccessToast('댓글이 수정되었습니다.');
-        setCommentTrigger((prev) => prev + 1);
-      } catch (error) {
-        console.log('공지 댓글 수정 실패', error);
-        ErrorToast('댓글 수정에 살패했습니다.')
-      }
-    } else {
-      data = {
-        "newContent": content,
-      }
-      try {
-        const response = await apiUtils({
-          url: BOARD_COMMENTS(id),
-          method: 'PUT',
-          data: data
-        })
-        console.log('게시글 댓글 수정 성공', response);
-        SuccessToast('댓글이 수정되었습니다.');
-        setCommentTrigger((prev) => prev + 1);
-      } catch (error) {
-        console.log('게시글 댓글 수정 실패', error);
-        ErrorToast('댓글 수정에 살패했습니다.')
-      }
-    };
-  }
+    const data = { newContent: content };
+    await commentApiUtils(id, 'PUT', post.category, data);
+    setCommentTrigger((prev) => prev + 1);
+  };
+
 
   return (
     <Styled.Container>

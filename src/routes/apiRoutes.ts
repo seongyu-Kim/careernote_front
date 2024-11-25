@@ -22,25 +22,21 @@ export const ADMIN_API = {
 };
 
 export const BOARD_API = {
-  ALL_BOARD: `${BASE_URL}/api/board`, // 전체 게시글 목록 조회
+  ALL_BOARD: `${BASE_URL}/api/board`, // 전체 게시글 목록 조회, 게시글 생성
   CATEGORY: (category: string) => `${BASE_URL}/api/board/category/${category}`, // 게시글 by 카테고리
-  CUD_BOARD: `${BASE_URL}/api/board`, // 게시글 (CREATE,UPDATE,DELETE)
-  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 게시물 상세 조회(READ)
+  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/board/${id}`, // 게시물 상세
 };
 
 export const NOTICE_API = {
-  ALL_NOTICES: `${BASE_URL}/api/notice`, // 전체 공지 목록 조회
-  CUD_NOTICE: `${BASE_URL}/api/notice`, // 공지 (CREATE,UPDATE,DELETE)
-  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/notice/${id}`, // 공지 상세 조회(READ)
+  ALL_NOTICES: `${BASE_URL}/api/notice`, // 전체 공지 목록 조회, 공지 생성
+  DETAILS_BOARD: (id: string | number) => `${BASE_URL}/api/notice/${id}`, // 공지 상세 
 };
 //const response = await axios.get(BOARD_ROUTE_API.READ_BOARD(id)); 사용 예시
 
 export const BOARD_COMMENT_API = {
   BOARD_COMMENTS: (id: string | number) => `${BASE_URL}/api/boardcomment/${id}`,
-  CUD_BOARD_COMMENT: `${BASE_URL}/api/boardcomment`,
 };
 
 export const NOTICE_COMMENT_API = {
   NOTICE_COMMENTS: (id: string | number) => `${BASE_URL}/api/noticecomment/${id}`,
-  CUD_NOTICE_COMMENT: `${BASE_URL}/api/noticecomment`,
 };
