@@ -64,11 +64,6 @@ const AdminMain = () => {
     }
   }, [selectedCategory, currentPage]);
 
-  useEffect(() => {
-    console.log(categories);
-    fetchUsers();
-  }, []);
-
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
     navigate(`?page=${page}`);
@@ -273,7 +268,7 @@ const AdminMain = () => {
                       <Styled.CategoryListContent>{item.name}</Styled.CategoryListContent>
                       <Styled.CategoryListContent>
                         <Button
-                          width="50%"
+                          width="25%"
                           border="none"
                           textColor="white"
                           backgroundColor="#E25151"

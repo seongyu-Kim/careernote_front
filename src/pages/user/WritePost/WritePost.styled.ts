@@ -61,7 +61,7 @@ export const WarningText = styled.div`
 
 export const TextareaField = styled.textarea`
   width: 100%;
-  height: 600px;
+  min-height: 600px;
   padding: 10px;
   margin-bottom: 15px;
   border: none;

@@ -37,6 +37,7 @@ export const Title = styled.h1`
   font-weight: bold;
   color: #333;
 `;
+
 export const ContainerHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -62,12 +63,19 @@ export const Date = styled.span`
 
 export const Content = styled.p`
   font-size: 16px;
-  height: 600px;
+  min-height: 600px;
   color: #333;
   line-height: 1.6;
   word-break: break-word;
   white-space: pre-wrap; /* 줄 바꿈 유지 */
   margin-bottom: 20px;
+`;
+export const CommentTitle = styled.h1`
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+  margin-top:50px;
 `;
 export const ShowMoreButton = styled.button`
   background: none;
