@@ -92,15 +92,20 @@ const Navbar = ({ categories }: NavbarProps) => {
         <Styled.MenuButton onClick={toggleMenu}>☰</Styled.MenuButton>
 
         <Styled.Logo
-          onClick={() => navigate(user?.level.name === '관리자' ? '/admin' : '/posts?page=1')}
-        >
+          onClick={() => {
+            const targetPath = user?.level.name === '관리자' ? '/admin' : '/posts';
+            window.location.href = targetPath;
+          }}>
           <Styled.LogoImg src={logo_w} alt="logo" />
         </Styled.Logo>
 
         {isLogin && user ? (
           <Styled.LogoutBox>
-            <Styled.UserNameText>{user?.level?.name === "꼬꼬닭" ? "🐔" : user?.level?.name === "삐약이" ? "🐣" : "⭐"}{user?.nickName}</Styled.UserNameText> 님
-            <Styled.Logout onClick={handleLogout}>Logout</Styled.Logout>
+            <Styled.UserNameText>
+              {user?.level?.name === '꼬꼬닭' ? '🐔' : user?.level?.name === '삐약이' ? '🐣' : '⭐'}
+              {user?.nickName}
+            </Styled.UserNameText>{' '}
+            님<Styled.Logout onClick={handleLogout}>Logout</Styled.Logout>
           </Styled.LogoutBox>
         ) : (
           <Styled.LogoutBox>
@@ -116,7 +121,13 @@ const Navbar = ({ categories }: NavbarProps) => {
             <Styled.NickNameContainer>
               <Styled.UserName>{user?.nickName} 님</Styled.UserName>
               <Styled.UserLevel>
-                {user?.level?.name} {user?.level?.name === "꼬꼬닭" ? "🐔" : user?.level?.name === "삐약이" ? "🐣" : "⭐"}</Styled.UserLevel>
+                {user?.level?.name}{' '}
+                {user?.level?.name === '꼬꼬닭'
+                  ? '🐔'
+                  : user?.level?.name === '삐약이'
+                    ? '🐣'
+                    : '⭐'}
+              </Styled.UserLevel>
             </Styled.NickNameContainer>
             <Styled.EditBtnContainer>
               <Button
@@ -146,13 +157,11 @@ const Navbar = ({ categories }: NavbarProps) => {
               <Styled.MenuItem key={category}>
                 <Styled.MenuItemBtn
                   $isSelected={selectedMenu === category}
-                  onClick={() => handleCategoryChange(category)}
-                >
+                  onClick={() => handleCategoryChange(category)}>
                   {category}
                 </Styled.MenuItemBtn>
               </Styled.MenuItem>
             ))}
-
         </Styled.Menu>
       )}
     </>
