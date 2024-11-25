@@ -312,7 +312,7 @@ const PostCard = ({ onDelete }: PostCardProps) => {
       <Styled.Content>{post.content}</Styled.Content>
 
       {/* 댓글 컴포넌트 */}
-      <Styled.Title>댓글 ({comments.length || 0})</Styled.Title>
+      <Styled.CommentTitle>댓글 ({comments.length || 0})</Styled.CommentTitle>
       <>
         {comments.map((comment, index) => (
           <Comment
