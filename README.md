@@ -10,7 +10,7 @@
 > - <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> <img src="https://img.shields.io/badge/Zustand-3578E5.svg?style=for-the-badge&logo=Zustand&logoColor=white" />
 
 > **개발 인원(역할)**
-> - FE 3/ BE 1(관리자 애플리케이션 프론트엔드 개발)
+> - FE 3/ BE 2(관리자 애플리케이션 프론트엔드 개발)
 
 > **개발 기간**
 >  - 2023.11 ~ 2023.11
