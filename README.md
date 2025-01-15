@@ -3,7 +3,7 @@
 > - 면접 경험, 취업 정보, 채용 공고 등 다영한 취업 관련 정보를 공유하는 플랫폼
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/11d21f21-f21e-4e61-af98-e996c72a0a8d" alt="등붕이포스터" width="500" />
+  <img src="https://github.com/user-attachments/assets/d90b1b38-645f-4cea-8c8b-c8e1d55e5385" alt="포스터" width="500" />
 </div>
 
 > **기술 스택**
