@@ -1,43 +1,72 @@
-# CARRERNOTE
-> **📖 설명**
-> - 면접 경험, 취업 정보, 채용 공고 등 다영한 취업 관련 정보를 공유하는 플랫폼
+## 1. 팀 소개
+**팀명** : 1팀 뭐라도하겠지
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/d90b1b38-645f-4cea-8c8b-c8e1d55e5385" alt="포스터" width="500" />
-</div>
+**팀원** : 박주호(팀장), 이주영, 김선규, 조아라, 하정우
+<hr />
+<hr />
 
-> **기술 스택**
-> - <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> <img src="https://img.shields.io/badge/Zustand-3578E5.svg?style=for-the-badge&logo=Zustand&logoColor=white" />
+## 2. 기획내용
+**프로젝트 주제** : 커뮤니티 웹 서비스
 
-> **개발 인원(역할)**
-> - FE 3/ BE 2(관리자 애플리케이션 프론트엔드 개발)
+**프로젝트 기간** : 2024년 11월 12일 ~ 2024년 11월 25일
 
-> **개발 기간**
->  - 2023.11 ~ 2023.11
+**프로젝트 인원** : 5명
 
-<br>
+**프로젝트 소개** : 면접 경험, 취업 정보, 채용 공고 등 다영한 취업 관련 정보를 공유하는 취준생 대상 플랫폼
 
-### 💁‍♂️ 주요 업무 및 상세 역할
-- React hooks를 이용한 상태관리
-- zustand의 구독 범위를 최소화한 전역 상태관리
-- TypeScript를 사용한 정적 타입 분석
-- 페이지네이션 로직을 구현하여 데이터를 효율적으로 처리
-- 메인페이지(네비게이션, 게시글 테이블, 페이지네이션 등), 카테고리 추가/삭제, 마이페이지(내가 쓴 글), 회원탈퇴 등
+<br/>
 
-<br>
+**기술 스택** :  ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> <img src="https://img.shields.io/badge/Zustand-3578E5.svg?style=for-the-badge&logo=Zustand&logoColor=white" /> 
 
-### 💡 느낀 점
-- 전역 상태 관리
-    Zutand를 처음 사용해보면서 사용법이 간단하고 React 컴포넌트의 의존성을 최소화할 수 있어, 기존에 사용해봤던 Context API, Recoil과 비교했을 때 더 효율적으로 전역 상태를 관리할 수 있었습니다.
-    하지만, 상태를 구독하는 범위와 전역 상태로 관리해야할 데이터를 명확히 정의하지 않아 초기 설계에서 일부 비효율적인 코드가 발생했습니다. 이후 구독 범위를 필요한 컴포넌트로만 제한하고 상태를 세분화하면서 문제를 해결했지만, 초기 설계의 중요성을 다시 한 번 깨달았습니다.
-    
+<hr />
+<hr />
 
-- 사용자 경험에 대한 개선
-    로그아웃 후에도 페이지네이션의 이전 상태가 유지되는 문제를 발견하고 수정하며, 사용자 경험을 중심으로 로직을 설계하는 방식이 더욱 중요하다고 생각하게 되었습니다. 사용자 흐름을 중심으로 코드를 설계하고, 예상하지 못한 사용자 행동에도 자연스럽게 대응할 수 있는 시스템을 만들고자 합니다.
- 
-<br>
+## 3. 역할 분담
+| **팀원**            | **역할**                                                                 |
+|---------------------|--------------------------------------------------------------------------|
+| **박주호 (Front)**  | 로그인/회원가입, 비밀번호 찾기, 비밀번호 재설정, 내 정보 수정                                               |
+| **이주영 (Front)**  | 상세페이지, 댓글, 사용자 관리                                                 |
+| **김선규 (Front)**  | 메인페이지, 네비게이션/사이드바, 페이지네이션, 게시판 카테고리 추가/삭제                              |
+| **조아라 (Back)**   | 유저 API                      |
+| **하정우 (Back)**   | 게시판 API, 공지 API, 카테고리 API, 댓글 API                                    |
 
-### 시연영상
+<hr />
+<hr />
+
+## 4. 구현기능
+##### 로그인 및 회원가입
+- 로그인 : 사용자의 입력 값 유효성 검사
+- 회원가입 : 사용자의 이메일, 아이디, 닉네임 중복 검사 및 유효성 검사
+- 비밀번호 재설정 : 이메일 유효성 검사 및 가입 이메일로 비밀번호 재설정 메일 발송
+
+##### 사이드바 및 상단바
+- 사이드바 : 카테고리 선택 시 해당하는 게시물만 필터링, 비밀번호 입력 후 내 정보 수정, 회원탈퇴
+- 상단바 : 비로그인 시 로그인 버튼 표시, 로그인 시 사용자 닉네임과 로그아웃 버튼 표시
+
+##### 메인페이지
+- 게시글 테이블: 공지와 공지 외 게시글로 분류해서 표시, 공지 숨기기 버튼, 글쓰기 버튼, 페이지네이션
+
+##### 게시글 상세보기
+- 게시글 등록: 회원 등급에 따라 작성 가능한 카테고리 제한
+- 게시글 수정/삭제: 본인일 경우에만 수정, 삭제 가능 
+- 댓글: 본인이 작성한 댓글만 수정, 삭제 가능
+  
+##### 관리자 페이지
+- 사용자 관리: DnD로 사용자 등급 변경
+- 카테고리 관리: 게시판 카테고리 추가/삭제, 해당 카테고리의 게시글이 없어야만 카테고리 삭제 가능
+- 게시판 관리: 관리자 공지 등록/수정/삭제, 사용자 게시글 삭제, 사용자 댓글 삭제
+
+
+<hr />
+<hr />
+
+## 5. 보완할 점 & 추후 개발하고자 하는부분
+- 카테고리를 선택할 때 마다 API를 호출하기 때문에 API호출이 너무 많이 발생함. 게시글을 캐싱해두었다가 카테고리에 따라 보여주면 API호출을 줄을 수 있을 것 같음
+- 비회원일 경우 컨텐츠 접근을 과도하게 제한함. UX를 조금 더 고려할 필요가 있음
+- 사이트 접속 시 /post로 리다이렉트 되는데 이는 추가적인 요청이 발생하는 것이기 때문에 루트 경로에서 /post 페이지가 보이게 할 필요가 있음
+
+<hr />
+<hr />
+
+## 시연영상
 https://www.youtube.com/watch?v=wGmRV-elPxM
-
-
