@@ -1,9 +1,16 @@
+# CAREERNOTE
+<div align="center">
+  <img width="45%" alt="스크린샷 2025-02-19 오후 5 12 37" src="https://github.com/user-attachments/assets/14ecbb52-5594-4669-8143-91cc306c6f66" />
+</div>
+
+<br />
+
 ## 1. 팀 소개
 **팀명** : 1팀 뭐라도하겠지
 
 **팀원** : 박주호(팀장), 이주영, 김선규, 조아라, 하정우
-<hr />
-<hr />
+
+<br />
 
 ## 2. 기획내용
 **프로젝트 주제** : 커뮤니티 웹 서비스
@@ -18,8 +25,7 @@
 
 **기술 스택** :  ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white) <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> <img src="https://img.shields.io/badge/Zustand-3578E5.svg?style=for-the-badge&logo=Zustand&logoColor=white" /> 
 
-<hr />
-<hr />
+<br />
 
 ## 3. 역할 분담
 | **팀원**            | **역할**                                                                 |
@@ -30,8 +36,7 @@
 | **조아라 (Back)**   | 유저 API                      |
 | **하정우 (Back)**   | 게시판 API, 공지 API, 카테고리 API, 댓글 API                                    |
 
-<hr />
-<hr />
+<br />
 
 ## 4. 구현기능
 ##### 로그인 및 회원가입
@@ -57,16 +62,14 @@
 - 게시판 관리: 관리자 공지 등록/수정/삭제, 사용자 게시글 삭제, 사용자 댓글 삭제
 
 
-<hr />
-<hr />
+<br />
 
 ## 5. 보완할 점 & 추후 개발하고자 하는부분
 - 카테고리를 선택할 때 마다 API를 호출하기 때문에 API호출이 너무 많이 발생함. 게시글을 캐싱해두었다가 카테고리에 따라 보여주면 API호출을 줄을 수 있을 것 같음
 - 비회원일 경우 컨텐츠 접근을 과도하게 제한함. UX를 조금 더 고려할 필요가 있음
 - 사이트 접속 시 /post로 리다이렉트 되는데 이는 추가적인 요청이 발생하는 것이기 때문에 루트 경로에서 /post 페이지가 보이게 할 필요가 있음
 
-<hr />
-<hr />
+<br />
 
 ## 시연영상
 https://www.youtube.com/watch?v=wGmRV-elPxM
